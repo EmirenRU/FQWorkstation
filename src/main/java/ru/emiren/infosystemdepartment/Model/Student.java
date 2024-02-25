@@ -1,9 +1,6 @@
 package ru.emiren.infosystemdepartment.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +8,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table()
+@Table
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,12 +16,21 @@ import lombok.Setter;
 public class Student {
 
     @Id
-    private Long id; // студ.номер
+    private Long id;
 
-    private String fio; // ФИО
-    private String citizenship; // гражданство
-    private String theme; // тема
-    private String orientation; // направление
-    private String loe; // Уровень образования == Level of Education
-    private String scientificSupervisor; // Научный руководитель
+    private Long   stud_num;                // Студ.номер
+    private String fio;                     // ФИО
+    private String citizenship;             // Гражданство
+    private String theme;                   // Тема
+    private String orientation;             // Направление
+    private String loe;                     // Уровень образования == Level of Education
+    private String scientificSupervisor;    // Научный руководитель
+
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name = "department_kod",  referencedColumnName = "code"),
+            @JoinColumn(name = "department_name", referencedColumnName = "name")
+    })
+    private Department department;          // Кафедра
 }
