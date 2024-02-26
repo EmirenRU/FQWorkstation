@@ -1,9 +1,7 @@
 package ru.emiren.infosystemdepartment.Model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +23,9 @@ public class FQW {
     private Float uniqueness; // оригинальность
     private String feedback; // отзыв
     private String volume; // объем
+
+    @OneToOne
+    @JoinColumn(name = "reviewer_id", referencedColumnName = "id")
+    private Reviewer reviewer;
 
 }

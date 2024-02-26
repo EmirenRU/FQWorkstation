@@ -27,6 +27,6 @@ public class Protocol {
     private Integer volume; // объем
     private Integer grade; // оценка
 
-    private List<String> questions = new ArrayList<>();
+//    private List<String> questions = new ArrayList<>();
 
 }

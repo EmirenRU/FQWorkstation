@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table
 @NoArgsConstructor
@@ -20,7 +23,10 @@ public class Lecturer {
 
     private String fio;
 
-    private String academicDegree; // Ученая степень и должность
+    private String academicDegree; // Ученая степень
 
     private String position; // должность
+
+    @OneToMany(mappedBy = "lecturer")
+    private List<Student> students = new ArrayList<>();
 }

@@ -18,7 +18,7 @@ public class Reviewer {
     private Long id;
 
     private String fio;
-    private String Department;
+    private String department;
 
 
 }

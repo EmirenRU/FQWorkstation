@@ -8,7 +8,6 @@ import lombok.Setter;
 
 
 @Entity
-@Table
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,21 +15,29 @@ import lombok.Setter;
 public class Student {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long   stud_num;                // Студ.номер
     private String fio;                     // ФИО
     private String citizenship;             // Гражданство
     private String theme;                   // Тема
-    private String orientation;             // Направление
     private String loe;                     // Уровень образования == Level of Education
     private String scientificSupervisor;    // Научный руководитель
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "orientation_code", referencedColumnName = "code")
+    private Orientation orientation;          // Направление
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumns({
-            @JoinColumn(name = "department_kod",  referencedColumnName = "code"),
-            @JoinColumn(name = "department_name", referencedColumnName = "name")
-    })
-    private Department department;          // Кафедра
+    @JoinColumn(name = "department_code", referencedColumnName = "code")
+    private Department department;             // Кафедра
+
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private Lecturer lecturer;
+
+    @OneToOne
+    @JoinColumn(name = "FQW_name", referencedColumnName = "name")
+    private FQW fqw;
 }
