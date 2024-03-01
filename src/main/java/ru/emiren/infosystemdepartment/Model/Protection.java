@@ -1,16 +1,12 @@
 package ru.emiren.infosystemdepartment.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Builder
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,14 +15,16 @@ import java.time.LocalDate;
 public class Protection {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String fio;
     private String citizenship;
     private String theme;
     private String orientation;
     private String department;
     private String scientificSupervisor;
-    private String ConsultantFio;
+    private String consultantFio;
     private LocalDate dataOfProtection;
 
 }

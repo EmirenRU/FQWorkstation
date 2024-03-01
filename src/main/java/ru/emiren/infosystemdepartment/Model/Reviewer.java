@@ -1,12 +1,10 @@
 package ru.emiren.infosystemdepartment.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
+@Builder
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +16,8 @@ public class Reviewer {
     private Long id;
 
     private String fio;
-    private String department;
+    private String academicDegree; // Ученая степень
+    private String position; // должность
 
 
 }
