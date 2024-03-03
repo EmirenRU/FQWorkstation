@@ -11,11 +11,11 @@ public class StudentMapper {
                 .fio(studentDTO.getFio())
                 .citizenship(studentDTO.getCitizenship())
                 .loe(studentDTO.getLoe())
-                .scientificSupervisor(studentDTO.getScientificSupervisor())
+//                .scientificSupervisor(studentDTO.getScientificSupervisor())
                 .orientation(studentDTO.getOrientation())
                 .department(studentDTO.getDepartment())
-                .lecturer(studentDTO.getLecturer())
-                .fqw(studentDTO.getFqw())
+//                .lecturer(studentDTO.getLecturer())
+//                .fqw(studentDTO.getFqw())
                 .build();
     }
 
@@ -25,11 +25,11 @@ public class StudentMapper {
                 .fio(student.getFio())
                 .loe(student.getLoe())
                 .citizenship(student.getCitizenship())
-                .scientificSupervisor(student.getScientificSupervisor())
+//                .scientificSupervisor(student.getScientificSupervisor())
                 .orientation(student.getOrientation())
                 .department(student.getDepartment())
-                .lecturer(student.getLecturer())
-                .fqw(student.getFqw())
+//                .lecturer(student.getLecturer())
+//                .fqw(student.getFqw())
                 .build();
     }
 }

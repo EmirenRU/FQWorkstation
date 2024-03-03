@@ -26,6 +26,7 @@ public class Lecturer {
 
     private String position; // должность
 
-    @OneToMany(mappedBy = "lecturer")
-    private List<Student> students = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id")
+    private List<StudentLecturers> students = new ArrayList<>();
 }

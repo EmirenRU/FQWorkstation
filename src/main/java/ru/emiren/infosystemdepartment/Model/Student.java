@@ -1,7 +1,11 @@
 package ru.emiren.infosystemdepartment.Model;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -21,21 +25,23 @@ public class Student {
     private String citizenship;             // Гражданство
     private String theme;                   // Тема
     private String loe;                     // Уровень образования == Level of Education
-    private String scientificSupervisor;    // Научный руководитель
+    private String classifier;              // Классификатор
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "orientation_code", referencedColumnName = "code")
     private Orientation orientation;          // Направление
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_code", referencedColumnName = "code")
     private Department department;             // Кафедра
 
-    @ManyToOne
-    @JoinColumn(name = "lecturer_id", nullable = false)
-    private Lecturer lecturer;
+    @OneToMany(cascade = CascadeType.ALL )
+    @JoinColumn(name = "lecturer_id")
+    private List<StudentLecturers> lecturers = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "FQW_name", referencedColumnName = "name")
-    private FQW fqw;
+//    @OneToOne
+//    @JoinColumn(name = "FQW_name", referencedColumnName = "name")
+//    private FQW fqw;
+
+
 }
