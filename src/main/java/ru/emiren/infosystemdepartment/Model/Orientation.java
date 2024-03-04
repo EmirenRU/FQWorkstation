@@ -5,6 +5,7 @@ import lombok.*;
 
 @Entity
 @Table
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,8 +13,5 @@ import lombok.*;
 public class Orientation {
     @Id
     private String code;
-
-
-
     private String name;
 }

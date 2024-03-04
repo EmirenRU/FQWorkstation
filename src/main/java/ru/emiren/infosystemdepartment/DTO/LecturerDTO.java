@@ -17,5 +17,6 @@ public class LecturerDTO {
     private String fio;
     private String academicDegree; // Ученая степень
     private String position; // должность
+    private DepartmentDTO department;
     private List<StudentDTO> students;
 }

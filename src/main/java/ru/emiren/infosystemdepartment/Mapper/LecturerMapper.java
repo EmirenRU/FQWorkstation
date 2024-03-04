@@ -12,6 +12,7 @@ public class LecturerMapper {
                 .fio(lecturerDTO.getFio())
                 .academicDegree(lecturerDTO.getAcademicDegree())
                 .position(lecturerDTO.getPosition())
+                .department(DepartmentMapper.mapToDepartment(lecturerDTO.getDepartment()))
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class LecturerMapper {
                 .fio(lecturer.getFio())
                 .academicDegree(lecturer.getAcademicDegree())
                 .position(lecturer.getPosition())
+                .department(DepartmentMapper.mapToDepartmentDTO(lecturer.getDepartment()))
 //                .students(lecturer.getStudents().stream().map(StudentMapper::mapToStudentDTO).collect(Collectors.toList()))
                 .build();
     }

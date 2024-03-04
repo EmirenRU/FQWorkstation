@@ -26,6 +26,10 @@ public class Lecturer {
 
     private String position; // должность
 
+    @ManyToOne
+    @JoinColumn(name="department", referencedColumnName = "code")
+    private Department department;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     private List<StudentLecturers> students = new ArrayList<>();

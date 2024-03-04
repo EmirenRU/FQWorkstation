@@ -6,6 +6,7 @@ import lombok.*;
 
 @Entity
 @Table
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -13,8 +14,5 @@ import lombok.*;
 public class Department {
     @Id
     private String code;
-
-
-
     private String name;
 }

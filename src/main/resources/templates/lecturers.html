@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th='http://thymeleaf.org'
+>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,17 +34,20 @@
 
     <main>
         <section class="contacts-form">
-            <div class="container form-container">
+            <div class="container form-container" >
               <h2 class="section-header form-header">Получить документ</h2>
-              <div class="form-space flex">
+              <div class="form-space flex" >
                 <form action="https://jsonplaceholder.typicode.com/posts" method="post" class="form-body">
   
                 <div class="selector-patch">
                   <label class="selection-param">Направление
                   <select name="city" class="slider-val">
-                    <option value="NKN" >НКН</option>
-                    <option value="NFI" >НФИ</option>
-                    <option value="NPM" >НПМ</option>
+                    <option
+                            th:each="orientation :${orientations}"
+                            th:text="${orientation.name}"
+                    ></option>
+                      <!--                            th:value=""-->
+
                   </select>
                 </label>
               </div>
@@ -49,9 +55,12 @@
                 <div class="selector-patch">
                 <label class="selection-param">Кафедра
                   <select name="Education" class="slider-val">
-                    <option value="B" >ММиИИ</option>
-                    <option value="M" >ТВиК</option>
-                    <option value="A" >ОХиМ</option>
+                    <option
+                            th:each="department :${departments}"
+
+                            th:text="${department.name}"
+                    ></option>
+                      <!--                            th:value=-->
                   </select>
                 </label>
               </div>
@@ -73,8 +82,13 @@
   
               <div class="selector-patch-2 margin-fix">
                 <label class="selection-param">Науч.рук
-                  <input type="text" name="Tutor" class="val" placeholder="Малых М.Д." required>
+                  <input type="text" name="Tutor" class="val"
+
+                         required>
                 </label>
+                  <!--                         th:each="lecturer :${lecturers}"-->
+                  <!--                         th:text="${lecturer.department.name}"-->
+                  <!--                         th:if=""-->
               </div>
                 <button class="btn-reset form-button list-button">Создать</button>
                 </form>

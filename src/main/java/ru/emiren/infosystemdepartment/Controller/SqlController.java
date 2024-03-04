@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.emiren.infosystemdepartment.DTO.DepartmentDTO;
 import ru.emiren.infosystemdepartment.DTO.LecturerDTO;
+import ru.emiren.infosystemdepartment.DTO.OrientationDTO;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.DepartmentService;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.LecturerService;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.OrientationService;
@@ -32,20 +34,23 @@ public class SqlController {
 
     @GetMapping("")
     public String main(Model model){
-        return "";
+        return "redirect:/lecturer";
     }
 
     @GetMapping("lecturer")
     public String CreateLectureForm(Model model){
         List<LecturerDTO> lecturers = lecturerService.getAllLecturer();
+        List<DepartmentDTO> departments = departmentService.getAllDepartments();
+        List<OrientationDTO> orientations = orientationService.getAllOrientations();
 
-        model.addAttribute("lecturer", lecturers);
+        model.addAttribute("lecturers", lecturers);
+        model.addAttribute("departments", departments);
+        model.addAttribute("orientations", orientations);
         return "lecturers";
     }
 
     @GetMapping("Students")
     public String CreateStudentForm(Model model){
-
 
         return "students";
     }
