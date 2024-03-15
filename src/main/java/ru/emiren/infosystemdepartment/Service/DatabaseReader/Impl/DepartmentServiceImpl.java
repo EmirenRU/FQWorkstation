@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.DepartmentDTO;
 import ru.emiren.infosystemdepartment.Mapper.DepartmentMapper;
-import ru.emiren.infosystemdepartment.Model.Department;
+import ru.emiren.infosystemdepartment.Model.SQL.Department;
 import ru.emiren.infosystemdepartment.Repository.DepartmentRepository;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.DepartmentService;
 

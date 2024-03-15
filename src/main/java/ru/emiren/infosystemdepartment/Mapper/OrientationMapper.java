@@ -1,7 +1,7 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.OrientationDTO;
-import ru.emiren.infosystemdepartment.Model.Orientation;
+import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 
 
 public class OrientationMapper {

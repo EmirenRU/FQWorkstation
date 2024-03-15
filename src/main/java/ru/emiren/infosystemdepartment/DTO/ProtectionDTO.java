@@ -1,7 +1,11 @@
 package ru.emiren.infosystemdepartment.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Builder;
 import lombok.Data;
+import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 
 import java.time.LocalDate;
 
@@ -9,12 +13,10 @@ import java.time.LocalDate;
 @Builder
 public class ProtectionDTO {
     private Long id;
-    private String fio;
-    private String citizenship;
-    private String theme;
-    private String orientation;
-    private String department;
-    private String scientificSupervisor;
-    private String consultantFio;
+
+    private Orientation orientation;
+
+    @JsonFormat(pattern = "dd-MM-yyyy") // пока под вопросом (над сделать запрос на проверку ошибки)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dataOfProtection;
 }

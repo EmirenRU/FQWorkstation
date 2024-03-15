@@ -1,9 +1,7 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.LecturerDTO;
-import ru.emiren.infosystemdepartment.Model.Lecturer;
-
-import java.util.stream.Collectors;
+import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
 
 public class LecturerMapper {
     public static Lecturer mapToLecturer(LecturerDTO lecturerDTO){

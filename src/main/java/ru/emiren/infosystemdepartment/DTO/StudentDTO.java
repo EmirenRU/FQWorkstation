@@ -2,10 +2,10 @@ package ru.emiren.infosystemdepartment.DTO;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.emiren.infosystemdepartment.Model.Department;
-import ru.emiren.infosystemdepartment.Model.FQW;
-import ru.emiren.infosystemdepartment.Model.Lecturer;
-import ru.emiren.infosystemdepartment.Model.Orientation;
+import ru.emiren.infosystemdepartment.Model.SQL.Department;
+import ru.emiren.infosystemdepartment.Model.SQL.FQW;
+import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
+import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 
 @Data
 @Builder

@@ -1,8 +1,7 @@
 package ru.emiren.infosystemdepartment.Service.DatabaseReader;
 
-import org.springframework.data.jpa.repository.Query;
 import ru.emiren.infosystemdepartment.DTO.StudentDTO;
-import ru.emiren.infosystemdepartment.Model.Student;
+import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
 import java.util.List;
 import java.util.Set;

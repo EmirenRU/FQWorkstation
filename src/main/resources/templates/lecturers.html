@@ -44,6 +44,7 @@
                   <select name="city" class="slider-val">
                     <option
                             th:each="orientation :${orientations}"
+                            th:field="*{orientation.name}"
                             th:text="${orientation.name}"
                     ></option>
                       <!--                            th:value=""-->

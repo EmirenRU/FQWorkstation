@@ -1,12 +1,14 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.FQWDTO;
-import ru.emiren.infosystemdepartment.Model.FQW;
+import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 
 public class FQWMapper {
     public static FQW mapToFQW(FQWDTO fqwdto){
         return FQW.builder()
-                .name(fqwdto.getName())
+//                .name(fqwdto.getName)
+//                .id(fqwdto.getId())
+//                .student(fqwdto.getStudent())
                 .classifier(fqwdto.getClassifier())
                 .uniqueness(fqwdto.getUniqueness())
                 .feedback(fqwdto.getFeedback())
@@ -17,7 +19,8 @@ public class FQWMapper {
 
     public static FQWDTO mapToFQWDTO(FQWDTO fqwdto){
         return FQWDTO.builder()
-                .name(fqwdto.getName())
+                .id(fqwdto.getId())
+                .student(fqwdto.getStudent())
                 .classifier(fqwdto.getClassifier())
                 .uniqueness(fqwdto.getUniqueness())
                 .feedback(fqwdto.getFeedback())

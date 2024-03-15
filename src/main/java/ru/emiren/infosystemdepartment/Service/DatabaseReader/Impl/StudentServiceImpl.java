@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.StudentDTO;
 import ru.emiren.infosystemdepartment.Mapper.StudentMapper;
-import ru.emiren.infosystemdepartment.Model.Student;
+import ru.emiren.infosystemdepartment.Model.SQL.Student;
 import ru.emiren.infosystemdepartment.Repository.StudentRepository;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.StudentService;
 

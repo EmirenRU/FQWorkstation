@@ -1,7 +1,7 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.CommisionerDTO;
-import ru.emiren.infosystemdepartment.Model.Commisioner;
+import ru.emiren.infosystemdepartment.Model.SQL.Commisioner;
 
 public class CommisionerMapper {
     public static Commisioner mapToCommisioner(CommisionerDTO commisionerDTO){

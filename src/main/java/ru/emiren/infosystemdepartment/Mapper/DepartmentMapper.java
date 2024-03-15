@@ -1,7 +1,7 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.DepartmentDTO;
-import ru.emiren.infosystemdepartment.Model.Department;
+import ru.emiren.infosystemdepartment.Model.SQL.Department;
 
 public class DepartmentMapper {
     public static Department mapToDepartment(DepartmentDTO departmentDTO){

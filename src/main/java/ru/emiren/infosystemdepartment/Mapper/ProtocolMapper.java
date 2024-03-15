@@ -1,7 +1,7 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.ProtocolDTO;
-import ru.emiren.infosystemdepartment.Model.Protocol;
+import ru.emiren.infosystemdepartment.Model.SQL.Protocol;
 
 public class ProtocolMapper {
     public static Protocol mapToProtocol(ProtocolDTO protocolDTO){

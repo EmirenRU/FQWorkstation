@@ -1,7 +1,7 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.StudentDTO;
-import ru.emiren.infosystemdepartment.Model.Student;
+import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
 public class StudentMapper {
 

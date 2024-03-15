@@ -3,7 +3,7 @@ package ru.emiren.infosystemdepartment.Service.DatabaseReader.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.OrientationDTO;
-import ru.emiren.infosystemdepartment.Model.Orientation;
+import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 import ru.emiren.infosystemdepartment.Repository.OrientationRepository;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.OrientationService;
 import ru.emiren.infosystemdepartment.Mapper.OrientationMapper;
