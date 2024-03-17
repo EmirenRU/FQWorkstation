@@ -93,33 +93,22 @@ html {
   }
 
   main{
-    margin-bottom: 45px;
+    margin: 0 auto;
   }
 
-  .form-body {
-    display: flex;
-    flex-direction: row;
-    margin: 0;
-    align-items: center;
-    padding-left: 28px;
-    padding-right: 28px;
-    padding-top: 31px;
-    padding-bottom: 30px;
-    background-color: #FFFFFF;
-    border-radius: 15px;
-    min-height: 106px;
-    border: 5px solid rgba(70,156,235,0.75);
-}
 
 .form-container{
+  padding: 0;
     padding-top: 45px;
     padding-bottom: 45px;
     border-radius: 15px;
   }
   
   
+  
   .form-body{
     display: flex;
+    flex-shrink: 1;
     flex-direction: row;
     margin: 0;
     align-items: center;
@@ -131,11 +120,20 @@ html {
     background-color: #FFFFFF;
     border-radius: 15px;
     min-height: 106px;
-    max-width: 100%;
+    border: 5px solid rgba(70,156,235,0.75);
+    width: 90%;
+  }
+  
+
+  .form-header{
+    display: flex;
+    justify-content: center;
   }
   
   .form-space{
-    margin: 0;
+    margin: 0 auto;
+    max-width: 100%;
+    justify-content: center;
   }
   
   
@@ -152,6 +150,10 @@ html {
     justify-content: left;
     max-width: 169px;
     margin-right: 10px;
+  }
+
+  .selector-patch:first-child{
+    width: 134px;
   }
   
   .selector-patch-2{
@@ -174,7 +176,6 @@ html {
   
   .slider-val{
     font-size: 16px;
-    width: 169px;
     border: 0;
   }
   
@@ -206,7 +207,7 @@ html {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        background-color: #333333;
+        background-color: rgb(50, 53, 54);
         border-radius: 15px 15px 0 0;
         min-height: 341px;
   }

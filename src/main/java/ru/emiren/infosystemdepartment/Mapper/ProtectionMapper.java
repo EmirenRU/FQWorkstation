@@ -6,6 +6,7 @@ import ru.emiren.infosystemdepartment.Model.SQL.Protection;
 public class ProtectionMapper {
     public static Protection mapToProtection(ProtectionDTO protectionDTO){
         return Protection.builder()
+                .id(protectionDTO.getId())
                 .orientation(protectionDTO.getOrientation())
                 .dataOfProtection(protectionDTO.getDataOfProtection())
                 .build();
@@ -13,6 +14,7 @@ public class ProtectionMapper {
 
     public static ProtectionDTO protectionDTO(Protection protection){
         return ProtectionDTO.builder()
+                .id(protection.getId())
                 .orientation(protection.getOrientation())
                 .dataOfProtection(protection.getDataOfProtection())
                 .build();

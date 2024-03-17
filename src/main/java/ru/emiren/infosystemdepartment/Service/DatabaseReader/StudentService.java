@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.DatabaseReader;
 
+import ru.emiren.infosystemdepartment.DTO.LecturerDTO;
 import ru.emiren.infosystemdepartment.DTO.StudentDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
@@ -16,4 +17,5 @@ public interface StudentService {
 
     public List<Student> findByFilterText(Set<String> words);
 
+    List<StudentDTO> findAllStudentByLecturerId(Long lecturerId);
 }

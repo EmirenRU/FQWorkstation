@@ -9,6 +9,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/media.css">
 </head>
 
     <body>
@@ -37,31 +38,28 @@
             <div class="container form-container" >
               <h2 class="section-header form-header">Получить документ</h2>
               <div class="form-space flex" >
-                <form action="https://jsonplaceholder.typicode.com/posts" method="post" class="form-body">
+                <form action="https://jsonplaceholder.typicode.com/posts" method="post" class="form-body" th:action="@{/sql/lecturers}">
   
                 <div class="selector-patch">
                   <label class="selection-param">Направление
-                  <select name="city" class="slider-val">
+                  <select name="orientation" class="slider-val" >
                     <option
                             th:each="orientation :${orientations}"
-                            th:field="*{orientation.name}"
+                            th:value="${orientation.code}"
                             th:text="${orientation.name}"
                     ></option>
-                      <!--                            th:value=""-->
-
                   </select>
                 </label>
               </div>
   
                 <div class="selector-patch">
                 <label class="selection-param">Кафедра
-                  <select name="Education" class="slider-val">
+                  <select name="department" class="slider-val" >
                     <option
                             th:each="department :${departments}"
-
+                            th:value="${department.code}"
                             th:text="${department.name}"
                     ></option>
-                      <!--                            th:value=-->
                   </select>
                 </label>
               </div>
@@ -82,16 +80,19 @@
   
   
               <div class="selector-patch-2 margin-fix">
-                <label class="selection-param">Науч.рук
-                  <input type="text" name="Tutor" class="val"
-
-                         required>
-                </label>
+                  <label class="selection-param">Науч рук
+                      <select name="lecturer" class="slider-val">
+                          <option th:each="lecturer : ${lecturers}"
+                                  th:value="${lecturer.id}"
+                                  th:text="${lecturer.fio}">
+                          </option>
+                      </select>
+                  </label>
                   <!--                         th:each="lecturer :${lecturers}"-->
                   <!--                         th:text="${lecturer.department.name}"-->
                   <!--                         th:if=""-->
               </div>
-                <button class="btn-reset form-button list-button">Создать</button>
+                <button class="btn-reset form-button list-button">Получить</button>
                 </form>
               </div>
             </div>

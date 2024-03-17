@@ -12,12 +12,9 @@ import ru.emiren.infosystemdepartment.Model.SQL.Student;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FQWDTO {
-    private Long id;
-
-    private Student student;
+    private String name;
 
     private String classifier; // классификатор
-
     private Float uniqueness; // оригинальность
     private String feedback; // отзыв
     private String volume; // объем

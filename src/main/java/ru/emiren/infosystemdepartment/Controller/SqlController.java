@@ -1,17 +1,16 @@
 package ru.emiren.infosystemdepartment.Controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ru.emiren.infosystemdepartment.DTO.DepartmentDTO;
 import ru.emiren.infosystemdepartment.DTO.LecturerDTO;
 import ru.emiren.infosystemdepartment.DTO.OrientationDTO;
-import ru.emiren.infosystemdepartment.Service.DatabaseReader.DepartmentService;
-import ru.emiren.infosystemdepartment.Service.DatabaseReader.LecturerService;
-import ru.emiren.infosystemdepartment.Service.DatabaseReader.OrientationService;
-import ru.emiren.infosystemdepartment.Service.DatabaseReader.StudentService;
+import ru.emiren.infosystemdepartment.DTO.StudentDTO;
+import ru.emiren.infosystemdepartment.Service.DatabaseReader.*;
 
 import java.util.List;
 
@@ -23,13 +22,15 @@ public class SqlController {
     DepartmentService departmentService;
     LecturerService lecturerService;
     OrientationService orientationService;
+    ProtectionService protectionService;
 
     @Autowired
-    public SqlController(StudentService studentService, DepartmentService departmentService, LecturerService lecturerService, OrientationService orientationService){
+    public SqlController(StudentService studentService, DepartmentService departmentService, LecturerService lecturerService, OrientationService orientationService, ProtectionService protectionService){
         this.studentService = studentService;
         this.departmentService = departmentService;
         this.lecturerService = lecturerService;
         this.orientationService = orientationService;
+        this.protectionService = protectionService;
     }
 
     @GetMapping("")
@@ -37,15 +38,31 @@ public class SqlController {
         return "redirect:/lecturer";
     }
 
-    @GetMapping("lecturer")
+    @GetMapping("lecturers")
     public String CreateLectureForm(Model model){
-        List<LecturerDTO> lecturers = lecturerService.getAllLecturer();
-        List<DepartmentDTO> departments = departmentService.getAllDepartments();
-        List<OrientationDTO> orientations = orientationService.getAllOrientations();
+        model.addAttribute("lecturers", lecturerService.getAllLecturer());
+        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("orientations", orientationService.getAllOrientations());
+        return "lecturers";
+    }
 
-        model.addAttribute("lecturers", lecturers);
-        model.addAttribute("departments", departments);
-        model.addAttribute("orientations", orientations);
+    @PostMapping("lecturers")
+    public String getLecturerers(@RequestParam("lecturer") Long lecturerId,
+                                 @RequestParam("department") String departmentCode,
+                                 @RequestParam("orientation") String orientationCode,
+                                 Model model){
+
+        LecturerDTO lecturerDTO = lecturerService.findByLecturerId(lecturerId);
+        if (lecturerDTO == null){
+            model.addAttribute("lecturers", lecturerService.getAllLecturer());
+            return "redirect:/lecturers";
+        }
+
+        model.addAttribute("students", studentService.findAllStudentByLecturerId(lecturerId));
+        model.addAttribute("lecturers", lecturerService.getAllLecturer());
+        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("orientations", orientationService.getAllOrientations());
+
         return "lecturers";
     }
 

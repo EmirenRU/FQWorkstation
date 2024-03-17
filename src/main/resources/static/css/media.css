@@ -1,0 +1,52 @@
+@media(max-width: 1024px){
+    body {
+        align-items: center;
+      }
+    
+      .main{
+        margin-bottom: 80px;
+      }
+    
+      .header {
+        margin-bottom: 40px;
+      }
+    
+      .container {
+        max-width: 1098px;
+        padding: 0 51px;
+        margin: 0 auto;
+        width: 100%;
+    
+      }
+    
+      .header__container {
+        padding-top: 25px;
+        padding-bottom: 27px;
+      }
+    
+      .nav__list {
+        margin-right: 104px;
+      }
+    
+      .header__logo__picture {
+        max-width: 150px;
+        height: 48px;
+      }
+    
+      .nav__item:not(:last-child) {
+        --current-pad: 0px;
+        margin-right: 52px;
+      }
+
+      .form-container{
+        padding: 0;
+        padding-bottom: 45px;
+        border-radius: 15px;
+        }
+
+        .form-header{
+            margin-top: 0;
+            padding: 0 ;
+        }
+    
+}

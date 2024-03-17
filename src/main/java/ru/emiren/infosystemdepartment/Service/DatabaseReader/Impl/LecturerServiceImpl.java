@@ -21,6 +21,17 @@ public class LecturerServiceImpl implements LecturerService {
         this.lecturerRepository = lecturerRepository;
     }
 
+
+    @Override
+    public LecturerDTO findByLecturerId(Long id) {
+        return LecturerMapper.mapToLecturerDTO(lecturerRepository.findById(id).get());
+    }
+
+    @Override
+    public LecturerDTO findByLecturerName(String name) {
+        return null;
+    }
+
     @Override
     public List<LecturerDTO> getAllLecturer() {
         List<Lecturer> lecturers = lecturerRepository.findAll();

@@ -21,7 +21,6 @@ public class FQW {
     private String name;
 
     private String classifier; // классификатор
-
     private Float uniqueness; // оригинальность
     private String feedback; // отзыв
     private String volume; // объем
