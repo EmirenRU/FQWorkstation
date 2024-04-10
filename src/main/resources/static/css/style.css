@@ -8,8 +8,27 @@ html {
   *::after {
     box-sizing: inherit;
   }
+
+  table{
+    margin-bottom: -2px;
+    width: 100%;
+  }
   
-  
+  .tr-table{
+    display: flex;
+    width: 100%;
+    outline : 1px solid black;
+    flex-direction: row;
+  }
+
+  .td-table{
+    display: flex;
+    flex-direction: column;
+    width:12.5%;
+    padding: 0.5%;
+    outline : 1px solid black;
+    justify-content: center;
+  }
   
   :root {
     --max-padding: 75px;
@@ -121,7 +140,6 @@ html {
     border-radius: 15px;
     min-height: 106px;
     border: 5px solid rgba(70,156,235,0.75);
-    width: 90%;
   }
   
 
@@ -132,7 +150,6 @@ html {
   
   .form-space{
     margin: 0 auto;
-    max-width: 100%;
     justify-content: center;
   }
   
@@ -149,7 +166,7 @@ html {
     align-items: flex-start;
     justify-content: left;
     max-width: 169px;
-    margin-right: 10px;
+    margin-right: 2%;
   }
 
   .selector-patch:first-child{
@@ -176,7 +193,12 @@ html {
   
   .slider-val{
     font-size: 16px;
+    width: 155px;
     border: 0;
+    overflow:hidden;
+    display:inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   
@@ -199,6 +221,7 @@ html {
   }
 
   .footer{
+    padding-top: 25px;
     background-color: rgb(50, 53, 54);
   }
 
@@ -243,7 +266,6 @@ html {
   }
 
   .right{
-    padding-top: 25px;
     max-width: 250px;
   }
 
@@ -254,4 +276,8 @@ html {
 
   .icons__social:not(:last-child){
     margin-right: 50px;
+  }
+
+  .display{
+    margin-bottom: 50px;
   }

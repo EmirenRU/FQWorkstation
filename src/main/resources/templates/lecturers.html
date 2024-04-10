@@ -99,18 +99,33 @@
           </section>
 
 
-          
-          <section class="display">
-            <div class="container ">
-              <h2 class="section-header">Документ</h2>
 
-
-              <img src="/img/plaveholder_docpng.png" class="display-placeholder">
-
+        <section class="display">
+            <h2 class="section-header">Документ</h2>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Academic_Degree</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                </tr>
+            </table>
+            <div class="container" >
+                    <table>
+                        <tr class="tr-table"
+                            th:each="stlec : ${studentLecturers}" th:if="${not #lists.isEmpty(stlec)}" >
+                            <td class="td-table" th:text="${stlec.lecturer.fio}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.academicDegree}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.position}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.department.name}"></td>
+                            <td class="td-table" th:text="${stlec.student.fio}"></td>
+                            <td class="td-table" th:text="${stlec.student.stud_num}"></td>
+                            <td class="td-table" th:text="${stlec.student.citizenship}"></td>
+                            <td class="td-table" th:text="${stlec.student.fqw.name}"></td>
+                        </tr>
+                    </table>
             </div>
-
-
-          </section>
+        </section>
 
     </main>
     <footer class="footer">

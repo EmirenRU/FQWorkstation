@@ -24,6 +24,7 @@ public class StudentMapper {
     public static StudentDTO mapToStudentDTO(Student student) {
         return StudentDTO.builder()
                 .id(student.getId())
+                .stud_num(student.getStud_num())
                 .fio(student.getFio())
                 .loe(student.getLoe())
                 .citizenship(student.getCitizenship())

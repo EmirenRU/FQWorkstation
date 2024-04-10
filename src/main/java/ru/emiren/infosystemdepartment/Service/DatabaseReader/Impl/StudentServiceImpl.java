@@ -41,17 +41,16 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> findAllStudentById(Long id) {
+
         return null;
     }
 
     @Override
-    public List<Student> findAllStudentByFilterText(List<String> words) {
-        return null;
-    }
-
-    @Override
-    public List<Student> findByFilterText(Set<String> words) {
-        return null;
+    public List<StudentDTO> findAllStudentByLecturerIdAndOrientationCodeAndDepartmentCode(Long lecturerId, String OrientationCode, String DepartmentCode) {
+        return studentRepository.findAllStudentByLecturerIdAndOrientationCodeAndDepartmentCode(lecturerId, OrientationCode, DepartmentCode)
+                .stream()
+                .map(StudentMapper::mapToStudentDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

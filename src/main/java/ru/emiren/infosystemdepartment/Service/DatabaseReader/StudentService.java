@@ -13,9 +13,9 @@ public interface StudentService {
     List<StudentDTO> findAllStudent();
     List<Student> findAllStudentById(Long id);
 
-    List<Student> findAllStudentByFilterText(List<String> words);
-
-    public List<Student> findByFilterText(Set<String> words);
+    List<StudentDTO> findAllStudentByLecturerIdAndOrientationCodeAndDepartmentCode(Long       lecturerId,
+                                                                                   String OrientationCode,
+                                                                                   String DepartmentCode);
 
     List<StudentDTO> findAllStudentByLecturerId(Long lecturerId);
 }

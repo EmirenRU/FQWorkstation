@@ -10,4 +10,6 @@ public interface LecturerService {
     LecturerDTO findByLecturerName(String name);
 
     List<LecturerDTO> getAllLecturer();
+
+    List<LecturerDTO> findAllLecturersById(Long lecturerId);
 }
