@@ -17,7 +17,7 @@ html {
   .tr-table{
     display: flex;
     width: 100%;
-    outline : 1px solid black;
+    outline : 0.5px solid black;;
     flex-direction: row;
   }
 
@@ -26,7 +26,7 @@ html {
     flex-direction: column;
     width:12.5%;
     padding: 0.5%;
-    outline : 1px solid black;
+    outline : 0.5px solid black;
     justify-content: center;
   }
   
@@ -68,6 +68,10 @@ html {
     margin-right: auto;
   }
 
+  .header__logo-inside{
+    padding-left: 25px;
+  }
+
   .header__container{
     padding-top: 25px;
     padding-bottom: 25px;
@@ -91,7 +95,7 @@ html {
   .nav__list {
     list-style: none;
     display: flex;
-    margin-right: 80px;
+    padding-right: 25px;
   }
   
   .nav__links {
@@ -100,7 +104,6 @@ html {
     color: #4670e4;
     text-decoration: none;
     font-size: 18px;
-    line-height: 21.94px;
     font-weight: 600;
     line-height: 22px;
     letter-spacing: -0.13px;
@@ -140,6 +143,7 @@ html {
     border-radius: 15px;
     min-height: 106px;
     border: 5px solid rgba(70,156,235,0.75);
+    width: 95%;
   }
   
 
@@ -276,8 +280,14 @@ html {
 
   .icons__social:not(:last-child){
     margin-right: 50px;
+    width: 60px;
+    display: inline-block;
   }
 
   .display{
     margin-bottom: 50px;
+  }
+
+  .icons-social{
+    width: 60px;
   }

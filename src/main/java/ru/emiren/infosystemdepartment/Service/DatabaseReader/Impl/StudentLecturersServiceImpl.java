@@ -6,6 +6,8 @@ import ru.emiren.infosystemdepartment.Mapper.StudentLecturersMapper;
 import ru.emiren.infosystemdepartment.Repository.StudentLecturerRepository;
 import ru.emiren.infosystemdepartment.Service.DatabaseReader.StudentLecturersService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

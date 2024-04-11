@@ -11,5 +11,7 @@ public interface LecturerService {
 
     List<LecturerDTO> getAllLecturer();
 
+    LecturerDTO createDummyLecturer();
+
     List<LecturerDTO> findAllLecturersById(Long lecturerId);
 }

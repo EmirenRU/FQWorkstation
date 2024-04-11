@@ -34,8 +34,16 @@ public class LecturerServiceImpl implements LecturerService {
 
     @Override
     public List<LecturerDTO> getAllLecturer() {
-        List<Lecturer> lecturers = lecturerRepository.findAll();
-        return lecturers.stream().map(LecturerMapper::mapToLecturerDTO).collect(Collectors.toList());
+        List<LecturerDTO> lecturers = lecturerRepository.findAll()
+                .stream().map(LecturerMapper::mapToLecturerDTO).collect(Collectors.toList());
+        return lecturers;
+    }
+
+    @Override
+    public LecturerDTO createDummyLecturer() {
+        return new LecturerDTO().builder()
+                .id(null)
+                .build();
     }
 
     @Override

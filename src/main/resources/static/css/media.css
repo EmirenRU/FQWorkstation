@@ -13,7 +13,7 @@
     
       .container {
         max-width: 1000px;
-        padding: 0 51px;
+        padding: 0 25px;
         margin: 0 auto;
         width: 100%;
     
@@ -33,10 +33,6 @@
         max-width: 100%;
       }
     
-      .nav__list {
-        margin-right: 104px;
-        padding: 0;
-      }
     
       .header__logo__picture {
         max-width: 150px;
@@ -73,10 +69,12 @@
 
         .selector-patch{
           width: 110px;
+          margin-right: 2%;
         }
 
         .selector-patch-2{
           width: 110px;
+          margin-right: 5%;
         }
 
         .slider-val{
@@ -90,7 +88,11 @@
       }
 
       .margin-fix{
-        margin-right: auto;
+        margin-right:   2%;
+      }
+
+      .val{
+        width: 100%;
       }
     
 }

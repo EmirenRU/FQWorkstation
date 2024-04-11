@@ -15,14 +15,14 @@ public class FQWMapper {
                 .build();
     }
 
-    public static FQWDTO mapToFQWDTO(FQWDTO fqwdto){
+    public static FQWDTO mapToFQWDTO(FQW fqw){
         return FQWDTO.builder()
-                .name(fqwdto.getName())
-                .classifier(fqwdto.getClassifier())
-                .uniqueness(fqwdto.getUniqueness())
-                .feedback(fqwdto.getFeedback())
-                .volume(fqwdto.getVolume())
-                .reviewer(fqwdto.getReviewer())
+                .name(fqw.getName())
+                .classifier(fqw.getClassifier())
+                .uniqueness(fqw.getUniqueness())
+                .feedback(fqw.getFeedback())
+                .volume(fqw.getVolume())
+                .reviewer(fqw.getReviewer())
                 .build();
     }
 }
