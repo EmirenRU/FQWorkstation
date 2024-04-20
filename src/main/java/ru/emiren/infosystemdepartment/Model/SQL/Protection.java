@@ -1,11 +1,7 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import lombok.*;
-import ru.emiren.infosystemdepartment.Repository.OrientationRepository;
 
 import java.time.LocalDate;
 

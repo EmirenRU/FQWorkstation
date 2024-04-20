@@ -3,10 +3,6 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.emiren.infosystemdepartment.Mapper.StudentMapper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table

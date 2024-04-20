@@ -169,7 +169,7 @@ html {
     flex-direction: column;
     align-items: flex-start;
     justify-content: left;
-    max-width: 169px;
+    width: 169px;
     margin-right: 2%;
   }
 
@@ -291,3 +291,139 @@ html {
   .icons-social{
     width: 60px;
   }
+
+
+  .form__header-support {
+    margin: 0;
+    margin-bottom: 25px;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 59px;
+    color: #CACACA;
+  }
+  
+  .form-body-support {
+    /*flex-shrink: 1;*/
+    margin: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 31px 28px 30px;
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    min-height: 106px;
+    border: 5px solid rgba(70,156,235,0.75);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input {
+    max-width: 570px;
+  }
+  
+  .input__str {
+    color: #FFFFFF;
+    border: 0;
+    background-color: #414141;
+    transition: background-color 0.3s ease-in-out;
+    border-radius: 16px;
+    min-height: 60px;
+    width: 570px;
+    padding-left: 24px;
+    vertical-align: middle;
+    margin-bottom: 25px;
+  }
+  
+  .input__str-msg {
+    color: #FFFFFF;
+    border: 0;
+    background-color: #414141;
+    transition: background-color 0.3s ease-in-out;
+    border-radius: 16px;
+    width: 100%;
+    padding-left: 24px;
+    vertical-align: middle;
+    padding-top: 24px;
+    min-height: 150px;
+    margin-bottom: 32px;
+  }
+  
+  .send {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  
+  
+  .custom {
+    color: #CACACA
+  }
+  
+  .custom-checkbox {
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  .custom-checkbox:focus-within{
+    outline: #0051ff 2px solid;
+  }
+  
+  .custom-input {
+    appearance: none;
+    position: absolute;
+  }
+  
+  .custom-text {
+    position: relative;
+    padding-left: 20px;
+  }
+  
+  .custom-text::before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #CACACA;
+    transform: translateY(-50%);
+  }
+  
+  .custom-text::after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #CACACA;
+    transform: translateY(-50%);
+    background-image: url(../img/checked.svg);
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    opacity: 0;
+  }
+  
+  .send__button {
+    background-color: #006eff;
+    color: #FFFFFF;
+    border-radius: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out;
+    max-width: 275px;
+    padding: 20px 52px;
+    font-size: 16px;
+    line-height: 15.5px;
+    letter-spacing: -0.5px;
+    margin-right: 20px;
+  }
+  
+  .send__text {
+    letter-spacing: 0.25px;
+  }
+  
+  .custom-input:checked+.custom-text::after {
+    opacity: 1;
+  }
+  

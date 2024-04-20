@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/media.css">
+    <link href="/thirdParty/select2/css/select2.min.css" rel="stylesheet" />
+    <script src="/thirdParty/select2/js/select2.min.js"></script>
+    <script src="/js/index.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header__container flex">
+          <div class="container flex">
+            <a href="#" class="header__logo">
+              <div class="header__logo-inside flex">
+                <img src="img/rudn_logo.png" alt="Евклид" class="header__logo__picture">
+              </div>
+            </a>
+            <nav class="nav flex">
+              <ul class="list-reset nav__list flex">
+                <li class="nav__item"><a class="nav__links" href="#">Учителям</a></li>
+                <li class="nav__item"><a class="nav__links" href="students.html">Ученикам</a></li>
+                <li class="nav__item"><a class="nav__links" href="#">Вопросы</a></li>
+                <li class="nav__item"><a class="nav__links" href="#">Поддержка</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        
+      </header>
+      <div class="form-support">
+        <h3 class="form__header-support">Оставить заявку</h3>
+        <form action="https://jsonplaceholder.typicode.com/posts" method="post" th:action="@{/support}" th:object="${data}" class="form-body-support" role="form">
+          <div class="input">
+            <input
+                    type="text"
+                    name="name"
+                    class="input__str"
+                    th:field="*{fullName}"
+                    placeholder="Фамилия, имя и отчество*"
+                    required
+                    aria-label="Фамилия, имя и отчество"
+            >
+            <input
+                    type="tel"
+                    name="name"
+                    class="input__str"
+                    th:field="*{phone}"
+                    placeholder="Введите номер телефона"
+                    required
+                    aria-label="Введите номер телефона"
+            >
+            <input
+                    type="email"
+                    name="e-mail"
+                    th:field="*{email}"
+                    class="input__str"
+                    placeholder="Email*"
+                    required>
+            <textarea
+                    name="msg"
+                    th:field="*{description}"
+                    class="input__str-msg msg-box"
+                    placeholder="Сообщение"
+            ></textarea>
+          </div>
+          <div class="send flex">
+            <button class="btn-reset send__button"> <span class="send__text">Отправить данные</span></button>
+
+            <div class="custom">
+              <label class="custom-checkbox">
+                <input type="checkbox" name="agreement" class="custom-input" role="checkbox" aria-checked="false">
+                <span class="custom-text">Согласен на обработку данных</span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+</body>
+</html>

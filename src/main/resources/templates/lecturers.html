@@ -21,16 +21,13 @@
             <nav class="nav flex">
                 <ul class="list-reset nav__list flex">
                     <li class="nav__item">
-                        <a class="nav__links" href="#">Учителям</a>
+                        <a class="nav__links" th:href="@{/sql/lecturers}">Учителям</a>
                     </li>
                     <li class="nav__item">
-                        <a class="nav__links" href="students.html">Ученикам</a>
+                        <a class="nav__links" th:href="@{/faq}">Вопросы</a>
                     </li>
                     <li class="nav__item">
-                        <a class="nav__links" href="#">Вопросы</a>
-                    </li>
-                    <li class="nav__item">
-                        <a class="nav__links" href="#">Поддержка</a>
+                        <a class="nav__links" th:href="@{/support}">Поддержка</a>
                     </li>
                 </ul>
             </nav>
@@ -52,7 +49,7 @@
                                 </option>
                                 <option th:each="orientation :${orientations_selector}"
                                         th:value="${orientation.code}"
-                                        th:text="${orientation.name}">
+                                        th:text="${orientation.toString()}">
                                 </option>
                             </select>
                         </label>
