@@ -18,5 +18,5 @@ public class ProtectionDTO {
 
     @JsonFormat(pattern = "dd-MM-yyyy") // пока под вопросом (над сделать запрос на проверку ошибки)
     @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate dataOfProtection;
+    private LocalDate dateOfProtection;
 }

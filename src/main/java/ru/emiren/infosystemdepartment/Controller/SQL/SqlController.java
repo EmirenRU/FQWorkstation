@@ -10,6 +10,7 @@ import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -29,6 +30,8 @@ public class SqlController {
     List<OrientationDTO> orientationDTOS;
     List<DepartmentDTO> departmentDTOS;
     List<FQWDTO> fqwdtos;
+
+    DateTimeFormatter dateTimeFormatter;
 
     @Autowired
     public SqlController(StudentService studentService,
@@ -52,11 +55,8 @@ public class SqlController {
         departmentDTOS = departmentService.getAllDepartments();
         orientationDTOS = orientationService.getAllOrientations();
         fqwdtos = fqwService.getAllFQW();
-    }
 
-    @GetMapping("")
-    public String main(Model model){
-        return "redirect:/lecturer";
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     }
 
     @GetMapping("lecturers")
@@ -82,21 +82,22 @@ public class SqlController {
         Long lecturerId = Long.valueOf(request.getParameter("lecturer"));
         String orientationCode = request.getParameter("orientation");
         String departmentCode = request.getParameter("department");
-        String strDate = request.getParameter("date");
-        String theme = request.getParameter("theme");
+        String theme = request.getParameter("themes");
+        String strDate =request.getParameter("date");
         LocalDate date = null;
 
-        if (!strDate.isEmpty()) {
+        if (!strDate.isEmpty()){
             date = LocalDate.parse(strDate);
         }
+
         // Init models for selectors
         model.addAttribute("lecturers_selector", lecturerDTOS);
         model.addAttribute("departments_selector", departmentDTOS);
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
 
-        model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerName());
-        model.addAttribute("studentLecturers_container_temp", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
+//        model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerName());
+        model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
 
 
         if (lecturerId == -1){

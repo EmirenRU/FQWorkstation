@@ -8,7 +8,7 @@ public class ProtectionMapper {
         return Protection.builder()
                 .id(protectionDTO.getId())
                 .orientation(protectionDTO.getOrientation())
-                .dataOfProtection(protectionDTO.getDataOfProtection())
+                .dateOfProtection(protectionDTO.getDateOfProtection())
                 .build();
     }
 
@@ -16,7 +16,7 @@ public class ProtectionMapper {
         return ProtectionDTO.builder()
                 .id(protection.getId())
                 .orientation(protection.getOrientation())
-                .dataOfProtection(protection.getDataOfProtection())
+                .dateOfProtection(protection.getDateOfProtection())
                 .build();
     }
 }

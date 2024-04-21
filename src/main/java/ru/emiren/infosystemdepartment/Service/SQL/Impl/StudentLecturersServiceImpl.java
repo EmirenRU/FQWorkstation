@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
+import ru.emiren.infosystemdepartment.Mapper.SQL.LecturerMapper;
 import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
 import ru.emiren.infosystemdepartment.Repository.SQL.StudentLecturerRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.StudentLecturersService;
@@ -36,7 +37,13 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
 
     @Override
     public List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(String orientationCode, String departmentCode, LocalDate date, String theme, Long lecturerId) {
-        return null;
-//        return studentLecturerRepository.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId);
+        return studentLecturerRepository.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
+        (orientationCode,
+        departmentCode,
+        date,
+        theme,
+        lecturerId).stream()
+                .map(StudentLecturersMapper::mapToStudentLecturersDTO)
+                .collect(Collectors.toList());
     }
 }

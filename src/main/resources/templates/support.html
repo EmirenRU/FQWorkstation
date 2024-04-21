@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,10 +23,9 @@
             </a>
             <nav class="nav flex">
               <ul class="list-reset nav__list flex">
-                <li class="nav__item"><a class="nav__links" href="#">Учителям</a></li>
-                <li class="nav__item"><a class="nav__links" href="students.html">Ученикам</a></li>
-                <li class="nav__item"><a class="nav__links" href="#">Вопросы</a></li>
-                <li class="nav__item"><a class="nav__links" href="#">Поддержка</a></li>
+                <li class="nav__item"><a class="nav__links" th:href="@{/sql/lecturers}">Учителям</a></li>
+                <li class="nav__item"><a class="nav__links" th:href="@{/faq}">Вопросы</a></li>
+                <li class="nav__item"><a class="nav__links" th:href="@{/support}">Поддержка</a></li>
               </ul>
             </nav>
           </div>
@@ -33,7 +33,7 @@
         
       </header>
       <div class="form-support">
-        <h3 class="form__header-support">Оставить заявку</h3>
+        <h3 class="form__header">Оставить заявку</h3>
         <form action="https://jsonplaceholder.typicode.com/posts" method="post" th:action="@{/support}" th:object="${data}" class="form-body-support" role="form">
           <div class="input">
             <input

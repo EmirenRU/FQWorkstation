@@ -10,5 +10,10 @@ public interface StudentLecturersService {
 
     List<StudentLecturersDTO> findAllAndSortedByLecturerName();
 
-    List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(String orientationCode, String departmentCode, LocalDate date, String theme, Long lecturerId);
+    List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
+            (String orientationCode,
+             String departmentCode,
+             LocalDate date,
+             String theme,
+             Long lecturerId);
 }

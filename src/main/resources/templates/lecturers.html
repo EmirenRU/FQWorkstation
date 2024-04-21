@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th='http://thymeleaf.org'>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +13,12 @@
     <script src="/thirdParty/select2/js/select2.min.js"></script>
     <script src="/js/index.js"></script>
 </head>
+
 <body>
 <header class="header">
     <div class="header__container flex">
         <div class="container flex">
-            <a href="#" class="header__logo">
+            <a th:href="@{/}" class="header__logo">
                 <div class="header__logo-inside flex"><img src="/img/rudn_logo.png" alt="Евклид" class="header__logo__picture"></div></a>
             <nav class="nav flex">
                 <ul class="list-reset nav__list flex">
@@ -71,13 +73,14 @@
 
                     <div class="selector-patch-2">
                         <label class="selection-param">Дата защиты
-                            <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}">
+                            <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                         </label>
                     </div>
 
                     <div class="selector-patch-2">
                         <label class="selection-param">Тема
                             <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'">
+                                <option th:value="-1">Выберите тему: </option>
                                 <option th:each="theme : ${themes_selector}"
                                         th:text="${theme.name}"
                                         th:value="${theme.name}">
@@ -106,19 +109,19 @@
     <section class="display">
         <div class="container">
             <h2 class="section-header">Документ</h2>
-            <table>
-                <tr>
-                    <th>ФИО Преподавателя</th>
-                    <th>Ученная степень</th>
-                    <th>Должность</th>
-                    <th>Кафедра</th>
-                    <th>ФИО Студента</th>
-                    <th>Студ.Номер</th>
-                    <th>Гражданство</th>
-                    <th>Тема</th>
+            <table class="columns">
+                <tr class="tr-table">
+                    <th class="td-table">ФИО Преподавателя</th>
+                    <th class="td-table">Ученная степень</th>
+                    <th class="td-table">Должность</th>
+                    <th class="td-table">Кафедра</th>
+                    <th class="td-table">ФИО Студента</th>
+                    <th class="td-table">Студ.Номер</th>
+                    <th class="td-table">Гражданство</th>
+                    <th class="td-table">Тема</th>
                 </tr>
             </table>
-            <div class="container">
+            <div class="container leveling">
                 <table>
                     <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
                         <td class="td-table" th:text="${stlec.lecturer.fio}"></td>
@@ -140,16 +143,16 @@
         <div class="footer__left">
             <ul class="footer__list">
                 <li class="footer__list__item">
-                    <a class="footer__link" href="#">О&nbsp;нас</a>
+                    <a class="footer__link" th:href="@{#}">О&nbsp;нас</a>
                 </li>
                 <li class="footer__list__item">
-                    <a class="footer__link" href="#">Проекты</a>
+                    <a class="footer__link" th:href="@{https://github.com/EmirenRU?tab=repositories}">Проекты</a>
                 </li>
                 <li class="footer__list__item">
-                    <a class="footer__link" href="#">FAQ</a>
+                    <a class="footer__link" th:href="@{/faq}">FAQ</a>
                 </li>
                 <li class="footer__list__item">
-                    <a class="footer__link" href="#">Сообщить о проблеме</a>
+                    <a class="footer__link" th:href="@{/support}">Сообщить о проблеме</a>
                 </li>
             </ul>
             <div class="icons">
