@@ -76,7 +76,7 @@
                             <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                         </label>
                     </div>
-
+<!--#dates.format(#dates.createNow(), 'dd-MM-yyyy')-->
                     <div class="selector-patch-2">
                         <label class="selection-param">Тема
                             <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'">
@@ -101,7 +101,7 @@
                                 </option>
                             </select>
                         </label>
-                    </div><button class="btn-reset form-button list-button">Получить</button>
+                    </div><button class="btn-reset form-button list-button" >Получить</button>
                 </form>
             </div>
         </div>
@@ -109,19 +109,21 @@
     <section class="display">
         <div class="container">
             <h2 class="section-header">Документ</h2>
-            <table class="columns">
-                <tr class="tr-table">
-                    <th class="td-table">ФИО Преподавателя</th>
-                    <th class="td-table">Ученная степень</th>
-                    <th class="td-table">Должность</th>
-                    <th class="td-table">Кафедра</th>
-                    <th class="td-table">ФИО Студента</th>
-                    <th class="td-table">Студ.Номер</th>
-                    <th class="td-table">Гражданство</th>
-                    <th class="td-table">Тема</th>
-                </tr>
-            </table>
             <div class="container leveling">
+                <table class="columns">
+                    <thead>
+                        <tr class="tr-table">
+                            <th class="td-table">ФИО Преподавателя</th>
+                            <th class="td-table">Ученная степень</th>
+                            <th class="td-table">Должность</th>
+                            <th class="td-table">Кафедра</th>
+                            <th class="td-table">ФИО Студента</th>
+                            <th class="td-table">Студ.Номер</th>
+                            <th class="td-table">Гражданство</th>
+                            <th class="td-table">Тема</th>
+                        </tr>
+                    </thead>
+                </table>
                 <table>
                     <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
                         <td class="td-table" th:text="${stlec.lecturer.fio}"></td>

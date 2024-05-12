@@ -18,6 +18,10 @@ import ru.emiren.infosystemdepartment.Properties.PostgreSQLDataSourceProperties;
 import javax.sql.DataSource;
 import java.util.HashMap;
 
+/**
+ * Конфигурация для второго источника данных (Support), использующего PostgreSQL,
+ * с настройками EntityManagerFactory, DataSource и TransactionManager.
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
@@ -28,17 +32,30 @@ import java.util.HashMap;
 public class DataDatabaseConfig {
     PostgreSQLDataSourceProperties postgreSQLDataSourceProperties;
 
+    /**
+     * Конструктор, используемый для внедрения зависимостей.
+     * @param postgreSQLDataSourceProperties объект настроек для PostgreSQL.
+     */
     @Autowired
     public DataDatabaseConfig(PostgreSQLDataSourceProperties postgreSQLDataSourceProperties) {
         this.postgreSQLDataSourceProperties = postgreSQLDataSourceProperties;
     }
 
+    /**
+     * Определение бина источника данных для второго источника (support-datasource).
+     * @return настроенный DataSource.
+     */
     @Bean(name = "dataDataSource")
     @ConfigurationProperties(prefix = "spring.second-datasource")
-    public DataSource dataDataSource() {
-        return DataSourceBuilder.create().build();
-    }
+    public DataSource dataDataSource() { return DataSourceBuilder.create().build(); }
 
+
+    /**
+     * Создает LocalContainerEntityManagerFactoryBean для JPA с заданным источником данных и параметрами.
+     * @param builder объект для построения EntityManagerFactory.
+     * @param dataSource источник данных.
+     * @return LocalContainerEntityManagerFactoryBean для JPA.
+     */
     @Bean(name = "dataEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean dataEntityManagerFactory
             (EntityManagerFactoryBuilder builder,
@@ -53,6 +70,11 @@ public class DataDatabaseConfig {
                 .build();
     }
 
+    /**
+     * Создает транзакционный менеджер для JPA с указанной фабрикой EntityManager.
+     * @param entityManagerFactory фабрика EntityManager.
+     * @return транзакционный менеджер для JPA.
+     */
     @Bean(name = "dataTransactionManager")
     public PlatformTransactionManager dataTransactionManager
             (@Qualifier("dataEntityManagerFactory") EntityManagerFactory entityManagerFactory) {

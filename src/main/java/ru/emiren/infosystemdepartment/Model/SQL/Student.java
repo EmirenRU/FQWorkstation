@@ -40,4 +40,8 @@ public class Student {
     @OneToMany(cascade = CascadeType.ALL )
     @JoinColumn(name = "lecturer_id")
     private List<StudentLecturers> lecturers = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="student_id")
+    private List<YearStudent> yearStudents = new ArrayList<>();
 }

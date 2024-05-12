@@ -14,6 +14,11 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
     @Query("SELECT sl FROM StudentLecturers sl ORDER BY sl.lecturer.fio")
     List<StudentLecturers> findAllSorted();
 
+    // TODO make a javadoc for every methods and README.md for structure of project
+    // TODO make a annual year backup for data_${year}.sql
+    // TODO make student [1 or(N)]<->1 RelevantNotRelevant
+    // TODO make an api for minimal saving from HttpRequest (REST)
+    // TODO to write a letter about dhcp server and about static ip-address
     @Query("SELECT sl FROM StudentLecturers sl " +
             "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code " +
             "WHERE " +

@@ -1,13 +1,17 @@
 package ru.emiren.infosystemdepartment.Controller.SQL;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
+import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +29,7 @@ public class SqlController {
     ProtectionService protectionService;
     StudentLecturersService studentLecturersService;
     FQWService fqwService;
+    WordService wordService;
 
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
@@ -32,6 +37,9 @@ public class SqlController {
     List<FQWDTO> fqwdtos;
 
     DateTimeFormatter dateTimeFormatter;
+
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDate date;
 
     @Autowired
     public SqlController(StudentService studentService,
@@ -41,7 +49,8 @@ public class SqlController {
                          ProtectionService protectionService,
                          StudentLecturersService studentLecturersService,
                          LecturerRepository lecturerRepository,
-                         FQWService fqwService){
+                         FQWService fqwService,
+                         WordService wordService){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
         this.lecturerService            = lecturerService;
@@ -50,13 +59,12 @@ public class SqlController {
         this.studentLecturersService    = studentLecturersService;
         this.lecturerRepository         = lecturerRepository;
         this.fqwService                 = fqwService;
-
+        this.wordService                = wordService;
         lecturerDTOS = lecturerService.getAllLecturer();
         departmentDTOS = departmentService.getAllDepartments();
         orientationDTOS = orientationService.getAllOrientations();
         fqwdtos = fqwService.getAllFQW();
-
-        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     }
 
     @GetMapping("lecturers")
@@ -65,6 +73,10 @@ public class SqlController {
         model.addAttribute("departments_selector", departmentDTOS);
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
+
+        date = LocalDate.now();
+        wordService.generateWordDocument();
+        model.addAttribute("date", date);
         return "lecturers";
     }
 
@@ -105,6 +117,8 @@ public class SqlController {
             return "lecturers";
         }
 
+
+
         // TODO make one or ALL
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
@@ -119,10 +133,15 @@ public class SqlController {
 
         model.addAttribute("specificLecturer", lecturerDTO);
 
-
-
         return "lecturers";
     }
+
+
+//    @GetMapping("lecturers/${year}")
+//    public String CreateLecturerForm(Model model,
+//                                     @NotNull @Param("year") LocalDate date){
+//
+//    }
 
     @GetMapping("Students")
     public String CreateStudentForm(Model model){

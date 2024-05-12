@@ -407,3 +407,7 @@ INSERT INTO student_lecturers (student_id, lecturer_id, isconsultant, isscientif
                                                                                                   (87, 5, FALSE, TRUE),
                                                                                                   (88, 8, FALSE, TRUE),
                                                                                                   (89, 4, FALSE, TRUE);
+
+INSERT INTO year(year) VALUES (2024);
+
+INSERT INTO year_student(student_id, year_date) SELECT id, '2024' FROM student;
