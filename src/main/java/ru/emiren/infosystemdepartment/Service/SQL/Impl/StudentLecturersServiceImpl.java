@@ -46,4 +46,11 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
                 .map(StudentLecturersMapper::mapToStudentLecturersDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<StudentLecturersDTO> findAllAndSortedByDate(String date) {
+        return studentLecturerRepository.findAllSortedByDate(date).stream()
+                .map(StudentLecturersMapper::mapToStudentLecturersDTO)
+                .collect(Collectors.toList());
+    }
 }

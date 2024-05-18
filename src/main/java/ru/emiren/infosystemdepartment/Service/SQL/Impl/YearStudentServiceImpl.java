@@ -2,10 +2,15 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.emiren.infosystemdepartment.DTO.SQL.YearStudentDTO;
+import ru.emiren.infosystemdepartment.Mapper.SQL.YearStudentMapper;
 import ru.emiren.infosystemdepartment.Repository.SQL.StudentRepository;
 import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
 import ru.emiren.infosystemdepartment.Repository.SQL.YearStudentRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.YearStudentService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class YearStudentServiceImpl implements YearStudentService {
@@ -20,5 +25,12 @@ public class YearStudentServiceImpl implements YearStudentService {
         this.yearStudentRepository = yearStudentRepository;
         this.yearRepository = yearRepository;
         this.studentRepository = studentRepository;
+    }
+
+    @Override
+    public List<YearStudentDTO> getAllYearStudent() {
+        return yearStudentRepository.findAll().stream()
+                .map(YearStudentMapper::mapToYearStudentDTO)
+                .collect(Collectors.toList());
     }
 }

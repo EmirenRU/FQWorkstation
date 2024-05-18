@@ -16,4 +16,6 @@ public interface StudentLecturersService {
              LocalDate date,
              String theme,
              Long lecturerId);
+
+    List<StudentLecturersDTO> findAllAndSortedByDate(String date);
 }

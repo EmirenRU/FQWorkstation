@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 @Entity(name = "year_student")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -1,18 +1,25 @@
 package ru.emiren.infosystemdepartment.Controller.SQL;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
+import ru.emiren.infosystemdepartment.Model.SQL.Year;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
+import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,11 +37,13 @@ public class SqlController {
     StudentLecturersService studentLecturersService;
     FQWService fqwService;
     WordService wordService;
+    YearRepository yearRepository;
 
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
     List<DepartmentDTO> departmentDTOS;
     List<FQWDTO> fqwdtos;
+    List<Year> years;
 
     DateTimeFormatter dateTimeFormatter;
 
@@ -50,6 +59,7 @@ public class SqlController {
                          StudentLecturersService studentLecturersService,
                          LecturerRepository lecturerRepository,
                          FQWService fqwService,
+                         YearRepository yearRepository,
                          WordService wordService){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
@@ -60,9 +70,11 @@ public class SqlController {
         this.lecturerRepository         = lecturerRepository;
         this.fqwService                 = fqwService;
         this.wordService                = wordService;
+        this.yearRepository             = yearRepository;
         lecturerDTOS = lecturerService.getAllLecturer();
         departmentDTOS = departmentService.getAllDepartments();
         orientationDTOS = orientationService.getAllOrientations();
+        years = yearRepository.findAll();
         fqwdtos = fqwService.getAllFQW();
         dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     }
@@ -73,40 +85,63 @@ public class SqlController {
         model.addAttribute("departments_selector", departmentDTOS);
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
-
+        model.addAttribute("years_selector", years);
         date = LocalDate.now();
-        wordService.generateWordDocument();
         model.addAttribute("date", date);
         return "lecturers";
     }
 
-    // @RequestParam("lecturer") Long lecturerId,
+    @GetMapping("lecturers/{year}")
+    public String CreateLectureForm(Model model, @PathVariable String year){
+        System.out.println(year + " " + year.getClass());
 
-//    @RequestParam("lecturer") Long lecturerId,
-//
-//                                 @RequestParam("department") String departmentCode,
-    //                                 @RequestParam("orientation") List<String> orientationCode,
+        model.addAttribute("lecturers_selector", lecturerDTOS);
+        model.addAttribute("departments_selector", departmentDTOS);
+        model.addAttribute("orientations_selector", orientationDTOS);
+        model.addAttribute("themes_selector", fqwdtos);
+        model.addAttribute("years_selector", years);
+        model.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
+
+        List<StudentLecturersDTO> list =  studentLecturersService.findAllAndSortedByDate(year);
+
+        if (list.isEmpty()){
+            return "redirect:/sql/lecturers/";
+        }
+
+        model.addAttribute("studentLecturers_container", list);
+        return "lecturers";
+    }
+
+    @GetMapping("/api/v1/download_protocols")
+    public String downloadProtocols(Model model,HttpServletResponse response) throws IOException {
+        XWPFDocument doc = wordService.generateWordDocument();
+        doc.write(new FileOutputStream("ddd.docx"));
+//        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+//        response.setHeader("Content-Disposition", "attachment; filename=\"protocols.docx\"");
+//        doc.write(response.getOutputStream());
+        doc.close();
+        return "lecturers";
+    }
+
     @PostMapping("lecturers")
     public String getLecturerers( HttpServletRequest request,
                                  Model model){
 
-//        List<String> orientationCodes = Arrays.asList(request.getParameterValues("orientation"));
         Long lecturerId = Long.valueOf(request.getParameter("lecturer"));
         String orientationCode = request.getParameter("orientation");
         String departmentCode = request.getParameter("department");
         String theme = request.getParameter("themes");
         String strDate =request.getParameter("date");
         LocalDate date = null;
-
         if (!strDate.isEmpty()){
             date = LocalDate.parse(strDate);
         }
-
         // Init models for selectors
         model.addAttribute("lecturers_selector", lecturerDTOS);
         model.addAttribute("departments_selector", departmentDTOS);
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
+        model.addAttribute("years_selector", years);
 
 //        model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerName());
         model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));

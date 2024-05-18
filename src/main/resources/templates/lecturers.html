@@ -22,6 +22,8 @@
                 <div class="header__logo-inside flex"><img src="/img/rudn_logo.png" alt="Евклид" class="header__logo__picture"></div></a>
             <nav class="nav flex">
                 <ul class="list-reset nav__list flex">
+
+
                     <li class="nav__item">
                         <a class="nav__links" th:href="@{/sql/lecturers}">Учителям</a>
                     </li>
@@ -30,6 +32,22 @@
                     </li>
                     <li class="nav__item">
                         <a class="nav__links" th:href="@{/support}">Поддержка</a>
+                    </li>
+
+                    <li>
+                        <a class="nav__links" th:href="@{/sql/api/v1/download_protocols}">Протоколы</a>
+                    </li>
+
+                    <li>
+                        <div class="dropdown">
+                            <button class="dropbtn">Dropdown</button>
+                            <div class="dropdown-content">
+                                <a th:each="year: ${years_selector}"
+                                   th:text="${year.year}"
+                                   th:value="${year.year}"
+                                   th:href="@{/sql/lecturers/{year}(year=${year.year})}"></a>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </nav>

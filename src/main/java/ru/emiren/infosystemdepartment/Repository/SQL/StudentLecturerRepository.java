@@ -34,4 +34,10 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
              LocalDate date,
              String theme,
              Long lecturerId);
+
+    @Query("SELECT sl from StudentLecturers sl " +
+            "JOIN year_student yr ON yr.student.stud_num = sl.student.stud_num " +
+            "WHERE yr.year.year = :date AND :date IS NOT NULL " +
+            "ORDER BY sl.lecturer.fio")
+    List<StudentLecturers> findAllSortedByDate(String date);
 }

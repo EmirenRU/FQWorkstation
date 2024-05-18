@@ -1,9 +1,11 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
 import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
+import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 
 import java.util.List;
 
 public interface OrientationService {
     List<OrientationDTO> getAllOrientations();
+
 }
