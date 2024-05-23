@@ -93,10 +93,10 @@ public class WordServiceImpl implements WordService {
 
                 XWPFTemplate tempTemplate = XWPFTemplate.compile(filePath).render(dataMap);
                 XWPFDocument tempDoc = tempTemplate.getXWPFDocument();
-
-                for (int j = 0; j < tempDoc.getParagraphs().size(); j++){
-                    tempDoc.getParagraph().setStyle();
-                }
+//
+//                for (int j = 0; j < tempDoc.getParagraphs().size(); j++){
+//                    tempDoc.getParagraph().setStyle();
+//                }
 
                 tempDoc.getParagraphs().forEach(p -> finalDocument.createParagraph().createRun().setText(p.getText()));
 

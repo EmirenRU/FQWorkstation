@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
 import ru.emiren.infosystemdepartment.Model.SQL.Year;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
@@ -81,51 +82,49 @@ public class SqlController {
 
     @GetMapping("lecturers")
     public String CreateLectureForm(Model model){
+        return "forward:lecturers/view";
+    }
+
+    @GetMapping("lecturers/view")
+    public String viewLecturer(Model model){
         model.addAttribute("lecturers_selector", lecturerDTOS);
         model.addAttribute("departments_selector", departmentDTOS);
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
         model.addAttribute("years_selector", years);
-        date = LocalDate.now();
-        model.addAttribute("date", date);
         return "lecturers";
     }
 
     @GetMapping("lecturers/{year}")
     public String CreateLectureForm(Model model, @PathVariable String year){
-        System.out.println(year + " " + year.getClass());
-
-        model.addAttribute("lecturers_selector", lecturerDTOS);
-        model.addAttribute("departments_selector", departmentDTOS);
-        model.addAttribute("orientations_selector", orientationDTOS);
-        model.addAttribute("themes_selector", fqwdtos);
-        model.addAttribute("years_selector", years);
-        model.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
 
         List<StudentLecturersDTO> list =  studentLecturersService.findAllAndSortedByDate(year);
 
         if (list.isEmpty()){
-            return "redirect:/sql/lecturers/";
+            return "redirect:/sql/lecturers";
         }
 
+        model.addAttribute("flag", true);
+        model.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
         model.addAttribute("studentLecturers_container", list);
-        return "lecturers";
+        return "forward:/sql/lecturers/view";
     }
 
     @GetMapping("/api/v1/download_protocols")
     public String downloadProtocols(Model model,HttpServletResponse response) throws IOException {
         XWPFDocument doc = wordService.generateWordDocument();
-        doc.write(new FileOutputStream("ddd.docx"));
-//        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-//        response.setHeader("Content-Disposition", "attachment; filename=\"protocols.docx\"");
-//        doc.write(response.getOutputStream());
+        response.setContentType("application/msword");
+        response.setHeader("Content-Disposition", "attachment; filename=\"protocols.docx\"");
+        doc.write(response.getOutputStream());
         doc.close();
         return "lecturers";
     }
 
     @PostMapping("lecturers")
-    public String getLecturerers( HttpServletRequest request,
-                                 Model model){
+    public String getLecturers(HttpServletRequest request,
+                               Model model,
+                               RedirectAttributes redirectAttributes){
+
 
         Long lecturerId = Long.valueOf(request.getParameter("lecturer"));
         String orientationCode = request.getParameter("orientation");
@@ -133,54 +132,41 @@ public class SqlController {
         String theme = request.getParameter("themes");
         String strDate =request.getParameter("date");
         LocalDate date = null;
+
         if (!strDate.isEmpty()){
             date = LocalDate.parse(strDate);
         }
-        // Init models for selectors
+
+//        redirectAttributes.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
+//        redirectAttributes.addAttribute("flag", true);
+
+
+        model.addAttribute("studentLecturers_container",
+                studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
+
         model.addAttribute("lecturers_selector", lecturerDTOS);
         model.addAttribute("departments_selector", departmentDTOS);
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
         model.addAttribute("years_selector", years);
 
-//        model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerName());
-        model.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
-
+        model.addAttribute("flag", true);
 
         if (lecturerId == -1){
             model.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
+//            redirectAttributes.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
             return "lecturers";
         }
-
-
 
         // TODO make one or ALL
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
 
-        // Check if lectorDto is in
         LecturerDTO lecturerDTO = lecturerService.findByLecturerId(lecturerId);
 
-        List<StudentDTO> students = studentService.findAllStudentByLecturerIdAndOrientationCodeAndDepartmentCode(lecturerId, orientationCode, departmentCode);
-
-//        model.addAttribute("students_container", studentService.findAllStudentByLecturerId(lecturerId));
-//        model.addAttribute("lecturers_container", Arrays.asList(lecturerDTO));
-
         model.addAttribute("specificLecturer", lecturerDTO);
+//        redirectAttributes.addAttribute("specificLecturer", lecturerDTO);
 
         return "lecturers";
-    }
-
-
-//    @GetMapping("lecturers/${year}")
-//    public String CreateLecturerForm(Model model,
-//                                     @NotNull @Param("year") LocalDate date){
-//
-//    }
-
-    @GetMapping("Students")
-    public String CreateStudentForm(Model model){
-
-        return "students";
     }
 }
