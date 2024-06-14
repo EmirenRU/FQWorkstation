@@ -12,4 +12,6 @@ public class MainController {
     @GetMapping("/faq")
     public String faq(){ return "faq"; }
 
+    @GetMapping("/giveup")
+    public String giveup(){ return "redirect:https://youtu.be/dQw4w9WgXcQ?si=_A7-90hHkk9D5RRy"; }
 }

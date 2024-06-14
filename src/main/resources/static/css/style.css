@@ -300,6 +300,7 @@ main {
 	margin: 0;
 	font-size: 18px;
 	color: #FFFFFF;
+	text-shadow: 4px 4px 2px rgba(17, 17, 17, 0.6);
 }
 
 .footer__left {
@@ -322,6 +323,7 @@ main {
 
 .footer__link {
 	color: #E9E9E9;
+	text-shadow: 4px 4px 2px rgba(17, 17, 17, 0.6);
 	text-decoration: none;
 }
 
@@ -398,7 +400,12 @@ main {
 	justify-content: center;
 	align-items: center;
 	margin: 0 auto;
+	margin-bottom: 70px;
 }
+
+::placeholder { /* Most modern browsers support this now. */
+	color:    rgb(221, 221, 221);
+ }
 
 
 .form__header {
@@ -408,10 +415,10 @@ main {
 	font-weight: 400;
 	line-height: 59px;
 	color: #ffffff;
-	text-shadow: 1px 1px 7px #009dff,
-		1px 1px 10px #21aaff,
-		1px 1px 15px #25abff,
-		1px 1px 21px #2aadff;
+	text-shadow: 1px 1px 7px rgba(70, 156, 235, 0.75),
+		1px 1px 10px rgba(70, 156, 235, 0.75),
+		1px 1px 15px rgba(70, 156, 235, 0.75),
+		1px 1px 21px rgba(70, 156, 235, 0.75);
 }
 
 .form-body-support {
@@ -426,7 +433,7 @@ main {
 .input__str {
 	color: #FFFFFF;
 	border: 0;
-	background-color: #414141;
+	background-color: #676767;
 	transition: background-color 0.3s ease-in-out;
 	border-radius: 16px;
 	min-height: 60px;
@@ -439,7 +446,7 @@ main {
 .input__str-msg {
 	color: #FFFFFF;
 	border: 0;
-	background-color: #414141;
+	background-color: #676767;
 	transition: background-color 0.3s ease-in-out;
 	border-radius: 16px;
 	width: 100%;
@@ -457,7 +464,7 @@ main {
 
 
 .custom {
-	color: #CACACA
+	color: #4f4f4f;
 }
 
 .custom-checkbox {
@@ -486,7 +493,7 @@ main {
 	top: 50%;
 	width: 14px;
 	height: 14px;
-	border: 1px solid #CACACA;
+	border: 1px solid #4f4f4f;
 	transform: translateY(-50%);
 }
 
@@ -497,7 +504,7 @@ main {
 	top: 50%;
 	width: 14px;
 	height: 14px;
-	border: 1px solid #CACACA;
+	border: 1px solid #4f4f4f;
 	transform: translateY(-50%);
 	background-image: url(../img/checked.svg);
 	background-position: center;
