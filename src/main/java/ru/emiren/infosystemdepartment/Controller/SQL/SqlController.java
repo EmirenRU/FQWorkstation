@@ -1,5 +1,8 @@
 package ru.emiren.infosystemdepartment.Controller.SQL;
 
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.util.PoitlIOUtils;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -19,8 +22,11 @@ import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -112,11 +118,25 @@ public class SqlController {
 
     @GetMapping("/api/v1/download_protocols")
     public String downloadProtocols(Model model,HttpServletResponse response) throws IOException {
-        XWPFDocument doc = wordService.generateWordDocument();
-        response.setContentType("application/msword");
-        response.setHeader("Content-Disposition", "attachment; filename=\"protocols.docx\"");
-        doc.write(response.getOutputStream());
-        doc.close();
+        OutputStream out;
+        BufferedOutputStream bos;
+
+        try {
+            NiceXWPFDocument doc = wordService.generateWordDocument();
+            out = response.getOutputStream();
+            bos = new BufferedOutputStream(out);
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-disposition","attachment;filename=\""+"protocols.docx"+"\"");
+            doc.write(bos);
+            bos.flush();
+            out.flush();
+            PoitlIOUtils.closeQuietlyMulti(doc, bos, out);
+        } catch (IllegalStateException e){
+            System.out.println("Logs for WORD Templating");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         return "lecturers";
     }
 

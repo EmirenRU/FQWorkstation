@@ -1,15 +1,13 @@
 package ru.emiren.infosystemdepartment.Service.Word.Impl;
 
-import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.springframework.util.ResourceUtils;
+import com.deepoove.poi.XWPFTemplate;
+import org.springframework.util.ResourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
-import ru.emiren.infosystemdepartment.Model.SQL.Protection;
-import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
-import ru.emiren.infosystemdepartment.Model.SQL.YearStudent;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
@@ -50,12 +48,12 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public XWPFDocument generateWordDocument() {
+    public NiceXWPFDocument generateWordDocument() throws Exception{
         studentLecturersDTO = studentLecturersService.getAllStudentLecturers();
         protectionsDTO = protectionService.getAllProtections();
         yearStudentsDTO = yearStudentService.getAllYearStudent();
         orientationsDTO = orientationService.getAllOrientations();
-        XWPFDocument doc = createWordDocumentByTemplatesPath(studentLecturersDTO, protectionsDTO, yearStudentsDTO, orientationsDTO);
+        NiceXWPFDocument doc = createWordDocumentByTemplatesPath(studentLecturersDTO, protectionsDTO, yearStudentsDTO, orientationsDTO);
         return doc;
     }
 
@@ -63,16 +61,22 @@ public class WordServiceImpl implements WordService {
         return new XWPFDocument();
     }
 
-    private XWPFDocument createWordDocumentByTemplatesPath(List<StudentLecturersDTO> studentLecturers, List<ProtectionDTO> protections, List<YearStudentDTO> yearStudents, List<OrientationDTO> orientationsDTO) {
+    private NiceXWPFDocument createWordDocumentByTemplatesPath(List<StudentLecturersDTO> studentLecturers,
+                                                               List<ProtectionDTO> protections,
+                                                               List<YearStudentDTO> yearStudents,
+                                                               List<OrientationDTO> orientationsDTO)
+            throws Exception
+    {
         try {
             filePath = ResourceUtils.getFile("classpath:template.docx");
 
-            XWPFDocument finalDocument = new XWPFDocument();
+            NiceXWPFDocument source = new NiceXWPFDocument(new FileInputStream(filePath));
+            List<NiceXWPFDocument> documents = new ArrayList<>();
 
             for (int i = 0; i < studentLecturers.size(); i++) {
                 StudentLecturersDTO sl = studentLecturers.get(i);
                 Map<String, Object> dataMap = new HashMap<>();
-                dataMap.put("id", i);
+                dataMap.put("id", i+1);
                 LocalDate date = protectionService.getDateWithSpecificStudent(sl, protections);
                 dataMap.put("date", date);
                 dataMap.put("orientationCode", sl.getStudent().getOrientation().getCode());
@@ -90,24 +94,16 @@ public class WordServiceImpl implements WordService {
                 dataMap.put("consultantPos","?");
                 dataMap.put("consultantName","?");
 
-
-                XWPFTemplate tempTemplate = XWPFTemplate.compile(filePath).render(dataMap);
-                XWPFDocument tempDoc = tempTemplate.getXWPFDocument();
-//
-//                for (int j = 0; j < tempDoc.getParagraphs().size(); j++){
-//                    tempDoc.getParagraph().setStyle();
-//                }
-
-                tempDoc.getParagraphs().forEach(p -> finalDocument.createParagraph().createRun().setText(p.getText()));
-
-                finalDocument.createParagraph().createRun().addBreak();
-
-                tempTemplate.close();
+                documents.add(XWPFTemplate.compile(filePath).render(dataMap).getXWPFDocument());
             }
-            return finalDocument;
+            source = source.merge(documents, source.getParagraphArray(0).getRuns().get(0));
+
+            return source;
         } catch (IOException e) {
             System.out.println("Something wrong with Doc");
         }
         return null;
     }
+
+
 }
