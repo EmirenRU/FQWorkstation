@@ -1,4 +1,4 @@
-package ru.emiren.infosystemdepartment.API;
+package ru.emiren.infosystemdepartment.Controller.API;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
