@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th='http://thymeleaf.org'
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title>Функционал</title>
+</head>
+<body layout:fragment="body">
+    <main layout:fragment="main">
+        <div class="container">
+            <div class="input__wrapper">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input name="file" type="file" id="input__file" class="input input__file", accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                    <label for="input__file" class="input__file-button">
+                            <span class="input__file-icon-wrapper">
+                                <img class="input__file-icon" src="img/upload.svg" alt="Выбрать файл" width="25">
+                            </span>
+                        <span class="input__file-button-text">Выберите файл</span>
+                    </label>
+                    <button type="submit">Upload</button>
+                </form>
+                <div id="uploadStatus"></div>
+            </div>
+            <a type="button" th:href="@{/api/v1/download_protocols}">Get Proton</a>
+        </div>
+    </main>
+    <script>
+        $(document).ready(function() {
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/v1/deserialization-data',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        $('#uploadStatus').html('<p>' + response + '</p>');
+                    },
+                    error: function(response) {
+                        $('#uploadStatus').html('<p>File upload failed.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

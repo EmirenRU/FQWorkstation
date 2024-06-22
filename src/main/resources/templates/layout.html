@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/thirdParty/select2/css/select2.min.css">
     <script src="/thirdParty/jquery/jquery-3.7.1.min.js"></script>
     <script src="/thirdParty/select2/js/select2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/js/index.js"></script>
 </head>
 
@@ -36,13 +37,7 @@
                     </li>
 
                     <li class="nav__item">
-                        <div class="dropdown">
-                            <button class="dropbtn">Функционал</button>
-                            <div class="dropdown-content">
-                                <a th:href="@{/api/v1/download_protocols}">Скачать Протокол</a>
-                                <a th:href="@{api/v2/refresh-db}">Обновить БД</a>
-                            </div>
-                        </div>
+                        <a class="nav__links" th:href="@{/functions}">Протокол</a>
                     </li>
 
                     <li class="nav__item">
@@ -62,7 +57,9 @@
     </div>
 </header>
 
-<main layout:fragment="main"></main>
+<body layout:fragment="body">
+    <main layout:fragment="main"></main>
+</body>
 
 <footer class="footer">
     <div class="container footer__container">

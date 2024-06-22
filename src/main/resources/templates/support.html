@@ -4,56 +4,58 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}"
 >
-
-<main layout:fragment="main">
-      </header>
-      <div class="form-support">
-        <h3 class="form__header">Оставить заявку</h3>
-        <form action="https://jsonplaceholder.typicode.com/posts" method="post" th:action="@{/support}" th:object="${data}" class="form-body-support" role="form">
-          <div class="input">
-            <input
-                    type="text"
-                    name="name"
-                    class="input__str"
-                    th:field="*{fullName}"
-                    placeholder="Фамилия, имя и отчество*"
-                    required
-                    aria-label="Фамилия, имя и отчество"
-            >
-            <input
-                    type="tel"
-                    name="name"
-                    class="input__str"
-                    th:field="*{phone}"
-                    placeholder="Введите номер телефона"
-                    required
-                    aria-label="Введите номер телефона"
-            >
-            <input
-                    type="email"
-                    name="e-mail"
-                    th:field="*{email}"
-                    class="input__str"
-                    placeholder="Email*"
-                    required>
-            <textarea
-                    name="msg"
-                    th:field="*{description}"
-                    class="input__str-msg msg-box"
-                    placeholder="Сообщение"
-            ></textarea>
-          </div>
-          <div class="send flex">
-            <button class="btn-reset send__button"> <span class="send__text">Отправить данные</span></button>
-
-            <div class="custom">
-              <label class="custom-checkbox">
-                <input type="checkbox" name="agreement" class="custom-input" role="checkbox" aria-checked="false">
-                <span class="custom-text">Согласен на обработку данных</span>
-              </label>
+<body layout:fragment="body">
+  <main layout:fragment="main">
+        </header>
+        <div class="form-support">
+          <h3 class="form__header">Оставить заявку</h3>
+          <form action="https://jsonplaceholder.typicode.com/posts" method="post" th:action="@{/support}" th:object="${data}" class="form-body-support" role="form">
+            <div class="input">
+              <input
+                      type="text"
+                      name="name"
+                      class="input__str"
+                      th:field="*{fullName}"
+                      placeholder="Фамилия, имя и отчество*"
+                      required
+                      aria-label="Фамилия, имя и отчество"
+              >
+              <input
+                      type="tel"
+                      name="name"
+                      class="input__str"
+                      th:field="*{phone}"
+                      placeholder="Введите номер телефона"
+                      required
+                      aria-label="Введите номер телефона"
+              >
+              <input
+                      type="email"
+                      name="e-mail"
+                      th:field="*{email}"
+                      class="input__str"
+                      placeholder="Email*"
+                      required>
+              <textarea
+                      name="msg"
+                      th:field="*{description}"
+                      class="input__str-msg msg-box"
+                      placeholder="Сообщение"
+              ></textarea>
             </div>
-          </div>
-        </form>
-      </div>
-</main>
+            <div class="send flex">
+              <button class="btn-reset send__button"> <span class="send__text">Отправить данные</span></button>
+
+              <div class="custom">
+                <label class="custom-checkbox">
+                  <input type="checkbox" name="agreement" class="custom-input" role="checkbox" aria-checked="false">
+                  <span class="custom-text">Согласен на обработку данных</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+  </main>
+  <footer layout:fragment="footer"></footer>
+</body>
 </html>

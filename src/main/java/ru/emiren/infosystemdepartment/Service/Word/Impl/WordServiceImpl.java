@@ -14,6 +14,7 @@ import ru.emiren.infosystemdepartment.Service.Word.WordService;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class WordServiceImpl implements WordService {
@@ -48,51 +49,68 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public NiceXWPFDocument generateWordDocument() throws Exception{
-        studentLecturersDTO = studentLecturersService.getAllStudentLecturers();
-        protectionsDTO = protectionService.getAllProtections();
-        yearStudentsDTO = yearStudentService.getAllYearStudent();
-        orientationsDTO = orientationService.getAllOrientations();
-        NiceXWPFDocument doc = createWordDocumentByTemplatesPath(studentLecturersDTO, protectionsDTO, yearStudentsDTO, orientationsDTO);
+    public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception{
+
+        NiceXWPFDocument doc = createWordDocumentByTemplatesPath(data);
         return doc;
+    }
+
+    @Override
+    public List<Map<String, String>> handleUploadFile(NiceXWPFDocument document) throws Exception {
+        return List.of();
+    }
+
+    @Override
+    public List<String> processTable(XWPFTable table, int indexRow, int numCells) {
+        XWPFTableRow row = table.getRow(indexRow);
+        return row.getTableCells().stream()
+                .map(cell -> cell.getText())
+                .collect(Collectors.toList());
     }
 
     private XWPFDocument createWordDocument() {
         return new XWPFDocument();
     }
 
-    private NiceXWPFDocument createWordDocumentByTemplatesPath(List<StudentLecturersDTO> studentLecturers,
-                                                               List<ProtectionDTO> protections,
-                                                               List<YearStudentDTO> yearStudents,
-                                                               List<OrientationDTO> orientationsDTO)
+    private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data)
             throws Exception
     {
         try {
-            filePath = ResourceUtils.getFile("classpath:template.docx");
+            filePath = ResourceUtils.getFile("classpath:temp.docx");
 
             NiceXWPFDocument source = new NiceXWPFDocument(new FileInputStream(filePath));
             List<NiceXWPFDocument> documents = new ArrayList<>();
 
-            for (int i = 0; i < studentLecturers.size(); i++) {
-                StudentLecturersDTO sl = studentLecturers.get(i);
+            for (List<String> arr : data) {
                 Map<String, Object> dataMap = new HashMap<>();
-                dataMap.put("id", i+1);
-                LocalDate date = protectionService.getDateWithSpecificStudent(sl, protections);
-                dataMap.put("date", date);
-                dataMap.put("orientationCode", sl.getStudent().getOrientation().getCode());
-                dataMap.put("orientationName", sl.getStudent().getOrientation().getName());
-                dataMap.put("studentName", sl.getStudent().getFio());
-                dataMap.put("theme", sl.getStudent().getFqw().getName());
-                dataMap.put("departmentName", sl.getStudent().getDepartment().getName());
-                dataMap.put("lecturerAcademicDegree", sl.getLecturer().getAcademicDegree());
-                dataMap.put("lecturerName", sl.getLecturer().getFio());
-                dataMap.put("lecturerPos", sl.getLecturer().getPosition());
-                dataMap.put("reviewerAD","?");
-                dataMap.put("reviewerPos","?");
-                dataMap.put("reviewerName","?");
-                dataMap.put("consultantAD","?");
-                dataMap.put("consultantPos","?");
-                dataMap.put("consultantName","?");
+                dataMap.put("№01", arr.get(0));
+//                dataMap.put("date", LocalDate.now());
+//                dataMap.put("orientationCode", "OrientationCode");
+//                dataMap.put("orientationName", "orientationName");
+                dataMap.put("№02", arr.get(1));
+                dataMap.put("№03", arr.get(2));
+//                dataMap.put("departmentName", sl.getStudent().getDepartment().getName());
+                dataMap.put("№04", arr.get(3));
+                dataMap.put("№05", arr.get(4));
+                dataMap.put("№06", arr.get(5));
+                dataMap.put("№07",arr.get(6));
+                dataMap.put("№08", arr.get(7));
+                dataMap.put("№09", arr.get(8));
+                dataMap.put("№10", arr.get(9));
+                dataMap.put("№11", arr.get(11));
+                dataMap.put("№12", arr.get(12));
+                dataMap.put("№13", arr.get(13));
+                dataMap.put("№14", arr.get(14));
+                dataMap.put("№15", arr.get(15));
+                dataMap.put("№16", arr.get(16));
+                dataMap.put("№17", arr.get(18));
+                dataMap.put("№18", arr.get(19));
+                dataMap.put("№19", arr.get(20));
+                dataMap.put("№20", arr.get(21));
+                dataMap.put("№21", arr.get(22));
+                dataMap.put("№22", arr.get(23));
+                dataMap.put("№23", arr.get(24));
+
 
                 documents.add(XWPFTemplate.compile(filePath).render(dataMap).getXWPFDocument());
             }

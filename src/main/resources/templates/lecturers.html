@@ -4,109 +4,109 @@
       layout:decorate="~{layout}">
 
 
+<body layout:fragment="body">
+    <main layout:fragment="main">
+        <section  class="contacts-form">
+            <div class="container form-container">
+                <h2 class="section-header form-header">Получить документ</h2>
+                <div class="form-space flex">
+                    <form method="post" class="form-body" th:action="@{/sql/lecturers}">
 
-<main layout:fragment="main">
-    <section  class="contacts-form">
-        <div class="container form-container">
-            <h2 class="section-header form-header">Получить документ</h2>
-            <div class="form-space flex">
-                <form method="post" class="form-body" th:action="@{/sql/lecturers}">
+                        <div class="selector-patch">
+                            <label class="selection-param">Направление
+                                <select name="orientation" class="slider-val">
+                                    <option th:value="-1">
+                                        Выберите Направление
+                                    </option>
+                                    <option th:each="orientation :${orientations_selector}"
+                                            th:value="${orientation.code}"
+                                            th:text="${orientation.toString()}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
 
-                    <div class="selector-patch">
-                        <label class="selection-param">Направление
-                            <select name="orientation" class="slider-val">
-                                <option th:value="-1">
-                                    Выберите Направление
-                                </option>
-                                <option th:each="orientation :${orientations_selector}"
-                                        th:value="${orientation.code}"
-                                        th:text="${orientation.toString()}">
-                                </option>
-                            </select>
-                        </label>
-                    </div>
+                        <div class="selector-patch">
+                            <label class="selection-param">Кафедра
+                                <select name="department" class="slider-val">
+                                    <option th:value="-1">
+                                        Выберите кафедру
+                                    </option>
+                                    <option th:each="department :${departments_selector}"
+                                            th:value="${department.code}"
+                                            th:text="${department.name}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
 
-                    <div class="selector-patch">
-                        <label class="selection-param">Кафедра
-                            <select name="department" class="slider-val">
-                                <option th:value="-1">
-                                    Выберите кафедру
-                                </option>
-                                <option th:each="department :${departments_selector}"
-                                        th:value="${department.code}"
-                                        th:text="${department.name}">
-                                </option>
-                            </select>
-                        </label>
-                    </div>
+                        <div class="selector-patch-2">
+                            <label class="selection-param">Дата защиты
+                                <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                            </label>
+                        </div>
+    <!--#dates.format(#dates.createNow(), 'dd-MM-yyyy')-->
+                        <div class="selector-patch-2">
+                            <label class="selection-param">Тема
+                                <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'">
+                                    <option th:value="-1">Выберите тему: </option>
+                                    <option th:each="theme : ${themes_selector}"
+                                            th:text="${theme.name}"
+                                            th:value="${theme.name}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
 
-                    <div class="selector-patch-2">
-                        <label class="selection-param">Дата защиты
-                            <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
-                        </label>
-                    </div>
-<!--#dates.format(#dates.createNow(), 'dd-MM-yyyy')-->
-                    <div class="selector-patch-2">
-                        <label class="selection-param">Тема
-                            <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'">
-                                <option th:value="-1">Выберите тему: </option>
-                                <option th:each="theme : ${themes_selector}"
-                                        th:text="${theme.name}"
-                                        th:value="${theme.name}">
-                                </option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="selector-patch-2 margin-fix">
-                        <label class="selection-param">Науч рук
-                            <select name="lecturer" class="slider-val">
-                                <option th:value="-1">
-                                    Выберите преподавателя
-                                </option>
-                                <option th:each="lecturer : ${lecturers_selector}"
-                                        th:value="${lecturer.id}"
-                                        th:text="${lecturer.fio}">
-                                </option>
-                            </select>
-                        </label>
-                    </div><button class="btn-reset form-button list-button" onclick="toggleDisplayAndSaveState()">Получить</button>
-                </form>
+                        <div class="selector-patch-2 margin-fix">
+                            <label class="selection-param">Науч рук
+                                <select name="lecturer" class="slider-val">
+                                    <option th:value="-1">
+                                        Выберите преподавателя
+                                    </option>
+                                    <option th:each="lecturer : ${lecturers_selector}"
+                                            th:value="${lecturer.id}"
+                                            th:text="${lecturer.fio}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div><button class="btn-reset form-button list-button" onclick="toggleDisplayAndSaveState()">Получить</button>
+                    </form>
+                </div>
             </div>
-        </div>
-    </section>
-    <section  class="display" th:if="${flag} == true">
-        <div class="container display-section", id="display-container">
-            <div class="container leveling">
-                <table class="columns">
-                    <thead>
-                        <tr class="tr-table">
-                            <th class="td-table">ФИО Преподавателя</th>
-                            <th class="td-table">Ученная степень</th>
-                            <th class="td-table">Должность</th>
-                            <th class="td-table">Кафедра</th>
-                            <th class="td-table">ФИО Студента</th>
-                            <th class="td-table">Студ.Номер</th>
-                            <th class="td-table">Гражданство</th>
-                            <th class="td-table">Тема</th>
+        </section>
+        <section  class="display" th:if="${flag} == true">
+            <div class="container display-section", id="display-container">
+                <div class="container leveling">
+                    <table class="columns">
+                        <thead>
+                            <tr class="tr-table">
+                                <th class="td-table">ФИО Преподавателя</th>
+                                <th class="td-table">Ученная степень</th>
+                                <th class="td-table">Должность</th>
+                                <th class="td-table">Кафедра</th>
+                                <th class="td-table">ФИО Студента</th>
+                                <th class="td-table">Студ.Номер</th>
+                                <th class="td-table">Гражданство</th>
+                                <th class="td-table">Тема</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <table>
+                        <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
+                            <td class="td-table" th:text="${stlec.lecturer.fio}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.academicDegree}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.position}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.department.name}"></td>
+                            <td class="td-table" th:text="${stlec.student.fio}"></td>
+                            <td class="td-table" th:text="${stlec.student.stud_num}"></td>
+                            <td class="td-table" th:text="${stlec.student.citizenship}"></td>
+                            <td class="td-table" th:text="${stlec.student.fqw.name}"></td>
                         </tr>
-                    </thead>
-                </table>
-                <table>
-                    <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
-                        <td class="td-table" th:text="${stlec.lecturer.fio}"></td>
-                        <td class="td-table" th:text="${stlec.lecturer.academicDegree}"></td>
-                        <td class="td-table" th:text="${stlec.lecturer.position}"></td>
-                        <td class="td-table" th:text="${stlec.lecturer.department.name}"></td>
-                        <td class="td-table" th:text="${stlec.student.fio}"></td>
-                        <td class="td-table" th:text="${stlec.student.stud_num}"></td>
-                        <td class="td-table" th:text="${stlec.student.citizenship}"></td>
-                        <td class="td-table" th:text="${stlec.student.fqw.name}"></td>
-                    </tr>
-                </table>
+                    </table>
+                </div>
             </div>
-        </div>
-    </section>
-</main>
-
+        </section>
+    </main>
+</body>
 </html>

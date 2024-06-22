@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
 import ru.emiren.infosystemdepartment.Model.SQL.Year;
@@ -116,29 +117,7 @@ public class SqlController {
         return "forward:/sql/lecturers/view";
     }
 
-    @GetMapping("/api/v1/download_protocols")
-    public String downloadProtocols(Model model,HttpServletResponse response) throws IOException {
-        OutputStream out;
-        BufferedOutputStream bos;
 
-        try {
-            NiceXWPFDocument doc = wordService.generateWordDocument();
-            out = response.getOutputStream();
-            bos = new BufferedOutputStream(out);
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-disposition","attachment;filename=\""+"protocols.docx"+"\"");
-            doc.write(bos);
-            bos.flush();
-            out.flush();
-            PoitlIOUtils.closeQuietlyMulti(doc, bos, out);
-        } catch (IllegalStateException e){
-            System.out.println("Logs for WORD Templating");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return "lecturers";
-    }
 
     @PostMapping("lecturers")
     public String getLecturers(HttpServletRequest request,
@@ -185,7 +164,6 @@ public class SqlController {
         LecturerDTO lecturerDTO = lecturerService.findByLecturerId(lecturerId);
 
         model.addAttribute("specificLecturer", lecturerDTO);
-//        redirectAttributes.addAttribute("specificLecturer", lecturerDTO);
 
         return "lecturers";
     }
