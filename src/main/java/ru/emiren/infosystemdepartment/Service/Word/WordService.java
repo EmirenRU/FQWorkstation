@@ -12,7 +12,6 @@ import java.util.Map;
 public interface WordService {
 
     public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception;
-    public List<Map<String, String>> handleUploadFile(NiceXWPFDocument document) throws Exception;
     List<String> processTable(XWPFTable table, int indexRow , int numCells);
 
 }

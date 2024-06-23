@@ -2,13 +2,10 @@ package ru.emiren.infosystemdepartment.Service.Word.Impl;
 
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import org.apache.poi.xwpf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import com.deepoove.poi.XWPFTemplate;
-import org.springframework.util.ResourceUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.emiren.infosystemdepartment.DTO.SQL.*;
-import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
 import java.io.*;
@@ -19,17 +16,16 @@ import java.util.stream.Collectors;
 @Service
 public class WordServiceImpl implements WordService {
 
+
     private File filePath;
 
-    @Override
-    public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception{
-        NiceXWPFDocument doc = createWordDocumentByTemplatesPath(data);
-        return doc;
+    public WordServiceImpl() throws FileNotFoundException {
+        filePath = ResourceUtils.getFile("classpath:temp.docx");
     }
 
     @Override
-    public List<Map<String, String>> handleUploadFile(NiceXWPFDocument document) throws Exception {
-        return List.of();
+    public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception{
+        return createWordDocumentByTemplatesPath(data);
     }
 
     @Override
@@ -48,7 +44,6 @@ public class WordServiceImpl implements WordService {
             throws Exception
     {
         try {
-            filePath = ResourceUtils.getFile("classpath:temp.docx");
 
             NiceXWPFDocument document = new NiceXWPFDocument();
 
