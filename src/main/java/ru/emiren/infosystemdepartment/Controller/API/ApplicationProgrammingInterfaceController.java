@@ -19,6 +19,7 @@ import ru.emiren.infosystemdepartment.Service.Word.WordService;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -70,7 +71,7 @@ public class ApplicationProgrammingInterfaceController {
 
 
     @GetMapping("/v1/download_protocols")
-    public String downloadProtocols(HttpServletResponse response) throws IOException {
+    public void downloadProtocols(HttpServletResponse response) throws IOException {
         OutputStream out;
         BufferedOutputStream bos;
         if (!data.isEmpty()) {
@@ -79,7 +80,7 @@ public class ApplicationProgrammingInterfaceController {
                 out = response.getOutputStream();
                 bos = new BufferedOutputStream(out);
                 response.setContentType("application/octet-stream");
-                response.setHeader("Content-disposition", "attachment;filename=\"" + "protocols.docx" + "\"");
+                response.setHeader("Content-disposition", "attachment;filename=\"" + "protocols" + LocalDate.now() + ".docx" + "\"");
                 doc.write(bos);
                 bos.flush();
                 out.flush();
@@ -90,7 +91,6 @@ public class ApplicationProgrammingInterfaceController {
                 throw new RuntimeException(e);
             }
         }
-        return "lecturers";
     }
 
     @GetMapping("/v1/refresh-db")
@@ -126,7 +126,7 @@ public class ApplicationProgrammingInterfaceController {
 
 
                     int numRows = t1.getNumberOfRows();
-                    for (int i = 0 ; i < numRows ; i++){
+                    for (int i = 1 ; i < numRows ; i++){
 
                         XWPFTableRow r1 = t1.getRow(i);
                         XWPFTableRow r2 = t2.getRow(i);
@@ -142,9 +142,10 @@ public class ApplicationProgrammingInterfaceController {
                         innerArray.addAll(wordService.processTable(t3, i, numCells3));
 
                         data.add(innerArray);
+
+
                         }
                     }
-
                 } catch (IOException e) {
                 throw new RuntimeException(e);
             }

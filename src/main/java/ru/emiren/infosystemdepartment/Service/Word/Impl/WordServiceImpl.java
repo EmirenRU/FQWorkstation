@@ -78,49 +78,60 @@ public class WordServiceImpl implements WordService {
         try {
             filePath = ResourceUtils.getFile("classpath:temp.docx");
 
-            NiceXWPFDocument source = new NiceXWPFDocument(new FileInputStream(filePath));
-            List<NiceXWPFDocument> documents = new ArrayList<>();
+            NiceXWPFDocument document = new NiceXWPFDocument();
 
-            for (List<String> arr : data) {
-                Map<String, Object> dataMap = new HashMap<>();
-                dataMap.put("№01", arr.get(0));
-//                dataMap.put("date", LocalDate.now());
-//                dataMap.put("orientationCode", "OrientationCode");
-//                dataMap.put("orientationName", "orientationName");
-                dataMap.put("№02", arr.get(1));
-                dataMap.put("№03", arr.get(2));
-//                dataMap.put("departmentName", sl.getStudent().getDepartment().getName());
-                dataMap.put("№04", arr.get(3));
-                dataMap.put("№05", arr.get(4));
-                dataMap.put("№06", arr.get(5));
-                dataMap.put("№07",arr.get(6));
-                dataMap.put("№08", arr.get(7));
-                dataMap.put("№09", arr.get(8));
-                dataMap.put("№10", arr.get(9));
-                dataMap.put("№11", arr.get(11));
-                dataMap.put("№12", arr.get(12));
-                dataMap.put("№13", arr.get(13));
-                dataMap.put("№14", arr.get(14));
-                dataMap.put("№15", arr.get(15));
-                dataMap.put("№16", arr.get(16));
-                dataMap.put("№17", arr.get(18));
-                dataMap.put("№18", arr.get(19));
-                dataMap.put("№19", arr.get(20));
-                dataMap.put("№20", arr.get(21));
-                dataMap.put("№21", arr.get(22));
-                dataMap.put("№22", arr.get(23));
-                dataMap.put("№23", arr.get(24));
+            for (int i = 0; i < data.size(); i++) {
+                List<String> arr = data.get(i);
 
+                Map<String, Object> dataMap = getStringObjectMap(arr);
 
-                documents.add(XWPFTemplate.compile(filePath).render(dataMap).getXWPFDocument());
+                NiceXWPFDocument tempDoc = XWPFTemplate.compile(filePath).render(dataMap).getXWPFDocument();
+
+                if (i < data.size() - 1) {
+                    XWPFParagraph paragraph = tempDoc.createParagraph();
+                    XWPFRun run = paragraph.createRun();
+                    run.addBreak(org.apache.poi.xwpf.usermodel.BreakType.PAGE);
+                }
+                document = document.merge(tempDoc);
             }
-            source = source.merge(documents, source.getParagraphArray(0).getRuns().get(0));
 
-            return source;
+            return document;
         } catch (IOException e) {
             System.out.println("Something wrong with Doc");
         }
         return null;
+    }
+
+    private static Map<String, Object> getStringObjectMap(List<String> arr) {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("id1", arr.getFirst());
+//                dataMap.put("date", LocalDate.now());
+//                dataMap.put("orientationCode", "OrientationCode");
+//                dataMap.put("orientationName", "orientationName");
+        dataMap.put("id02", arr.get(1));
+        dataMap.put("id03", arr.get(2));
+//                dataMap.put("departmentName", sl.getStudent().getDepartment().getName());
+        dataMap.put("id04", arr.get(3));
+        dataMap.put("id05", arr.get(4));
+        dataMap.put("id06", arr.get(5));
+        dataMap.put("id07", arr.get(6));
+        dataMap.put("id08", arr.get(7));
+        dataMap.put("id09", arr.get(8));
+        dataMap.put("id10", arr.get(9));
+        dataMap.put("id11", arr.get(11));
+        dataMap.put("id12", arr.get(12));
+        dataMap.put("id13", arr.get(13));
+        dataMap.put("id14", arr.get(14));
+        dataMap.put("id15", arr.get(15));
+        dataMap.put("id16", arr.get(16));
+        dataMap.put("id17", arr.get(18));
+        dataMap.put("id18", arr.get(19));
+        dataMap.put("id19", arr.get(20));
+        dataMap.put("id20", arr.get(21));
+        dataMap.put("id21", arr.get(22));
+        dataMap.put("id22", arr.get(23));
+        dataMap.put("id23", arr.get(24));
+        return dataMap;
     }
 
 

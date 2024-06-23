@@ -11,14 +11,13 @@
         <div class="container">
             <div class="input__wrapper">
                 <form id="uploadForm" enctype="multipart/form-data">
-                    <input name="file" type="file" id="input__file" class="input input__file", accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                    <input onchange="this.form.submit()" name="file" type="file" id="input__file" class="input input__file", accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     <label for="input__file" class="input__file-button">
                             <span class="input__file-icon-wrapper">
                                 <img class="input__file-icon" src="img/upload.svg" alt="Выбрать файл" width="25">
                             </span>
                         <span class="input__file-button-text">Выберите файл</span>
                     </label>
-                    <button type="submit">Upload</button>
                 </form>
                 <div id="uploadStatus"></div>
             </div>
@@ -27,9 +26,11 @@
     </main>
     <script>
         $(document).ready(function() {
-            $('#uploadForm').on('submit', function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
+            $('#input__file').on('change', function() {
+                var formData = new FormData();
+                var file = this.files[0];
+                formData.append('file', file);
+
                 $.ajax({
                     type: 'POST',
                     url: '/api/v1/deserialization-data',
