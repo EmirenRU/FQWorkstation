@@ -19,11 +19,10 @@ import ru.emiren.infosystemdepartment.Service.Word.WordService;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -80,7 +79,9 @@ public class ApplicationProgrammingInterfaceController {
                 out = response.getOutputStream();
                 bos = new BufferedOutputStream(out);
                 response.setContentType("application/octet-stream");
-                response.setHeader("Content-disposition", "attachment;filename=\"" + "protocols" + LocalDate.now() + ".docx" + "\"");
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss");
+                Date date = new Date();
+                response.setHeader("Content-disposition", "attachment;filename=\"" + "protocols-" + dateFormat.format(date) + ".docx" + "\"");
                 doc.write(bos);
                 bos.flush();
                 out.flush();
