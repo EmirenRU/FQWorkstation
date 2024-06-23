@@ -18,39 +18,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class WordServiceImpl implements WordService {
-    private StudentLecturersService studentLecturersService;
-    private StudentService studentService;
-    private LecturerService lecturerService;
-    private ProtectionService protectionService;
-    private YearStudentService yearStudentService;
-    private OrientationService orientationService;
+
     private File filePath;
-
-    List<StudentLecturersDTO> studentLecturersDTO;
-    List<ProtectionDTO> protectionsDTO;
-    List<YearStudentDTO> yearStudentsDTO;
-    List<OrientationDTO> orientationsDTO;
-    List<LecturerDTO> lecturersDTO;
-    List<StudentDTO> studentsDTO;
-
-    @Autowired
-    public WordServiceImpl(StudentService studentService,
-                           StudentLecturersService studentLecturersService,
-                           LecturerService lecturerService,
-                           ProtectionService protectionService,
-                           YearStudentService yearStudentService,
-                           OrientationService orientationService) {
-        this.studentService = studentService;
-        this.studentLecturersService = studentLecturersService;
-        this.lecturerService = lecturerService;
-        this.protectionService = protectionService;
-        this.yearStudentService = yearStudentService;
-        this.orientationService = orientationService;
-    }
 
     @Override
     public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception{
-
         NiceXWPFDocument doc = createWordDocumentByTemplatesPath(data);
         return doc;
     }
@@ -64,7 +36,7 @@ public class WordServiceImpl implements WordService {
     public List<String> processTable(XWPFTable table, int indexRow, int numCells) {
         XWPFTableRow row = table.getRow(indexRow);
         return row.getTableCells().stream()
-                .map(cell -> cell.getText())
+                .map(XWPFTableCell::getText)
                 .collect(Collectors.toList());
     }
 
