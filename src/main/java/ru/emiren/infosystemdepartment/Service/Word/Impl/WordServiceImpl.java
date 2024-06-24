@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.Word.Impl;
 
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class WordServiceImpl implements WordService {
     private File filePath;
 
     public WordServiceImpl() throws FileNotFoundException {
-        filePath = ResourceUtils.getFile("classpath:temp.docx");
+        filePath = ResourceUtils.getFile("classpath:template.docx");
     }
 
     @Override
@@ -45,22 +46,29 @@ public class WordServiceImpl implements WordService {
     {
         try {
 
-            NiceXWPFDocument document = new NiceXWPFDocument();
+            NiceXWPFDocument document = new NiceXWPFDocument(new FileInputStream(filePath));
+
+//            NiceXWPFDocument document = new NiceXWPFDocument(new FileInputStream(filePath));
+            List<NiceXWPFDocument> documents = new ArrayList<>();
+
 
             for (int i = 0; i < data.size(); i++) {
                 List<String> arr = data.get(i);
 
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
-                NiceXWPFDocument tempDoc = XWPFTemplate.compile(filePath).render(dataMap).getXWPFDocument();
+                NiceXWPFDocument tempDoc = XWPFTemplate.compile(filePath, Configure.createDefault()).render(dataMap).getXWPFDocument();
+
 
                 if (i < data.size() - 1) {
                     XWPFParagraph paragraph = tempDoc.createParagraph();
                     XWPFRun run = paragraph.createRun();
                     run.addBreak(org.apache.poi.xwpf.usermodel.BreakType.PAGE);
                 }
-                document = document.merge(tempDoc);
+                documents.add(tempDoc);
             }
+            document = document.merge(documents, document.getParagraphArray(0).getRuns().get(0));
+
 
             return document;
         } catch (IOException e) {
@@ -70,33 +78,32 @@ public class WordServiceImpl implements WordService {
     }
 
     private static Map<String, Object> getStringObjectMap(List<String> arr) {
+        for (int i = 0 ; i < arr.size(); i++)
+        {
+            System.out.println(i + " " + arr.get(i));
+        }
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("id1", arr.getFirst());
+
 //                dataMap.put("date", LocalDate.now());
 //                dataMap.put("orientationCode", "OrientationCode");
 //                dataMap.put("orientationName", "orientationName");
-        dataMap.put("id02", arr.get(1));
-        dataMap.put("id03", arr.get(2));
+        dataMap.put("id2", arr.get(1));
+        dataMap.put("id3", arr.get(2));
+        dataMap.put("ididk", "???");
 //                dataMap.put("departmentName", sl.getStudent().getDepartment().getName());
-        dataMap.put("id04", arr.get(3));
-        dataMap.put("id05", arr.get(4));
-        dataMap.put("id06", arr.get(5));
-        dataMap.put("id07", arr.get(6));
-        dataMap.put("id08", arr.get(7));
-        dataMap.put("id09", arr.get(8));
-        dataMap.put("id10", arr.get(9));
+        dataMap.put("id4", arr.get(3));
+        dataMap.put("id5", arr.get(4));
+        dataMap.put("id6", arr.get(5));
         dataMap.put("id11", arr.get(11));
         dataMap.put("id12", arr.get(12));
         dataMap.put("id13", arr.get(13));
         dataMap.put("id14", arr.get(14));
         dataMap.put("id15", arr.get(15));
         dataMap.put("id16", arr.get(16));
-        dataMap.put("id17", arr.get(18));
+        dataMap.put("id17", arr.get(21));
         dataMap.put("id18", arr.get(19));
-        dataMap.put("id19", arr.get(20));
-        dataMap.put("id20", arr.get(21));
-        dataMap.put("id21", arr.get(22));
-        dataMap.put("id22", arr.get(23));
+        dataMap.put("id19", arr.get(23));
         dataMap.put("id23", arr.get(24));
         return dataMap;
     }
