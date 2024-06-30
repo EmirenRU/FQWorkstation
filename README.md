@@ -11,9 +11,10 @@
 1. PostgreSQL settings
 
 ```psql
-$ CREATE USER "FQWorkstationUser" WITH PASSWORD "xxx" CREATEDB LOGIN 
+$ CREATE USER "FQWorkstationUser" WITH PASSWORD "xxx" CREATEDB LOGIN;
+$ CREATE DATABASE "info-system-department" "data-support";
 ```
 
 ```bash
-$ cd src/main/resources && 
+$ java app.jar
 ```
