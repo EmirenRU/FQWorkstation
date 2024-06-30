@@ -578,6 +578,9 @@ main {
 }
 
 .input__wrapper{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	padding-top: 100px;
 	text-align: center;
 }
@@ -599,7 +602,7 @@ main {
 
   .input__file-button {
 	width: 100%;
-	max-width: 290px;
+	min-width: 260px;
 	height: 60px;
 	background: #4670e4;
 	color: #fff;
@@ -610,10 +613,31 @@ main {
 	justify-content: flex-start;
 	border-radius: 3px;
 	cursor: pointer;
-	margin: 0 auto;
+	margin-bottom: 30px;
   }
 
   .input__file-icon{
 	fill: #fff;
 	stroke: #fff;
+  }
+
+  .download{
+	display: flex;
+	background-image: url(../img/download.svg);
+	background-repeat: no-repeat;
+	background-size: 32px 32px;
+	background-position: 5% 40%;
+	border: 2px #4670e4 solid;
+	border-radius: 3px;
+	background-color: #4670e4;
+	padding: 10px 30px;
+	justify-content: flex-end;
+  }
+
+  .download-button{
+	line-height: 32px;
+	font-weight: 700;
+	font-size: 1.125rem;
+	text-decoration: none;
+	color: #FFFFFF;
   }

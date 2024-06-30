@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres-info:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: info-system-department,data-support
+      POSTGRES_USER: temp
+      POSTGRES_PASSWORD: temp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-info-data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+  spring-app:
+    build: ../
+    ports:
+      - "80:8013"
+    depends_on:
+      - postgres-info
+    volumes:
+      - ./src/main/resources:/app/resources
+    environment:
+      SPRING_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres-info:5432/info-system-department
+      SPRING_DATASOURCE_USERNAME: temp
+      SPRING_DATASOURCE_PASSWORD: temp
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_SECOND_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres-info:5432/data-support
+      SPRING_SECOND_DATASOURCE_USERNAME: temp
+      SPRING_SECOND_DATASOURCE_PASSWORD: temp
+      SPRING_SECOND_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      server.port: 8013
+
+volumes:
+  postgres-info-data:

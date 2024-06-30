@@ -4,6 +4,8 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ResourceUtils;
 import com.deepoove.poi.XWPFTemplate;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,19 @@ import java.util.stream.Collectors;
 public class WordServiceImpl implements WordService {
 
 
-    private File filePath;
+    private ResourceLoader resourceLoader;
+    private Resource resource;
+    InputStream inputStream;
 
-    public WordServiceImpl() throws FileNotFoundException {
-        filePath = ResourceUtils.getFile("classpath:template.docx");
+    @Autowired
+    public WordServiceImpl(ResourceLoader resourceLoader) throws FileNotFoundException {
+        this.resourceLoader = resourceLoader;
+        resource = resourceLoader.getResource("classpath:template.docx");
+        try {
+            inputStream = resource.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -46,7 +57,7 @@ public class WordServiceImpl implements WordService {
     {
         try {
 
-            NiceXWPFDocument document = new NiceXWPFDocument(new FileInputStream(filePath));
+            NiceXWPFDocument document = new NiceXWPFDocument(inputStream);
 
 //            NiceXWPFDocument document = new NiceXWPFDocument(new FileInputStream(filePath));
             List<NiceXWPFDocument> documents = new ArrayList<>();
@@ -57,13 +68,13 @@ public class WordServiceImpl implements WordService {
 
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
-                NiceXWPFDocument tempDoc = XWPFTemplate.compile(filePath, Configure.createDefault()).render(dataMap).getXWPFDocument();
+                NiceXWPFDocument tempDoc = XWPFTemplate.compile(resource.getFile(), Configure.createDefault()).render(dataMap).getXWPFDocument();
 
 
                 if (i < data.size() - 1) {
                     XWPFParagraph paragraph = tempDoc.createParagraph();
                     XWPFRun run = paragraph.createRun();
-                    run.addBreak(org.apache.poi.xwpf.usermodel.BreakType.PAGE);
+                    run.addBreak(BreakType.PAGE);
                 }
                 documents.add(tempDoc);
             }
