@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -37,10 +36,14 @@ public class ApplicationProgrammingInterfaceController {
     private final ProtectionService protectionService;
     private final StudentLecturersService studentLecturersService;
     private final FQWService fqwService;
+    private final YearStudentService yearStudentService;
+
     private final WordService wordService;
-    private final YearRepository yearRepository;
+
 
     private final RestTemplate restTemplate = new RestTemplate();
+    private final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss");
+    private Date date;
 
     List<List<String>> data;
 
@@ -53,7 +56,7 @@ public class ApplicationProgrammingInterfaceController {
                                                      StudentLecturersService studentLecturersService,
                                                      LecturerRepository lecturerRepository,
                                                      FQWService fqwService,
-                                                     YearRepository yearRepository,
+                                                     YearStudentService yearStudentService,
                                                      WordService wordService) {
         this.studentService = studentService;
         this.departmentService = departmentService;
@@ -64,10 +67,9 @@ public class ApplicationProgrammingInterfaceController {
         this.lecturerRepository = lecturerRepository;
         this.fqwService = fqwService;
         this.wordService = wordService;
-        this.yearRepository = yearRepository;
+        this.yearStudentService = yearStudentService;
+
     }
-
-
 
     @GetMapping("/v1/download_protocols")
     public void downloadProtocols(HttpServletResponse response) throws IOException {
@@ -78,30 +80,24 @@ public class ApplicationProgrammingInterfaceController {
                 NiceXWPFDocument doc = wordService.generateWordDocument(data);
                 out = response.getOutputStream();
                 bos = new BufferedOutputStream(out);
+                date = new Date();
                 response.setContentType("application/octet-stream");
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss");
-                Date date = new Date();
                 response.setHeader("Content-disposition", "attachment;filename=\"" + "protocols-" + dateFormat.format(date) + ".docx" + "\"");
                 doc.write(bos);
                 bos.flush();
                 out.flush();
                 PoitlIOUtils.closeQuietlyMulti(doc, bos, out);
+                date = null;
             } catch (IllegalStateException e) {
                 System.out.println("Logs for WORD Templating");
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.out.println(e.getMessage());
             }
         }
     }
 
-    @GetMapping("/v1/refresh-db")
-    public void refreshDb() {
-
-    }
-
     @PostMapping("/v1/deserialization-data")
     public void deserialization(@RequestParam("file") MultipartFile file) {
-        System.out.println("i am here");
         if (data == null){
             data = new ArrayList<>();
         }
@@ -116,39 +112,28 @@ public class ApplicationProgrammingInterfaceController {
             try {
                 data = new ArrayList<>();
                 NiceXWPFDocument document = new NiceXWPFDocument(file.getInputStream());
-                System.out.println(document);
-
                 List<XWPFTable> tables = document.getTables();
-                System.out.println(tables.size());
+
                 if (tables.size() == 3){
                     XWPFTable t1 = tables.get(0);
                     XWPFTable t2 = tables.get(1);
                     XWPFTable t3 = tables.get(2);
 
-
-                    int numRows = t1.getNumberOfRows();
-                    for (int i = 1 ; i < numRows ; i++){
-
+                    for (int i = 1 ; i < t1.getNumberOfRows() ; i++){
                         XWPFTableRow r1 = t1.getRow(i);
                         XWPFTableRow r2 = t2.getRow(i);
                         XWPFTableRow r3 = t3.getRow(i);
 
-                        int numCells1 = r1.getTableCells().size();
-                        int numCells2 = r2.getTableCells().size();
-                        int numCells3 = r3.getTableCells().size();
-
                         List<String> innerArray = new ArrayList<>() {};
-                        innerArray.addAll(wordService.processTable(t1, i, numCells1));
-                        innerArray.addAll(wordService.processTable(t2, i, numCells2));
-                        innerArray.addAll(wordService.processTable(t3, i, numCells3));
+                        innerArray.addAll(wordService.processTable(t1, i, r1.getTableCells().size()));
+                        innerArray.addAll(wordService.processTable(t2, i, r2.getTableCells().size()));
+                        innerArray.addAll(wordService.processTable(t3, i, r3.getTableCells().size()));
 
                         data.add(innerArray);
-
-
                         }
                     }
                 } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("Handle later deserialization");
             }
         }
 

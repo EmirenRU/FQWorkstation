@@ -5,4 +5,6 @@ import ru.emiren.infosystemdepartment.Model.Support.Data;
 
 public interface DataService {
     Data saveData(DataDTO data);
+
+    DataDTO getDataById(int id);
 }

@@ -40,7 +40,7 @@
                         <a class="nav__links" th:href="@{/functions}">Протокол</a>
                     </li>
 
-                    <li class="nav__item">
+                    <li class="nav__item" th:if="${archiveFlag} == true">
                         <div class="dropdown">
                             <button class="dropbtn">Архив</button>
                             <div class="dropdown-content">

@@ -25,3 +25,25 @@ document.addEventListener('DOMContentLoaded', function() {
     var x = document.getElementById("display-container");
     x.style.display = "block";
 });
+
+$(document).ready(function() {
+    $('#input__file').on('change', function() {
+        var formData = new FormData();
+        var file = this.files[0];
+        formData.append('file', file);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/deserialization-data',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                $('#uploadStatus').html('<p>' + response + '</p>');
+            },
+            error: function(response) {
+                $('#uploadStatus').html('<p>File upload failed.</p>');
+            }
+        });
+    });
+});

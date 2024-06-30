@@ -99,11 +99,12 @@ public class SqlController {
         model.addAttribute("orientations_selector", orientationDTOS);
         model.addAttribute("themes_selector", fqwdtos);
         model.addAttribute("years_selector", years);
+        model.addAttribute("archiveFlag", true);
         return "lecturers";
     }
 
     @GetMapping("lecturers/{year}")
-    public String CreateLectureForm(Model model, @PathVariable String year){
+    public String CreateLectureForm(Model model, @PathVariable String year, HttpServletRequest request){
 
         List<StudentLecturersDTO> list =  studentLecturersService.findAllAndSortedByDate(year);
 
@@ -111,9 +112,9 @@ public class SqlController {
             return "redirect:/sql/lecturers";
         }
 
-        model.addAttribute("flag", true);
-        model.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
-        model.addAttribute("studentLecturers_container", list);
+        request.setAttribute("flag", true);
+        request.setAttribute("specificLecturer", lecturerService.createDummyLecturer());
+        request.setAttribute("studentLecturers_container", list);
         return "forward:/sql/lecturers/view";
     }
 
