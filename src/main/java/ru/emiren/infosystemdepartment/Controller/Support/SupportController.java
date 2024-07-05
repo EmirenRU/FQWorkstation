@@ -1,15 +1,9 @@
 package ru.emiren.infosystemdepartment.Controller.Support;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import ru.emiren.infosystemdepartment.DTO.Support.DataDTO;
 import ru.emiren.infosystemdepartment.Model.Support.Data;
