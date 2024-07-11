@@ -1,17 +1,15 @@
 package ru.emiren.infosystemdepartment.DTO.SQL;
 
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.emiren.infosystemdepartment.Model.SQL.Student;
-import ru.emiren.infosystemdepartment.Model.SQL.Year;
+
+import java.io.Serializable;
 
 @Data
 @Builder
-public class YearStudentDTO {
+public class YearStudentDTO implements Serializable {
     private Long id;
 
-    private Student student;
-    private Year year;
+    private StudentDTO student;
+    private YearDTO year;
 }

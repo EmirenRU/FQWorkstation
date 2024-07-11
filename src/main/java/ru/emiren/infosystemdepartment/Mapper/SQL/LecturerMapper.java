@@ -3,6 +3,8 @@ package ru.emiren.infosystemdepartment.Mapper.SQL;
 import ru.emiren.infosystemdepartment.DTO.SQL.LecturerDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
 
+import java.util.stream.Collectors;
+
 public class LecturerMapper {
     public static Lecturer mapToLecturer(LecturerDTO lecturerDTO){
         return Lecturer.builder()
@@ -11,6 +13,7 @@ public class LecturerMapper {
                 .academicDegree(lecturerDTO.getAcademicDegree())
                 .position(lecturerDTO.getPosition())
                 .department(DepartmentMapper.mapToDepartment(lecturerDTO.getDepartment()))
+//                .students(lecturerDTO.getStudents().stream().map(StudentLecturersMapper::mapToStudentLecturers).collect(Collectors.toList()))
                 .build();
     }
 
@@ -21,7 +24,7 @@ public class LecturerMapper {
                 .academicDegree(lecturer.getAcademicDegree())
                 .position(lecturer.getPosition())
                 .department(DepartmentMapper.mapToDepartmentDTO(lecturer.getDepartment()))
-//                .students(lecturer.getStudents().stream().map(StudentMapper::mapToStudentDTO).collect(Collectors.toList()))
+//                .students(lecturer.getStudents().stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).collect(Collectors.toList()))
                 .build();
     }
 }

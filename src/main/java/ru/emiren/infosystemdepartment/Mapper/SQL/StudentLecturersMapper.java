@@ -7,8 +7,8 @@ public class StudentLecturersMapper {
     public static StudentLecturers mapToStudentLecturers(StudentLecturersDTO studentLecturersDTO){
         return StudentLecturers.builder()
                 .id(studentLecturersDTO.getId())
-                .student(studentLecturersDTO.getStudent())
-                .lecturer(studentLecturersDTO.getLecturer())
+                .student(StudentMapper.mapToStudent(studentLecturersDTO.getStudent()))
+                .lecturer(LecturerMapper.mapToLecturer(studentLecturersDTO.getLecturer()))
                 .isConsultant(studentLecturersDTO.getIsConsultant())
                 .isScientificSupervisor(studentLecturersDTO.getIsScientificSupervisor())
                 .build();
@@ -17,8 +17,8 @@ public class StudentLecturersMapper {
     public static StudentLecturersDTO mapToStudentLecturersDTO(StudentLecturers studentLecturers){
         return StudentLecturersDTO.builder()
                 .id(studentLecturers.getId())
-                .student(studentLecturers.getStudent())
-                .lecturer(studentLecturers.getLecturer())
+                .student(StudentMapper.mapToStudentDTO(studentLecturers.getStudent()))
+                .lecturer(LecturerMapper.mapToLecturerDTO(studentLecturers.getLecturer()))
                 .isScientificSupervisor(studentLecturers.getIsScientificSupervisor())
                 .isConsultant(studentLecturers.getIsConsultant())
                 .build();

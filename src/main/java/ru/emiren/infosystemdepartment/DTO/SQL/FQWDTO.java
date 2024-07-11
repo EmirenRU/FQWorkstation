@@ -6,11 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.emiren.infosystemdepartment.Model.SQL.Reviewer;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FQWDTO {
+public class FQWDTO implements Serializable {
     private String name;
 
     private String classifier; // классификатор
@@ -18,5 +20,5 @@ public class FQWDTO {
     private String feedback; // отзыв
     private String volume; // объем
 
-    private Reviewer reviewer;
+    private ReviewerDTO reviewer;
 }

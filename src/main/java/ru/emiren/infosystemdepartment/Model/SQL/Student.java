@@ -2,7 +2,9 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.repository.cdi.Eager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student {
+@Eager
+public class Student implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +40,11 @@ public class Student {
     @JoinColumn(name = "department_code", referencedColumnName = "code")
     private Department department;             // Кафедра
 
-    @OneToMany(cascade = CascadeType.ALL )
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
     @JoinColumn(name = "lecturer_id")
     private List<StudentLecturers> lecturers = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="student_id")
     private List<YearStudent> yearStudents = new ArrayList<>();
 }

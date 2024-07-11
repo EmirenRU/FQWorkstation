@@ -26,11 +26,11 @@ public class Lecturer {
 
     private String position; // должность
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="department", referencedColumnName = "code")
     private Department department;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
     private List<StudentLecturers> students = new ArrayList<>();
 }

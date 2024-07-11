@@ -5,14 +5,16 @@ import lombok.Data;
 import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
+import java.io.Serializable;
+
 @Data
 @Builder
-public class StudentLecturersDTO {
+public class StudentLecturersDTO implements Serializable {
     private Long id;
 
-    private Student student;
+    private StudentDTO student;
 
-    private Lecturer lecturer;
+    private LecturerDTO lecturer;
 
     private Boolean isScientificSupervisor;
     private Boolean isConsultant;

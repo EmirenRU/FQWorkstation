@@ -32,7 +32,7 @@ public class ProtectionServiceImpl implements ProtectionService {
     public LocalDate getDateWithSpecificStudent(StudentLecturersDTO studentLecturersDTO, List<ProtectionDTO> protections) {
         LocalDate date = null;
         for (ProtectionDTO protectionDTO : protections) {
-            if (protectionDTO.getOrientation().getCode().equals(studentLecturersDTO.getStudent().getOrientation().getCode()))
+            if (protectionDTO.getOrientationDTO().getCode().equals(studentLecturersDTO.getStudent().getOrientation().getCode()))
                 date = protectionDTO.getDateOfProtection();
         }
         return date;

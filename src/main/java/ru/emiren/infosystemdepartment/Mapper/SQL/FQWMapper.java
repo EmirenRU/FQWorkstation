@@ -11,7 +11,7 @@ public class FQWMapper {
                 .uniqueness(fqwdto.getUniqueness())
                 .feedback(fqwdto.getFeedback())
                 .volume(fqwdto.getVolume())
-                .reviewer(fqwdto.getReviewer())
+//                .reviewer(ReviewerMapper.mapToReviewer(fqwdto.getReviewer()))
                 .build();
     }
 
@@ -22,7 +22,7 @@ public class FQWMapper {
                 .uniqueness(fqw.getUniqueness())
                 .feedback(fqw.getFeedback())
                 .volume(fqw.getVolume())
-                .reviewer(fqw.getReviewer())
+//                .reviewer(ReviewerMapper.mapToReviewerDTO(fqw.getReviewer()))
                 .build();
     }
 }

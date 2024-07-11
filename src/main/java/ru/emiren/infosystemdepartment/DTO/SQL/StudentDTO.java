@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Data;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Builder
-public class StudentDTO {
+public class StudentDTO implements Serializable {
     private Long id;
 
     private Long   stud_num;                // Студ.номер
@@ -17,11 +18,11 @@ public class StudentDTO {
     private String loe;                     // Уровень образования == Level of Education
     private String classifier;              // Классификатор
 
-    private FQW fqw;
+    private FQWDTO fqw;
 
-    private Orientation orientation;          // Направление
+    private OrientationDTO orientation;          // Направление
 
-    private Department department;             // Кафедра
+    private DepartmentDTO department;             // Кафедра
 
     private List<StudentLecturersDTO> lecturers;
 }
