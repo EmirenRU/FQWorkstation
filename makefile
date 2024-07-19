@@ -6,6 +6,9 @@ compose:
 else ifeq ($(OS),Windows_NT)
 compose:
 	cd docker ; docker-compose up --build
+build:
+	mvn package
+
 else
 compose:
     @echo "Not Supported OS"

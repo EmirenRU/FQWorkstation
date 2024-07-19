@@ -3,10 +3,13 @@ package ru.emiren.infosystemdepartment.Service.Word.Impl;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import org.apache.poi.xwpf.usermodel.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
+import org.springframework.data.repository.cdi.Eager;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
@@ -17,17 +20,26 @@ import java.util.stream.Collectors;
 @Service
 public class WordServiceImpl implements WordService {
 
-
+//    @Value("${template.file.path}")
+//    private final String TEMPLATE_PATH;
+    @Value("classpath:template.docx")
     private Resource resource;
-    InputStream inputStream;
+    private InputStream inputStream;
+    private ResourceLoader resourceLoader;
 
     @Autowired
-    public WordServiceImpl(ResourceLoader resourceLoader) {
-        resource = resourceLoader.getResource("classpath:template.docx");
+    public WordServiceImpl(@Value("${template.file.path}") String TEMPLATE_PATH, ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+        resource = resourceLoader.getResource(TEMPLATE_PATH);
+        //        this.TEMPLATE_PATH = "classpath:template.docx";
+//        resource = resourceLoader.getResource(this.TEMPLATE_PATH);
         try {
             inputStream = resource.getInputStream();
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println();
+            System.out.println("\nSomething wrong with Template Reading");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -47,9 +59,11 @@ public class WordServiceImpl implements WordService {
     private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data)
             throws Exception
     {
+        NiceXWPFDocument document = null;
         try {
 
-            NiceXWPFDocument document = new NiceXWPFDocument(inputStream);
+
+            document = new NiceXWPFDocument(inputStream);
             List<NiceXWPFDocument> documents = new ArrayList<>();
 
 
@@ -75,7 +89,7 @@ public class WordServiceImpl implements WordService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return document;
     }
 
     private static Map<String, Object> getStringObjectMap(List<String> arr) {

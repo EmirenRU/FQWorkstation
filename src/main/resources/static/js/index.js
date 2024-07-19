@@ -30,11 +30,34 @@ $(document).ready(function() {
     $('#input__file').on('change', function() {
         var formData = new FormData();
         var file = this.files[0];
-        formData.append('file', file);
+        formData.append('protocol', file);
 
         $.ajax({
             type: 'POST',
             url: '/api/v1/deserialization-data',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                $('#uploadStatus').html('<p>' + response + '</p>');
+            },
+            error: function(response) {
+                $('#uploadStatus').html('<p>File upload failed.</p>');
+            }
+        });
+    });
+});
+
+
+$(document).ready(function() {
+    $('#input__file__excel').on('change', function() {
+        var formData = new FormData();
+        var file = this.files[0];
+        formData.append('excel', file);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v2/upload-excel',
             data: formData,
             contentType: false,
             processData: false,

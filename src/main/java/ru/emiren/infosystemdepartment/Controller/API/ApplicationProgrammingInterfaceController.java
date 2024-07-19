@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Controller.API;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -11,14 +12,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -72,7 +73,7 @@ public class ApplicationProgrammingInterfaceController {
     }
 
     @GetMapping("/v1/download_protocols")
-    public void downloadProtocols(HttpServletResponse response) throws IOException {
+    public String downloadProtocols(HttpServletResponse response) throws IOException {
         OutputStream out;
         BufferedOutputStream bos;
         if (!data.isEmpty()) {
@@ -94,50 +95,67 @@ public class ApplicationProgrammingInterfaceController {
                 System.out.println(e.getMessage());
             }
         }
+        return "redirect:/functions";
     }
 
     @PostMapping("/v1/deserialization-data")
-    public void deserialization(@RequestParam("file") MultipartFile file) {
-        if (data == null){
+    public String deserialization(MultipartHttpServletRequest request, RedirectAttributes red) throws IOException {
+        MultipartFile file = request.getFile("protocol");
+
+
+        NiceXWPFDocument document;
+
+        if (file == null || !file.getOriginalFilename().endsWith(".docx") || file.isEmpty()) {
+            System.out.println("something wrong with file");
+        }
+
+        if (data == null) {
             data = new ArrayList<>();
         }
 
-        if (!data.isEmpty()){
+        if (!data.isEmpty()) {
             for (List<String> row : data)
                 row.clear();
             data.clear();
         }
 
-        if (!file.isEmpty()){
+        if (file != null && file.getSize() > 0){
             try {
                 data = new ArrayList<>();
-                NiceXWPFDocument document = new NiceXWPFDocument(file.getInputStream());
+                document = new NiceXWPFDocument(file.getInputStream());
                 List<XWPFTable> tables = document.getTables();
+                System.out.println(tables.size());
 
-                if (tables.size() == 3){
+                if (tables.size() == 3) {
                     XWPFTable t1 = tables.get(0);
                     XWPFTable t2 = tables.get(1);
                     XWPFTable t3 = tables.get(2);
 
-                    for (int i = 1 ; i < t1.getNumberOfRows() ; i++){
-                        XWPFTableRow r1 = t1.getRow(i);
-                        XWPFTableRow r2 = t2.getRow(i);
-                        XWPFTableRow r3 = t3.getRow(i);
+                    System.out.println(t1.getNumberOfRows() + " " + t2.getNumberOfRows() + " " + t3.getNumberOfRows());
 
-                        List<String> innerArray = new ArrayList<>() {};
-                        innerArray.addAll(wordService.processTable(t1, i, r1.getTableCells().size()));
-                        innerArray.addAll(wordService.processTable(t2, i, r2.getTableCells().size()));
-                        innerArray.addAll(wordService.processTable(t3, i, r3.getTableCells().size()));
+                    if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()){
+                        for (int i = 1; i < t1.getNumberOfRows(); i++) {
+                            XWPFTableRow r1 = t1.getRow(i);
+                            XWPFTableRow r2 = t2.getRow(i);
+                            XWPFTableRow r3 = t3.getRow(i);
 
-                        data.add(innerArray);
+
+                            List<String> innerArray = new ArrayList<>() {};
+
+                            innerArray.addAll(wordService.processTable(t1, i, r1.getTableCells().size()));
+                            innerArray.addAll(wordService.processTable(t2, i, r2.getTableCells().size()));
+                            innerArray.addAll(wordService.processTable(t3, i, r3.getTableCells().size()));
+
+                            data.add(innerArray);
                         }
                     }
-                } catch (IOException e) {
+                    return "redirect:/api/v1/download_protocols";
+                }
+            } catch (IOException e) {
                 System.out.println("Handle later deserialization");
             }
+
         }
-
-
+        return "redirect:/functions";
     }
-
 }

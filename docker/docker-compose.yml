@@ -19,7 +19,7 @@ services:
     depends_on:
       - postgres-info
     volumes:
-      - ./src/main/resources:/app/resources
+      - ../src/main/resources:/app/resources/
     environment:
       SPRING_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres-info:5432/info-system-department
       SPRING_DATASOURCE_USERNAME: temp
@@ -29,6 +29,8 @@ services:
       SPRING_SECOND_DATASOURCE_USERNAME: temp
       SPRING_SECOND_DATASOURCE_PASSWORD: temp
       SPRING_SECOND_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      TEMPLATE_FILE_PATH: /app/template.docx
+
       server.port: 8013
 
 volumes:
