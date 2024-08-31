@@ -1,6 +1,7 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
 import ru.emiren.infosystemdepartment.DTO.SQL.LecturerDTO;
+import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface LecturerService {
     LecturerDTO createDummyLecturer();
 
     List<LecturerDTO> findAllLecturersById(Long lecturerId);
+
+    Lecturer saveLecturer(Lecturer lecturerDTO);
 }

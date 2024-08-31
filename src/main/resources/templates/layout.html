@@ -11,17 +11,19 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/media.css">
     <link rel="stylesheet" href="/thirdParty/select2/css/select2.min.css">
-    <script src="/thirdParty/jquery/jquery-3.7.1.min.js"></script>
-    <script src="/thirdParty/select2/js/select2.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/js/index.js"></script>
+    <script type="text/javascript" src="/thirdParty/jquery/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="/thirdParty/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="/js/dataUtils.js"></script>
+    <script defer src="/js/uploadDataForm.js"></script>
+    <script defer src="/js/index.js"></script>
 </head>
 
 <header layout:fragment="header" class="header">
     <div class="header__container flex">
         <div class="container flex">
             <a th:href="@{/}" class="header__logo">
-                <div class="header__logo-inside flex"><img src="/img/rudn_logo.png" alt="Евклид" class="header__logo__picture"></div></a>
+                <div class="header__logo-inside flex"><img src="/img/rudn_logo.png" alt="РУДН" class="header__logo__picture"></div></a>
             <nav class="nav flex">
                 <ul class="list-reset nav__list flex">
 
@@ -32,6 +34,7 @@
                     <li class="nav__item">
                         <a class="nav__links" th:href="@{/faq}">Вопросы</a>
                     </li>
+
                     <li class="nav__item">
                         <a class="nav__links" th:href="@{/support}">Поддержка</a>
                     </li>
@@ -39,6 +42,8 @@
                     <li class="nav__item">
                         <a class="nav__links" th:href="@{/functions}">Протокол</a>
                     </li>
+
+
 
                     <li class="nav__item" th:if="${archiveFlag} == true">
                         <div class="dropdown">

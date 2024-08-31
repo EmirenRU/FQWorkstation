@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionDTO;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Mapper.SQL.ProtectionMapper;
+import ru.emiren.infosystemdepartment.Model.SQL.Protection;
 import ru.emiren.infosystemdepartment.Repository.SQL.ProtectionRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.ProtectionService;
 
@@ -36,5 +37,10 @@ public class ProtectionServiceImpl implements ProtectionService {
                 date = protectionDTO.getDateOfProtection();
         }
         return date;
+    }
+
+    @Override
+    public Protection saveProtection(Protection protection) {
+        return protectionRepository.save(protection);
     }
 }

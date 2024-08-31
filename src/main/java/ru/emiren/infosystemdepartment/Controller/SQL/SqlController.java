@@ -128,7 +128,7 @@ public class SqlController {
 
         Long lecturerId = Long.valueOf(request.getParameter("lecturer"));
         String orientationCode = request.getParameter("orientation");
-        String departmentCode = request.getParameter("department");
+        Long departmentCode = Long.valueOf(request.getParameter("department"));
         String theme = request.getParameter("themes");
         String strDate =request.getParameter("date");
         LocalDate date = null;
@@ -142,7 +142,10 @@ public class SqlController {
 
 
         model.addAttribute("studentLecturers_container",
-                studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
+                studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode,
+                                                                                                            departmentCode,
+                                                                                                            date,
+                                                                                                    theme, lecturerId));
 
         model.addAttribute("lecturers_selector", lecturerDTOS);
         model.addAttribute("departments_selector", departmentDTOS);

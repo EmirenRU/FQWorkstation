@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Mapper.SQL.FQWMapper;
+import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 import ru.emiren.infosystemdepartment.Repository.SQL.FQWRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.FQWService;
 
@@ -26,5 +27,10 @@ public class FQWServiceImpl implements FQWService {
                 .stream()
                 .map(FQWMapper::mapToFQWDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public FQW saveFqw(FQW fqw) {
+        return fqwRepository.save(fqw);
     }
 }

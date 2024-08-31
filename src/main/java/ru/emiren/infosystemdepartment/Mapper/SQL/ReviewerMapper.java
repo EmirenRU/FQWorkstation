@@ -7,7 +7,7 @@ public class ReviewerMapper {
     public static Reviewer mapToReviewer(ReviewerDTO reviewerDTO){
         return Reviewer.builder()
                 .id(reviewerDTO.getId())
-                .fio(reviewerDTO.getFio())
+                .name(reviewerDTO.getName())
                 .academicDegree(reviewerDTO.getAcademicDegree())
                 .position(reviewerDTO.getPosition())
                 .build();
@@ -16,7 +16,7 @@ public class ReviewerMapper {
     public static ReviewerDTO mapToReviewerDTO(Reviewer reviewer){
         return ReviewerDTO.builder()
                 .id(reviewer.getId())
-                .fio(reviewer.getFio())
+                .name(reviewer.getName())
                 .academicDegree(reviewer.getAcademicDegree())
                 .position(reviewer.getPosition())
                 .build();

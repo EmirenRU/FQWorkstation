@@ -28,5 +28,10 @@ public class OrientationServiceImpl implements OrientationService {
         return orientations.stream().map(OrientationMapper::mapToOrientationDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public Orientation saveOrientation(Orientation orientation) {
+        return orientationRepository.save(orientation);
+    }
+
 
 }

@@ -31,7 +31,7 @@
             </div>
 
             <div class="input__wrapper">
-                <form id="uploadExcelForm" enctype="multipart/form-data">
+                <form id="uploadExcelForm" method="POST" enctype="multipart/form-data">
                     <input onchange="this.form.submit()"
                            name="excel"
                            type="file"
@@ -47,6 +47,24 @@
                 </form>
                 <div id="uploadExcelStatus"></div>
             </div>
+
+<!--            <div class="input__wrapper">-->
+<!--                <form id="uploadZipForm" enctype="multipart/form-data" th:action="@{/functions}">-->
+<!--                    <input onchange="this.form.submit()"-->
+<!--                           name="zip"-->
+<!--                           type="file"-->
+<!--                           id="input__file__zip"-->
+<!--                           class="input input__file"-->
+<!--                           accept="application/zip,application/x-zip">-->
+<!--                    <label for="input__file__zip" class="input__file-button">-->
+<!--                <span class="input__file-icon-wrapper">-->
+<!--                    <img class="input__file-icon" src="img/upload.svg" alt="Zip файл" width="25">-->
+<!--                </span>-->
+<!--                        <span class="input__file-button-text">Выберите файл</span>-->
+<!--                    </label>-->
+<!--                </form>-->
+<!--                <div id="uploadZipStatus"></div>-->
+<!--            </div>-->
         </div>
     </main>
 </body>

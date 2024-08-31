@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommisionerDTO {
-    private String fio;
+    private String name;
     private String university;
     private String department;
 }

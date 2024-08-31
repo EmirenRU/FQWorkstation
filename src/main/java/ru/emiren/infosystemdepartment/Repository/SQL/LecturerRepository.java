@@ -8,6 +8,6 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
 
     LecturerDTO findLecturerById(Long id);
 
-    Lecturer findLecturerByFio(String fio);
+    Lecturer findLecturerByName(String name);
 
 }

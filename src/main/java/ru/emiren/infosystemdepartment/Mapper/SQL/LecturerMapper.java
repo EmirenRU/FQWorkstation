@@ -7,7 +7,7 @@ public class LecturerMapper {
     public static Lecturer mapToLecturer(LecturerDTO lecturerDTO){
         return Lecturer.builder()
                 .id(lecturerDTO.getId())
-                .fio(lecturerDTO.getFio())
+                .name(lecturerDTO.getName())
                 .academicDegree(lecturerDTO.getAcademicDegree())
                 .position(lecturerDTO.getPosition())
                 .department(DepartmentMapper.mapToDepartment(lecturerDTO.getDepartment()))
@@ -17,7 +17,7 @@ public class LecturerMapper {
     public static LecturerDTO mapToLecturerDTO(Lecturer lecturer){
         return LecturerDTO.builder()
                 .id(lecturer.getId())
-                .fio(lecturer.getFio())
+                .name(lecturer.getName())
                 .academicDegree(lecturer.getAcademicDegree())
                 .position(lecturer.getPosition())
                 .department(DepartmentMapper.mapToDepartmentDTO(lecturer.getDepartment()))

@@ -1,6 +1,7 @@
 package ru.emiren.infosystemdepartment.Controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -14,4 +15,9 @@ public class MainController {
 
     @GetMapping("/giveup")
     public String giveup(){ return "redirect:https://youtu.be/dQw4w9WgXcQ?si=_A7-90hHkk9D5RRy"; }
+
+    @GetMapping("/upload-data-form")
+    public String UploadDataForm(Model model){
+        return "uploadDataForm";
+    }
 }

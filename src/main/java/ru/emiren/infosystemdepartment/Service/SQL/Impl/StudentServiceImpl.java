@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private StudentRepository studentRepository;
-    private LecturerRepository lecturerRepository;
+    private final StudentRepository studentRepository;
+    private final LecturerRepository lecturerRepository;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository, LecturerRepository lecturerRepository){
@@ -26,9 +26,8 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public Student saveStudent(StudentDTO studentDTO) {
-        Student student = StudentMapper.mapToStudent(studentDTO);
-        return studentRepository.save(student);
+    public Student saveStudent(Student studentDTO) {
+        return studentRepository.save(studentDTO);
     }
 
     @Override

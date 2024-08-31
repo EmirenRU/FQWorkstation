@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ReviewerDTO {
     private Long id;
-    private String fio;
+    private String name;
     private String academicDegree; // Ученая степень
     private String position; // должность
 }

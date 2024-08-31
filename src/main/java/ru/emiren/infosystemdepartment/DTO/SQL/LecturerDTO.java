@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LecturerDTO {
     private Long id;
-    private String fio;
+    private String name;
     private String academicDegree; // Ученая степень
     private String position; // должность
     private DepartmentDTO department;

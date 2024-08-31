@@ -13,6 +13,7 @@ import lombok.*;
 @Setter
 public class Department {
     @Id
-    private String code;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long code;
     private String name;
 }

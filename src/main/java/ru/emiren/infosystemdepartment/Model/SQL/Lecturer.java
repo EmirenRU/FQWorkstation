@@ -20,7 +20,7 @@ public class Lecturer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fio;
+    private String name;
 
     private String academicDegree; // Ученая степень
 

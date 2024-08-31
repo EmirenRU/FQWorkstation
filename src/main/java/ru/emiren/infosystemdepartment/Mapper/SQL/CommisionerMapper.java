@@ -1,22 +1,22 @@
 package ru.emiren.infosystemdepartment.Mapper.SQL;
 
 import ru.emiren.infosystemdepartment.DTO.SQL.CommisionerDTO;
-import ru.emiren.infosystemdepartment.Model.SQL.Commisioner;
+import ru.emiren.infosystemdepartment.Model.SQL.Commissioner;
 
 public class CommisionerMapper {
-    public static Commisioner mapToCommisioner(CommisionerDTO commisionerDTO){
-        return Commisioner.builder()
-                .fio(commisionerDTO.getFio())
+    public static Commissioner mapToCommisioner(CommisionerDTO commisionerDTO){
+        return Commissioner.builder()
+                .name(commisionerDTO.getName())
                 .department(commisionerDTO.getDepartment())
                 .university(commisionerDTO.getUniversity())
                 .build();
     }
 
-    public static CommisionerDTO mapToCommisionerDTO(Commisioner commisioner){
+    public static CommisionerDTO mapToCommisionerDTO(Commissioner commissioner){
         return CommisionerDTO.builder()
-                .fio(commisioner.getFio())
-                .university(commisioner.getUniversity())
-                .department(commisioner.getDepartment())
+                .name(commissioner.getName())
+                .university(commissioner.getUniversity())
+                .department(commissioner.getDepartment())
                 .build();
     }
 }

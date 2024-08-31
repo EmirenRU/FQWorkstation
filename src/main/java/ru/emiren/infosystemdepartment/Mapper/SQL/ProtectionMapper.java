@@ -19,4 +19,5 @@ public class ProtectionMapper {
                 .dateOfProtection(protection.getDateOfProtection())
                 .build();
     }
+
 }

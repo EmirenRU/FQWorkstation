@@ -8,6 +8,6 @@ import lombok.Data;
 @Builder
 
 public class DepartmentDTO {
-    private String code;
+    private Long code;
     private String name;
 }

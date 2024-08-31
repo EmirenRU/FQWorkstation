@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -24,4 +26,8 @@ public class Protection {
     private Orientation orientation;          // Направление
 
     private LocalDate dateOfProtection;
+
+    @OneToMany(cascade = CascadeType.ALL )
+    @JoinColumn(name = "protection_id")
+    private List<ProtectionCommissioner> commissioners = new ArrayList<>();
 }

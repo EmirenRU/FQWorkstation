@@ -12,7 +12,7 @@ public class StudentDTO {
     private Long id;
 
     private Long   stud_num;                // Студ.номер
-    private String fio;                     // ФИО
+    private String name;                     // ФИО
     private String citizenship;             // Гражданство
     private String loe;                     // Уровень образования == Level of Education
     private String classifier;              // Классификатор
