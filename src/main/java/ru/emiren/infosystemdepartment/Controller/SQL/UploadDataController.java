@@ -68,9 +68,9 @@ public class UploadDataController {
 
 
     @PostMapping("/api/add-data")
-    public String AddData(@RequestParam Map<String, String> request){//        BufferedReader reader = request.getReader();
-
-        System.out.println(request.get("isScientificSupervisor"));
+    public String AddData(@RequestBody Map<String, String> request){//        BufferedReader reader = request.getReader();
+        System.out.println(request);
+        System.out.println(request.get("isScientificSupervisor")+ " " + request.get("dateOfProtection"));
 
         Date dateOfProtection = DateUtil.stringToDate(request.get("dateOfProtection"));
 

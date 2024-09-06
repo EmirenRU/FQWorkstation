@@ -103,6 +103,13 @@ public class SqlController {
         return "lecturers";
     }
 
+    @GetMapping("/upload-data-form")
+    public String UploadDataForm(Model model){
+//        model.addAttribute();
+        
+        return "uploadDataForm";
+    }
+
     @GetMapping("lecturers/{year}")
     public String CreateLectureForm(Model model, @PathVariable String year, HttpServletRequest request){
 

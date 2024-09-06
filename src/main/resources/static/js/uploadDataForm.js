@@ -77,25 +77,26 @@ function serializeFormDataMap(){
     return serializedData;
 }
 
-function sendFormData(){
+function sendFormData() {
     const json = JSON.stringify(serializeFormDataMap());
 
-    console.log(json);
+    console.log(json);  // Debugging: Check if the JSON is correct before sending
 
     $.ajax({
         type: 'POST',
         url: '/api/add-data',
-        data: json,
-        contentType: 'application/json',
-        processData: false,
+        data: json,  // Ensure it is stringified JSON
+        contentType: 'application/json',  // Set content type to JSON
+        processData: false,  // Don't process data into query string
 
-        success: function (response){
-            console.log("Uploaded data with data " + response.statusText);
-        }, error: function (response) {
-            console.log("404 " + response.statusText);
+        success: function (response) {
+            console.log("Uploaded data with response: " + response);
+        },
+        error: function (response) {
+            console.log("Error: " + response.statusText);
         },
         timeout: 5000,
-    })
+    });
 }
 
 $("7-field").on("change", function() {
@@ -119,19 +120,3 @@ $("7-field").on("change", function() {
 //         }
 //     }
 // }
-
-let data =
-
-
-    function getSomeDataFromServer(){
-    const url = "localhost:25565";
-
-    $.ajax({
-        url: url,
-        dataType: 'application/json',
-        type: 'GET',
-        success: function (json){
-
-        }
-    })
-}
