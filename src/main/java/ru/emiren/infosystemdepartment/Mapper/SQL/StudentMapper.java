@@ -14,9 +14,9 @@ public class StudentMapper {
                 .name(studentDTO.getName())
                 .citizenship(studentDTO.getCitizenship())
                 .loe(studentDTO.getLoe())
-                .orientation(studentDTO.getOrientation())
-                .department(studentDTO.getDepartment())
-                .fqw(studentDTO.getFqw())
+                .orientation(OrientationMapper.mapToOrientation(studentDTO.getOrientation()))
+                .department(DepartmentMapper.mapToDepartment(studentDTO.getDepartment()))
+                .fqw(FQWMapper.mapToFQW(studentDTO.getFqw()))
                 .lecturers(studentDTO.getLecturers().stream().map(StudentLecturersMapper::mapToStudentLecturers).collect(Collectors.toList()))
                 .build();
     }
@@ -28,10 +28,10 @@ public class StudentMapper {
                 .name(student.getName())
                 .loe(student.getLoe())
                 .citizenship(student.getCitizenship())
-                .orientation(student.getOrientation())
-                .department(student.getDepartment())
+                .orientation(OrientationMapper.mapToOrientationDTO(student.getOrientation()))
+                .department(DepartmentMapper.mapToDepartmentDTO(student.getDepartment()))
                 .lecturers(student.getLecturers().stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).collect(Collectors.toList()))
-                .fqw(student.getFqw())
+                .fqw(FQWMapper.mapToFQWDTO(student.getFqw()))
                 .build();
     }
 }

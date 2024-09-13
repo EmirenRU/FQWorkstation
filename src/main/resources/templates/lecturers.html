@@ -45,7 +45,6 @@
                                 <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                             </label>
                         </div>
-    <!--#dates.format(#dates.createNow(), 'dd-MM-yyyy')-->
                         <div class="selector-patch-2">
                             <label class="selection-param">Тема
                                 <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'">
@@ -66,11 +65,12 @@
                                     </option>
                                     <option th:each="lecturer : ${lecturers_selector}"
                                             th:value="${lecturer.id}"
-                                            th:text="${lecturer.fio}">
+                                            th:text="${lecturer.name}">
                                     </option>
                                 </select>
                             </label>
-                        </div><button class="btn-reset form-button list-button" onclick="toggleDisplayAndSaveState()">Получить</button>
+                        </div>
+                        <button class="btn-reset form-button list-button" onclick="toggleDisplayAndSaveState()">Получить</button>
                     </form>
                 </div>
             </div>
@@ -94,11 +94,11 @@
                     </table>
                     <table>
                         <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
-                            <td class="td-table" th:text="${stlec.lecturer.fio}"></td>
+                            <td class="td-table" th:text="${stlec.lecturer.name}"></td>
                             <td class="td-table" th:text="${stlec.lecturer.academicDegree}"></td>
                             <td class="td-table" th:text="${stlec.lecturer.position}"></td>
                             <td class="td-table" th:text="${stlec.lecturer.department.name}"></td>
-                            <td class="td-table" th:text="${stlec.student.fio}"></td>
+                            <td class="td-table" th:text="${stlec.student.name}"></td>
                             <td class="td-table" th:text="${stlec.student.stud_num}"></td>
                             <td class="td-table" th:text="${stlec.student.citizenship}"></td>
                             <td class="td-table" th:text="${stlec.student.fqw.name}"></td>

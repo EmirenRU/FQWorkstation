@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,11 +18,14 @@ public class StudentDTO {
     private String loe;                     // Уровень образования == Level of Education
     private String classifier;              // Классификатор
 
-    private FQW fqw;
+    private FQWDTO fqw;
 
-    private Orientation orientation;          // Направление
+    private OrientationDTO orientation;          // Направление
 
-    private Department department;             // Кафедра
+    private DepartmentDTO department;             // Кафедра
 
     private List<StudentLecturersDTO> lecturers;
+
+    private List<YearStudentDTO> yearStudents = new ArrayList<>();
+
 }
