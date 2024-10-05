@@ -5,6 +5,7 @@
 - Apache Maven
 - Java 
 - PostgreSQL v16
+- JDK Development Kit 21
 
 ## Installation
 
