@@ -38,7 +38,7 @@ for (let button of buttons){
         }
     })
 }
-
+if(nextPage !== null){
 
 nextPage.addEventListener('click', function(e){
     e.preventDefault();
@@ -56,6 +56,8 @@ nextPage.addEventListener('click', function(e){
     }
 
 })
+
+}
 
 function getData(){
     return docForm.querySelectorAll('input');

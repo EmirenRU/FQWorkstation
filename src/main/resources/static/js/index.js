@@ -20,14 +20,14 @@ $(document).ready(function() {
 function toggleDisplayAndSaveState() {
     let x = document.getElementById("display-container");
     if (x.style.display === "none") {
-        x.style.display = "block";
+        x.style.display = "flex";
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     let x = document.getElementById("display-container");
     if (x!==null) {
-        x.style.display = "block";
+        x.style.display = "flex";
     }
 });
 

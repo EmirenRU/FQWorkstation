@@ -10,43 +10,44 @@
     <main layout:fragment="main">
         <div class="container">
             <div class="input__wrapper">
+
                 <form id="uploadProtocolForm" enctype="multipart/form-data">
                     <input onchange="this.form.submit()"
                            name="protocol"
                            type="file"
                            id="input__file"
                            class="input input__file"
-                           accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                           accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                     <label for="input__file" class="input__file-button">
                             <span class="input__file-icon-wrapper">
                                 <img class="input__file-icon" src="img/upload.svg" alt="Word файл" width="25">
                             </span>
                         <span class="input__file-button-text">Выберите файл</span>
                     </label>
-                    <div class="download">
-                    <a class="download-button" type="button" th:href="@{/api/v1/download_protocols}">Скачать протокол</a>
-                    </div>
+                        <div class="download">
+                        <a class="download-button" type="button" th:href="@{/api/v1/download_protocols}">Скачать протокол</a>
+                        </div>
                 </form>
                 <div id="uploadProtocolStatus"></div>
             </div>
 
-            <div class="input__wrapper">
-                <form id="uploadExcelForm" method="POST" enctype="multipart/form-data">
-                    <input onchange="this.form.submit()"
-                           name="excel"
-                           type="file"
-                           id="input__file__excel"
-                           class="input input__file"
-                           accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet   ">
-                    <label for="input__file__excel" class="input__file-button">
-                            <span class="input__file-icon-wrapper">
-                                <img class="input__file-icon" src="img/upload.svg" alt="Excel файл" width="25">
-                            </span>
-                        <span class="input__file-button-text">Выберите файл</span>
-                    </label>
-                </form>
-                <div id="uploadExcelStatus"></div>
-            </div>
+<!--            <div class="input__wrapper">-->
+<!--                <form id="uploadExcelForm" method="POST" enctype="multipart/form-data">-->
+<!--                    <input onchange="this.form.submit()"-->
+<!--                           name="excel"-->
+<!--                           type="file"-->
+<!--                           id="input__file__excel"-->
+<!--                           class="input input__file"-->
+<!--                           accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet   ">-->
+<!--                    <label for="input__file__excel" class="input__file-button">-->
+<!--                            <span class="input__file-icon-wrapper">-->
+<!--                                <img class="input__file-icon" src="img/upload.svg" alt="Excel файл" width="25">-->
+<!--                            </span>-->
+<!--                        <span class="input__file-button-text">Выберите файл</span>-->
+<!--                    </label>-->
+<!--                </form>-->
+<!--                <div id="uploadExcelStatus"></div>-->
+<!--            </div>-->
 
 <!--            <div class="input__wrapper">-->
 <!--                <form id="uploadZipForm" enctype="multipart/form-data" th:action="@{/functions}">-->

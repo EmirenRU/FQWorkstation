@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Controller.API;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.ZipFile;
@@ -112,6 +113,27 @@ public class ApplicationProgrammingInterfaceController {
 
     }
 
+    @PostMapping("/v2/upload_file")
+    public String uploadFileToCheckAndReturnFile(@RequestParam("file") MultipartFile request){
+        log.info("In uploadFileToCheckAndReturnFile");
+        String name = request.getOriginalFilename();
+
+        if (name != null && name.contains(".")){
+            String fileFormat = name.substring(name.lastIndexOf(".") + 1);
+            if (fileFormat.equals("xlsx") || fileFormat.equals("xls")) {
+                log.info("IN xlsx|xls comparison");
+
+            } else if (fileFormat.equals("doc") || fileFormat.equals("docx")) {
+                log.info("IN docx|doc comparison");
+
+            }
+            log.info("Working with file with format " +  fileFormat);
+        }
+
+
+        log.info("Out uploadFileToCheckAndReturnFile: " + name);
+    }
+
     @GetMapping("/v1/download_protocols")
     public String downloadProtocols(HttpServletResponse response) throws IOException {
         OutputStream out;
@@ -139,7 +161,7 @@ public class ApplicationProgrammingInterfaceController {
     }
 
     @PostMapping("/v1/deserialization-data")
-    public String deserialization(MultipartHttpServletRequest request, RedirectAttributes red) throws IOException {
+    public String deserialization(MultipartHttpServletRequest request) throws IOException {
         MultipartFile file = request.getFile("protocol");
 
         if (file == null || !file.getOriginalFilename().endsWith(FileTypes.DOCX.fileType) || file.isEmpty()) {
@@ -210,201 +232,7 @@ public class ApplicationProgrammingInterfaceController {
 
 
 //    @PostMapping("/v1/upload-zip-file")
-    public ResponseEntity<String> uploadZipFile(MultipartHttpServletRequest request, HttpServletResponse response) throws IOException {
-        MultipartFile file = request.getFile("zip");
-        assert file != null;
-        if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
-        }
 
-        log.info(file.toString());
-
-        try {
-            File tempFile = File.createTempFile("tempZip", ".zip");
-            file.transferTo(tempFile);
-            ZipFile zipFile = new ZipFile(tempFile);
-            zipFile.setCharset(Charset.forName("CP866"));
-
-            List<FileHeader> fileHeaders = zipFile.getFileHeaders();
-
-            for (FileHeader fileHeader : fileHeaders) {
-                String fileName = fileHeader.getFileName();
-                if (!fileHeader.isDirectory() && ( fileName.endsWith(FileTypes.DOCX.fileType) || fileName.endsWith(FileTypes.Excel.fileType) || fileName.endsWith(FileTypes.PDF.fileType)) ) {
-                    log.info(fileName);
-
-                    if (fileName.contains("ВКР")) {
-                        if (fileName.endsWith(FileTypes.DOCX.fileType)){
-                            map.get(FileData.FQW.fileData).get(FileTypes.Word.fileType).add(fileHeader);
-                        } else if (fileName.endsWith(FileTypes.Excel.fileType)) {
-                            map.get(FileData.FQW.fileData).get(FileTypes.Excel.fileType).add(fileHeader);
-                        }
-
-                    } else if (fileName.contains("ГОС")) {
-                        log.info("ГОС " + fileName);
-                        if (fileName.endsWith(FileTypes.DOCX.fileType)){
-                            map.get(FileData.GOV.fileData).get(FileTypes.Word.fileType).add(fileHeader);
-                        } else if (fileName.endsWith(FileTypes.Excel.fileType)) {
-                            map.get(FileData.GOV.fileData).get(FileTypes.Excel.fileType).add(fileHeader);
-                        }
-
-                    } else if (fileName.contains("Отзыв и рец/")) {
-                        log.info("Отзыв и рец " + fileName);
-                        if (fileName.endsWith(FileTypes.DOCX.fileType)){
-                            map.get(FileData.REV.fileData).get(FileTypes.Word.fileType).add(fileHeader);
-                        } else if (fileName.endsWith(FileTypes.Excel.fileType)) {
-                            map.get(FileData.REV.fileData).get(FileTypes.Excel.fileType).add(fileHeader);
-
-                        }
-
-                    } else if (fileName.contains("Отчёт председателя/")) {
-                        log.info("отчёт председателя " + fileName);
-                        if (fileName.endsWith(FileTypes.DOCX.fileType)){
-                            map.get(FileData.COM.fileData).get(FileTypes.Word.fileType).add(fileHeader);
-                        } else if (fileName.endsWith(FileTypes.Excel.fileType)) {
-                            map.get(FileData.COM.fileData).get(FileTypes.Excel.fileType).add(fileHeader);
-                        }
-                    } else if (fileName.contains("Приказы/") && fileName.endsWith(FileTypes.PDF.fileType)){
-                            map.get(FileData.PRO.fileData).get(FileTypes.PDF.fileType).add(fileHeader);
-                    }
-                }
-            }
-
-
-//            handleFqwWordFile(zipFile, map.get(FileData.FQW.fileData).get(FileTypes.Word.fileType));
-//            handleFqwExcelFile(zipFile, map.get(FileData.FQW.fileData).get(FileTypes.Excel.fileType));
-//            handleGosWordFile(zipFile, map.get(FileData.GOV.fileData).get(FileTypes.Word.fileType));
-//            handleGosExcelFile(zipFile, map.get(FileData.GOV.fileData).get(FileTypes.Excel.fileType));
-//            handleReviewWordFile(zipFile, map.get(FileData.REV.fileData).get(FileTypes.Word.fileType));
-//            handleReviewExcelFile(zipFile, map.get(FileData.REV.fileData).get(FileTypes.Excel.fileType));
-//            handleCommisionersReviewWordFile(zipFile, map.get(FileData.COM.fileData).get(FileTypes.Word.fileType));
-//            handleCommisionersReviewExcelFile(zipFile, map.get(FileData.COM.fileData).get(FileTypes.Excel.fileType));
-//            handleDecreePdfFile(zipFile, map.get(FileData.PRO.fileData).get(FileTypes.PDF.fileType));
-
-        } catch (IOException ex ) {
-            log.warn(ex.getMessage());
-        } finally {
-            map.clear();
-        }
-
-        return null;
-    }
-
-    private final Map<String, Map<String, List<String>>> mapOfDataFromPDF = new HashMap<>();
-
-    private void handleDecreePdfFile(ZipFile zipFile, List<FileHeader> fileHeaders) throws IOException, InterruptedException {
-
-
-        final Pattern NUMERIC_PATTERN = Pattern.compile("^(0|[1-9]\\d*)$");
-        Map<String, List<String>> listMap = new HashMap<>();
-        List<String> currentHeaders = new ArrayList<>();
-
-        for (FileHeader fileHeader : fileHeaders) {
-            log.info("fileHeader " + fileHeader.getFileName());
-            byte[] bytes = zipFile.getInputStream(fileHeader).readAllBytes();
-            PDDocument document = Loader.loadPDF(bytes);
-
-//            PDFTextStripper reader = new PDFTextStripper();
-
-            SpreadsheetExtractionAlgorithm sea = new SpreadsheetExtractionAlgorithm();
-            PageIterator pi = new ObjectExtractor(document).extract();
-            String orientation;
-            String text = null;
-
-            while (pi.hasNext()) {
-                Page page = pi.next();
-                List<Table> tables = sea.extract(page);
-                for (Table table : tables) {
-                    boolean isHeaderProceed = false;
-                    String nonEmptyCellsString = "";
-                    for (List<RectangularTextContainer> rows : table.getRows()) {
-                        int nonEmptyCells = 0;
-                        int numericCells = 0;
-                        for (RectangularTextContainer col : rows) {
-                            text = col.getText().replaceAll("\r", " ").trim();
-                            log.info(text);
-
-                            if (text.contains("No п/п")){
-                                break;
-                            }
-                            if (NUMERIC_PATTERN.matcher(text).matches()) {
-                                log.warn("text is numeric");
-                                numericCells++;
-                            }
-                            if (numericCells > 1){
-                                log.warn("skipping in numeric cells");
-                                break;
-                            }
-
-                            if (!isHeaderProceed){
-                                if (text.isEmpty()){
-                                    nonEmptyCells++;
-
-                                }
-                                if (nonEmptyCells > 1) {
-                                    isHeaderProceed = true;
-                                    nonEmptyCells = 0;
-                                    continue;
-                                }
-                            }
-
-                            log.info("nonEmptyCells: " + nonEmptyCells);
-                        }
-
-                        Thread.sleep(1000);
-
-
-                        for (RectangularTextContainer cell : rows){
-                            text = cell.getText().replaceAll("\r", " ").trim();
-                        }
-
-
-                    }
-                }
-            }
-//            boolean flag = false;
-//            for (int i = 1; i < pageCount; i++) {
-//                reader.setStartPage(i);
-//                reader.setEndPage(i);
-//                String pageText = reader.getText(document).replaceAll("\\s+", " ").trim();
-//                log.info("useless" + pageText);
-//                if (!flag && !pageText.contains(keyword)){
-//                    flag = true;
-//                    continue;
-//                }
-
-
-
-//                log.info("Page " + i + ": " + pageText);
-//                Thread.sleep(10000);
-//            }
-
-            document.close();
-        }
-    }
-
-//    private void handleFqwExcelFile(ZipFile zipFile, List<FileHeader> l) {
-//        for (FileHeader fileHeader : l) {
-//            try {
-//                data = getListOfDataFromFile(zipFile.getInputStream(fileHeader));
-//            } catch (IOException e) {
-//                log.warn(e.getMessage());
-//            }
-//        }
-//    }
-
-    private void handleFqwWordFile(ZipFile zipFile, List<FileHeader> l) {
-        zipFile.setCharset(Charset.forName("CP866"));
-        for (FileHeader fileHeader : l) {
-            if (fileHeader.getFileName().contains("Таблица_защит")) {
-                try {
-                    data = getListOfDataFromFile(zipFile.getInputStream(fileHeader));
-                    parseDataFromWordToSqlDatabase(data);
-                } catch (IOException e) {
-                    log.warn(e.getMessage());
-                }
-            }
-        }
-    }
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
         // I am not sure about liquidity of data

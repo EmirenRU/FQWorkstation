@@ -25,9 +25,9 @@
                       name="name"
                       class="input__str"
                       th:field="*{phone}"
-                      placeholder="Введите номер телефона"
-                      required
+                      placeholder="Введите номер телефона (по желанию)"
                       aria-label="Введите номер телефона"
+                      pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$ "
               >
               <input
                       type="email"
@@ -41,6 +41,7 @@
                       th:field="*{description}"
                       class="input__str-msg msg-box"
                       placeholder="Сообщение"
+                      required
               ></textarea>
             </div>
             <div class="send flex">
@@ -48,8 +49,8 @@
 
               <div class="custom">
                 <label class="custom-checkbox">
-                  <input type="checkbox" name="agreement" class="custom-input" role="checkbox" aria-checked="false">
-                  <span class="custom-text">Согласен на обработку данных</span>
+                  <input type="checkbox" name="agreement" class="custom-input" role="checkbox" required aria-checked="false">
+                  <span class="custom-text" >Согласен на обработку данных</span>
                 </label>
               </div>
             </div>

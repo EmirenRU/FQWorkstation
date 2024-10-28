@@ -27,6 +27,10 @@ table thead th {
 	border-right: 1px solid #ddd;
 }
 
+.header{
+	margin-bottom: 45px ;
+}
+
 
 .section-header {
 	margin: 0;
@@ -40,6 +44,7 @@ table thead th {
 }
 
 .tr-table {
+	background-color: #ffffff;
 	display: flex;
 	width: 100%;
 	outline: 0.5px solid black;
@@ -76,7 +81,7 @@ body {
 	font-family: "Muller", Arial, Helvetica, sans-serif;
 
 }
-
+/*
 .container {
 	max-width: 1800px;
 	padding-left: 45px;
@@ -84,7 +89,7 @@ body {
 	margin: 0 auto;
 	width: 100%;
 }
-
+*/
 .nav {
 	display: flex;
 	align-items: center;
@@ -155,11 +160,12 @@ main {
 
 
 .form-container {
-	padding-top: 45px;
-	padding-bottom: 45px;
 	border-radius: 15px;
 }
 
+.selector-form{
+	margin-bottom: 45px;
+}
 
 .form-body {
 	display: flex;
@@ -270,8 +276,9 @@ main {
 
 
 .display-section {
-	display: block;
-	max-width: 100%;
+    flex-direction: column;
+    max-width: 100%;
+    align-items: center;
 }
 
 .footer {
@@ -342,9 +349,6 @@ main {
 	display: inline-block;
 }
 
-.display {
-	padding-bottom: 50px;
-}
 
 
 .dropbtn {
@@ -546,6 +550,7 @@ main {
 	box-shadow: -1px 1px 29px -2px rgba(70, 156, 235, 0.75);
 	-webkit-box-shadow: -1px 1px 29px -2px rgba(70, 156, 235, 0.75);
 	-moz-box-shadow: -1px 1px 29px -2px rgba(70, 156, 235, 0.75);
+	margin-bottom: 40px;
 }
 
 .nav__links:hover {
@@ -630,8 +635,10 @@ main {
 	border: 2px #4670e4 solid;
 	border-radius: 3px;
 	background-color: #4670e4;
-	padding: 10px 30px;
-	justify-content: flex-end;
+    padding: 10px 50px;
+	justify-content: center;
+	max-width: 265px;
+	
 }
 
 .download-button{
@@ -640,6 +647,8 @@ main {
 	font-size: 1.125rem;
 	text-decoration: none;
 	color: #FFFFFF;
+	width: 100%;
+
 }
 
 

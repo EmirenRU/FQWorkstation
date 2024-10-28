@@ -56,6 +56,57 @@ public class WordServiceImpl implements WordService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<List<String>> getListOfDataFromFile(InputStream file) {
+        List<List<String>> data = List.of();
+        NiceXWPFDocument document;
+
+        if (data == null) {
+            data = new ArrayList<>();
+        }
+
+        if (!data.isEmpty()) {
+            for (List<String> row : data)
+                row.clear();
+            data.clear();
+        }
+
+        try {
+            data = new ArrayList<>();
+            document = new NiceXWPFDocument(file);
+            List<XWPFTable> tables = document.getTables();
+
+            if (tables.size() == 3) {
+                XWPFTable t1 = tables.get(0);
+                XWPFTable t2 = tables.get(1);
+                XWPFTable t3 = tables.get(2);
+
+                log.info(t1.getNumberOfRows() + " " + t2.getNumberOfRows() + " " + t3.getNumberOfRows());
+
+                if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()) {
+                    for (int i = 1; i < t1.getNumberOfRows(); i++) {
+                        XWPFTableRow r1 = t1.getRow(i);
+                        XWPFTableRow r2 = t2.getRow(i);
+                        XWPFTableRow r3 = t3.getRow(i);
+
+
+                        List<String> innerArray = new ArrayList<>() {
+                        };
+
+                        innerArray.addAll(wordService.processTable(t1, i, r1.getTableCells().size()));
+                        innerArray.addAll(wordService.processTable(t2, i, r2.getTableCells().size()));
+                        innerArray.addAll(wordService.processTable(t3, i, r3.getTableCells().size()));
+
+                        data.add(innerArray);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.info("Handle later deserialization");
+        }
+        return data;
+    }
+
     private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data)
             throws Exception
     {

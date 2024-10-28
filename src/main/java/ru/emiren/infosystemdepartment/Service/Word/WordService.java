@@ -1,17 +1,14 @@
 package ru.emiren.infosystemdepartment.Service.Word;
 
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 public interface WordService {
 
     public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception;
-    List<String> processTable(XWPFTable table, int indexRow , int numCells);
-
+    public List<String> processTable(XWPFTable table, int indexRow , int numCells);
+    public List<List<String>> getListOfDataFromFile(InputStream file);
 }

@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/media.css">
     <link rel="stylesheet" href="/thirdParty/select2/css/select2.min.css">
@@ -17,11 +18,14 @@
     <script defer src="/js/dataUtils.js"></script>
     <script defer src="/js/uploadDataForm.js"></script>
     <script defer src="/js/index.js"></script>
+    <script defer src="/js/table.js"></script>
+    <script defer src="/js/download_table.js"></script>
+
 </head>
 
 <header layout:fragment="header" class="header">
     <div class="header__container flex">
-        <div class="container flex">
+        <div class="container-fluid flex">
             <a th:href="@{/}" class="header__logo">
                 <div class="header__logo-inside flex"><img src="/img/rudn_logo.png" alt="РУДН" class="header__logo__picture"></div></a>
             <nav class="nav flex">
