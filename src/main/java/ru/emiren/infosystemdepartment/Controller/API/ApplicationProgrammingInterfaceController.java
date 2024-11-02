@@ -129,7 +129,6 @@ public class ApplicationProgrammingInterfaceController {
             log.error("Error processing file upload: {}", ex.getMessage());
             headers.put("status", "500");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers);
-        } finally {
         }
     }
 

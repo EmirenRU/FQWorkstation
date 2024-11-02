@@ -30,17 +30,7 @@ public class WordServiceImpl implements WordService {
     @Autowired
     public WordServiceImpl(@Value("${template.file.path}") String TEMPLATE_PATH, ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
-        resource = resourceLoader.getResource(TEMPLATE_PATH);
-        //        this.TEMPLATE_PATH = "classpath:template.docx";
-//        resource = resourceLoader.getResource(this.TEMPLATE_PATH);
-        try {
-            inputStream = resource.getInputStream();
-
-        } catch (IOException e) {
-            System.out.println();
-            System.out.println("\nSomething wrong with Template Reading");
-            System.out.println(e.getMessage());
-        }
+        this.resource       = resourceLoader.getResource(TEMPLATE_PATH);
     }
 
     @Override
@@ -111,6 +101,8 @@ public class WordServiceImpl implements WordService {
     {
         NiceXWPFDocument document = null;
         try {
+            inputStream = resource.getInputStream();
+
             document = new NiceXWPFDocument(inputStream);
             List<NiceXWPFDocument> documents = new ArrayList<>();
 
