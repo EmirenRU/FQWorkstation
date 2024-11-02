@@ -253,6 +253,10 @@ main {
 	white-space: nowrap;
 }
 
+ option:hover {
+    background-color: #1846a8 !important;
+}
+
 
 .val {
 	width: 121px;
@@ -786,4 +790,64 @@ main {
 .button-wrapper{
 	display: flex;
 	justify-content: center
+}
+
+
+.instruction{
+	background-color: #FFFFFF;
+	display: flex;
+	flex-direction: column;
+	padding: 50px 50px;
+	border-radius: 10px;
+	align-items: center;
+	text-align: start;
+	overflow: auto;
+	justify-content: center;
+}
+
+.instruction-picture{
+	max-width: 80%;
+	margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 14px;
+	font-style: italic;
+}
+
+.instruction-picture-special{
+	max-width: 80%;
+	max-height: 500px;
+	margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 14px;
+	font-style: italic;
+}
+
+
+.instruction-text{
+	padding:0 ;
+	margin: 0;
+	width: 85%;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+    align-content: space-between;
+	line-height: 20px;
+}
+
+.instruction-img{
+	max-width: 100%;
+	max-height: 500px;
+}
+
+.text-space{
+	width: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-content: space-around;
+    flex-wrap: wrap;
 }

@@ -2,14 +2,13 @@ package ru.emiren.infosystemdepartment.Service.Word.Impl;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
-import org.springframework.data.repository.cdi.Eager;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
@@ -18,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class WordServiceImpl implements WordService {
 
 //    @Value("${template.file.path}")
@@ -44,7 +44,7 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public NiceXWPFDocument generateWordDocument(List<List<String>> data) throws Exception{
+    public NiceXWPFDocument generateWordDocument(List<List<String>> data){
         return createWordDocumentByTemplatesPath(data);
     }
 
@@ -81,7 +81,7 @@ public class WordServiceImpl implements WordService {
                 XWPFTable t2 = tables.get(1);
                 XWPFTable t3 = tables.get(2);
 
-                log.info(t1.getNumberOfRows() + " " + t2.getNumberOfRows() + " " + t3.getNumberOfRows());
+//                log.info(t1.getNumberOfRows() + " " + t2.getNumberOfRows() + " " + t3.getNumberOfRows());
 
                 if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()) {
                     for (int i = 1; i < t1.getNumberOfRows(); i++) {
@@ -93,9 +93,9 @@ public class WordServiceImpl implements WordService {
                         List<String> innerArray = new ArrayList<>() {
                         };
 
-                        innerArray.addAll(wordService.processTable(t1, i, r1.getTableCells().size()));
-                        innerArray.addAll(wordService.processTable(t2, i, r2.getTableCells().size()));
-                        innerArray.addAll(wordService.processTable(t3, i, r3.getTableCells().size()));
+                        innerArray.addAll(processTable(t1, i, r1.getTableCells().size()));
+                        innerArray.addAll(processTable(t2, i, r2.getTableCells().size()));
+                        innerArray.addAll(processTable(t3, i, r3.getTableCells().size()));
 
                         data.add(innerArray);
                     }
@@ -108,12 +108,9 @@ public class WordServiceImpl implements WordService {
     }
 
     private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data)
-            throws Exception
     {
         NiceXWPFDocument document = null;
         try {
-
-
             document = new NiceXWPFDocument(inputStream);
             List<NiceXWPFDocument> documents = new ArrayList<>();
 
@@ -137,8 +134,8 @@ public class WordServiceImpl implements WordService {
 
 
             return document;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.warn("WordService: {}", e.getMessage());
         }
         return document;
     }

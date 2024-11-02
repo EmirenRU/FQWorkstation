@@ -4,32 +4,31 @@ import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
-import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.rest.core.mapping.RepositoryResourceMappings;
+import org.springframework.http.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
+import ru.emiren.infosystemdepartment.Model.Temporal.FileHolder;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
+import ru.emiren.infosystemdepartment.Service.Deserialization.DeserializationService;
+import ru.emiren.infosystemdepartment.Service.Download.DownloadService;
+import ru.emiren.infosystemdepartment.Service.File.FileService;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
-import technology.tabula.*;
-import technology.tabula.extractors.SpreadsheetExtractionAlgorithm;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Slf4j
 @RestController
@@ -46,48 +45,24 @@ public class ApplicationProgrammingInterfaceController {
     private final StudentLecturersService studentLecturersService;
     private final FQWService fqwService;
     private final YearStudentService yearStudentService;
-
+    private final FileService fileService;
+    private final DeserializationService deserializationService;
+    private final DownloadService downloadService;
     private final WordService wordService;
 
-
-    public enum FileTypes{
-        Excel(".xslx"),
-        Word(".doc"),
-        PDF(".pdf"),
-        DOCX(".docx");
-
-        private final String fileType;
-        FileTypes(String fileType) {
-            this.fileType = fileType;
-        }
-    }
-
-    public enum FileData{
-        FQW("fqw"), // FinalQualifyingWork ВКР
-        GOV("gos"), //
-        REV("rev"), // Review Отзыв
-        COM("com"),
-        PRO("pro");
-
-        private final String fileData;
-        FileData(String fileData) { this.fileData = fileData; }
-    }
-
-    private final Map<String, Map<String,List<FileHeader>>> map = new HashMap<>(
-            Map.of(
-                    FileData.FQW.fileData, new HashMap<>(Map.of(FileTypes.Word.fileType, new ArrayList<>(), FileTypes.Excel.fileType, new ArrayList<>())),
-                    FileData.GOV.fileData, new HashMap<>(Map.of(FileTypes.Word.fileType, new ArrayList<>(), FileTypes.Excel.fileType, new ArrayList<>())),
-                    FileData.REV.fileData, new HashMap<>(Map.of(FileTypes.Word.fileType, new ArrayList<>(), FileTypes.Excel.fileType, new ArrayList<>())),
-                    FileData.COM.fileData, new HashMap<>(Map.of(FileTypes.Word.fileType, new ArrayList<>(), FileTypes.Excel.fileType, new ArrayList<>())),
-                    FileData.PRO.fileData, new HashMap<>(Map.of(FileTypes.PDF.fileType , new ArrayList<>()))
-            )
-    );
+    private final FunctionsController functionsController;
+//    private final SimpMessagingTemplate messagingTemplate;
 
 
-    private final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss");
+    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
+
+    @Autowired
+    private DateFormat dateFormat;
     private Date date;
 
     List<List<String>> data;
+    @Autowired
+    private RepositoryResourceMappings resourceMappings;
 
     @Autowired
     public ApplicationProgrammingInterfaceController(StudentService studentService,
@@ -99,7 +74,12 @@ public class ApplicationProgrammingInterfaceController {
                                                      LecturerRepository lecturerRepository,
                                                      FQWService fqwService,
                                                      YearStudentService yearStudentService,
-                                                     WordService wordService) {
+                                                     FileService fileService,
+                                                     DeserializationService deserializationService,
+                                                     DownloadService downloadService,
+                                                     WordService wordService, FunctionsController functionsController
+//                                                     SimpMessagingTemplate messagingTemplate
+    ) {
         this.studentService = studentService;
         this.departmentService = departmentService;
         this.lecturerService = lecturerService;
@@ -108,119 +88,111 @@ public class ApplicationProgrammingInterfaceController {
         this.studentLecturersService = studentLecturersService;
         this.lecturerRepository = lecturerRepository;
         this.fqwService = fqwService;
+        this.fileService = fileService;
+        this.deserializationService = deserializationService;
+        this.downloadService = downloadService;
         this.wordService = wordService;
         this.yearStudentService = yearStudentService;
 
+        this.functionsController = functionsController;
+//        this.messagingTemplate = messagingTemplate;
     }
 
-    @PostMapping("/v2/upload_file")
-    public String uploadFileToCheckAndReturnFile(@RequestParam("file") MultipartFile request){
-        log.info("In uploadFileToCheckAndReturnFile");
-        String name = request.getOriginalFilename();
+    FileHolder fileHolder = new FileHolder();
 
-        if (name != null && name.contains(".")){
-            String fileFormat = name.substring(name.lastIndexOf(".") + 1);
-            if (fileFormat.equals("xlsx") || fileFormat.equals("xls")) {
-                log.info("IN xlsx|xls comparison");
+    @PostMapping("v2/upload_file")
+    public ResponseEntity<?> handleFileUpload(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("id") String fileId) {
+        Map<String, String> headers = new HashMap<>();
+        log.info("Received file upload with ID: {}", fileId);
 
-            } else if (fileFormat.equals("doc") || fileFormat.equals("docx")) {
-                log.info("IN docx|doc comparison");
+        try (InputStream is = file.getInputStream();
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            log.info("Processing file: {}", file.getOriginalFilename());
 
-            }
-            log.info("Working with file with format " +  fileFormat);
+            List<List<String>> temp_data = wordService.getListOfDataFromFile(is);
+            NiceXWPFDocument processedDocument = wordService.generateWordDocument(temp_data);
+
+            log.info("Document generated successfully for file ID: {}", fileId);
+            processedDocument.write(baos);
+            byte[] docBytes = baos.toByteArray();
+
+            fileHolder.storeDocument(fileId, docBytes);
+
+            headers.put("status", "200");
+            headers.put("id", fileId);
+            PoitlIOUtils.closeQuietly(processedDocument);
+
+            return ResponseEntity.ok(headers);
+        } catch (IOException ex) {
+            log.error("Error processing file upload: {}", ex.getMessage());
+            headers.put("status", "500");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers);
+        } finally {
         }
+    }
 
 
-        log.info("Out uploadFileToCheckAndReturnFile: " + name);
+    /* TODO CREATION,CHECK,DELETE,HOLDING for File delete last pages of word
+    *
+    */
+    @PostMapping("/v2/check_file_availability/{id}")
+    public ResponseEntity<?> checkFileAvailability(@PathVariable("id") String id ) {
+        log.info(id);
+        ResponseEntity<?> response;
+
+        if (fileHolder.containsDocument(id)) {
+            response = ResponseEntity.status(HttpStatus.OK).body("200");
+            return response;
+//            return new HashMap<String, String>(Map.of("status", "200"));
+        } else {
+            response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not Found");
+            return response;
+//            return new HashMap<String, String>(Map.of("status", "File not found"));
+
+        }
+    }
+
+    @GetMapping("/v2/download_file/{id}")
+    public ResponseEntity<String> downloadFile(@PathVariable("id") String id, HttpServletResponse response) {
+        log.info("DownloadWordFile is activated with id: {}", id );
+        Date date = new Date();
+        if (fileHolder.containsDocument(id)) {
+            byte[] document = fileHolder.getDocument(id);
+            log.info(document.toString());
+
+            response.setContentType("application/octet-stream");
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                    ContentDisposition.builder("attachment")
+                            .filename("protocols-" + dateFormat.format(date) + ".docx")
+                            .build().toString());
+            try (OutputStream os = response.getOutputStream();
+                 BufferedOutputStream bos = new BufferedOutputStream(os);
+            ) {
+                log.info("In OutputStream for {}", id);
+//                document.write(bos);
+                bos.write(document);
+                log.info("Out OutputStream");
+                return ResponseEntity.ok("200");
+            } catch (IOException e) {
+                log.warn(e.getMessage());
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+            } finally {
+                try {
+                    response.flushBuffer();
+                } catch (IOException e) {
+                    log.warn(e.getMessage());
+                }
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/v1/download_protocols")
     public String downloadProtocols(HttpServletResponse response) throws IOException {
-        OutputStream out;
-        BufferedOutputStream bos;
-        if (!data.isEmpty()) {
-            try {
-                NiceXWPFDocument doc = wordService.generateWordDocument(data);
-                out = response.getOutputStream();
-                bos = new BufferedOutputStream(out);
-                date = new Date();
-                response.setContentType("application/octet-stream");
-                response.setHeader("Content-disposition", "attachment;filename=\"" + "protocols-" + dateFormat.format(date) + FileTypes.DOCX.fileType + "\"");
-                doc.write(bos);
-                bos.flush();
-                out.flush();
-                PoitlIOUtils.closeQuietlyMulti(doc, bos, out);
-                date = null;
-            } catch (IllegalStateException e) {
-                log.info("Logs for WORD Templating");
-            } catch (Exception e) {
-                log.info(e.getMessage());
-            }
-        }
+        downloadService.generateAndSendFile(data, response);
         return "redirect:/functions";
-    }
-
-    @PostMapping("/v1/deserialization-data")
-    public String deserialization(MultipartHttpServletRequest request) throws IOException {
-        MultipartFile file = request.getFile("protocol");
-
-        if (file == null || !file.getOriginalFilename().endsWith(FileTypes.DOCX.fileType) || file.isEmpty()) {
-            log.info("Something Wrong With File");
-        }
-
-        if (file != null && file.getSize() > 0) {
-            data = getListOfDataFromFile(file.getInputStream());
-        }
-        return "redirect:/functions";
-    }
-
-    private List<List<String>> getListOfDataFromFile(InputStream file) {
-        NiceXWPFDocument document;
-
-        if (data == null) {
-            data = new ArrayList<>();
-        }
-
-        if (!data.isEmpty()) {
-            for (List<String> row : data)
-                row.clear();
-            data.clear();
-        }
-
-        try {
-            data = new ArrayList<>();
-            document = new NiceXWPFDocument(file);
-            List<XWPFTable> tables = document.getTables();
-
-            if (tables.size() == 3) {
-                XWPFTable t1 = tables.get(0);
-                XWPFTable t2 = tables.get(1);
-                XWPFTable t3 = tables.get(2);
-
-                log.info(t1.getNumberOfRows() + " " + t2.getNumberOfRows() + " " + t3.getNumberOfRows());
-
-                if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()) {
-                    for (int i = 1; i < t1.getNumberOfRows(); i++) {
-                        XWPFTableRow r1 = t1.getRow(i);
-                        XWPFTableRow r2 = t2.getRow(i);
-                        XWPFTableRow r3 = t3.getRow(i);
-
-
-                        List<String> innerArray = new ArrayList<>() {
-                        };
-
-                        innerArray.addAll(wordService.processTable(t1, i, r1.getTableCells().size()));
-                        innerArray.addAll(wordService.processTable(t2, i, r2.getTableCells().size()));
-                        innerArray.addAll(wordService.processTable(t3, i, r3.getTableCells().size()));
-
-                        data.add(innerArray);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            log.info("Handle later deserialization");
-        }
-        return data;
     }
 
     @PostMapping("/v1/upload-data")
@@ -230,6 +202,55 @@ public class ApplicationProgrammingInterfaceController {
         return ResponseEntity.status(HttpStatus.OK).body("Proceed");
     }
 
+    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
+        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
+        Arrays.stream(FileData.values()).forEach(fileData -> {
+            Map<String, List<FileHeader>> typeMap = new HashMap<>();
+            if (fileData == FileData.PRO) {
+                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
+            } else {
+                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
+                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
+            }
+            map.put(fileData.getData(), typeMap);
+        });
+        return map;
+    }
+
+    public enum FileTypes {
+        Excel(".xlsx"),
+        Word(".doc"),
+        PDF(".pdf"),
+        DOCX(".docx");
+
+        private final String extension;
+
+        FileTypes(String extension) {
+            this.extension = extension;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+    }
+
+    public enum FileData {
+        FQW("fqw"),
+        GOV("gos"),
+        REV("rev"),
+        COM("com"),
+        PRO("pro");
+
+        private final String data;
+
+        FileData(String data) {
+            this.data = data;
+        }
+
+        public String getData() {
+            return data;
+        }
+    }
 
 //    @PostMapping("/v1/upload-zip-file")
 

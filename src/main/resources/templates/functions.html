@@ -3,30 +3,33 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
+
 <head>
     <title>Функционал</title>
+
 </head>
 <body layout:fragment="body">
     <main layout:fragment="main">
         <div class="container">
             <div class="input__wrapper">
 
-                <form id="uploadProtocolForm" enctype="multipart/form-data">
-                    <input onchange="this.form.submit()"
-                           name="protocol"
-                           type="file"
-                           id="input__file"
-                           class="input input__file"
-                           accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                <form id="uploadProtocolForm">
+                    <input
+                            onchange="uploadFileAndDownload()"
+                            name="file"
+                            type="file"
+                            id="input__file"
+                            class="input input__file"
+                            accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                     <label for="input__file" class="input__file-button">
-                            <span class="input__file-icon-wrapper">
-                                <img class="input__file-icon" src="img/upload.svg" alt="Word файл" width="25">
-                            </span>
+                    <span class="input__file-icon-wrapper">
+                        <img class="input__file-icon" src="img/upload.svg" alt="Word файл" width="25">
+                    </span>
                         <span class="input__file-button-text">Выберите файл</span>
                     </label>
-                        <div class="download">
+                    <div class="download">
                         <a class="download-button" type="button" th:href="@{/api/v1/download_protocols}">Скачать протокол</a>
-                        </div>
+                    </div>
                 </form>
                 <div id="uploadProtocolStatus"></div>
             </div>

@@ -31,94 +31,82 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-$(document).ready(function() {
-    $('#input__file').on('change', function() {
-        let formData = new FormData();
-        let file = this.files[0];
-        formData.append('protocol', file);
 
-        $.ajax({
-            type: 'POST',
-            url: '/api/v1/deserialization-data',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                $('#uploadStatus').html('<p>' + response + '</p>');
-            },
-            error: function(response) {
-                $('#uploadStatus').html('<p>File upload failed.</p>');
-            }
-        });
-    });
-});
+async function uploadFileAndDownload() {
+    let id = new Date().toJSON();
+    let formData = new FormData();
+    let file = $('#input__file')[0].files[0];
+
+    if (!file) {
+        $('#uploadProtocolStatus').text("Please select a file.");
+        return;
+    }
+
+    formData.append('file', file);
+    formData.append('id', id);
+
+    // Upload the file
+    let settings = {
+        method: 'POST',
+        body: formData,
+    };
+
+    try {
+        let response = await fetch('/api/v2/upload_file', settings);
+        let respData = await response.json();
+
+        if (respData.status === '200') {
+            $('#uploadProtocolStatus').text("File uploaded successfully!");
+            await checkFileAvailability(id);
+        } else {
+            $('#uploadProtocolStatus').text("Error uploading file: " + respData.status);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        $('#uploadProtocolStatus').text("Error: " + error.message);
+    }
+}
+
+async function checkFileAvailability(id) {
+    let isAvailable = false;
+    let settings = {
+        method: "POST",
+    };
+
+    while (!isAvailable) {
+        console.log("Checking file availability...");
+        let response = await fetch("/api/v2/check_file_availability/" + id, settings);
+
+        if (await response.text() === '200') {
+            console.log("File is available. Proceeding to download...");
+            isAvailable = true;
+            await downloadFile(id);
+        } else {
+
+            await new Promise(r => setTimeout(r, 3000));
+        }
+    }
+}
 
 
-$(document).ready(function() {
-    $('#input__file__excel').on('change', function() {
-        let formData = new FormData();
-        let file = this.files[0];
-        formData.append('excel', file);
+async function downloadFile(options) {
+    try {
+        const response = await fetch("/api/v2/download_file/" + options, { method: "GET" });
 
-        $.ajax({
-            type: 'POST',
-            url: '/api/v2/upload-excel',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                $('#uploadStatus').html('<p>' + response + '</p>');
-            },
-            error: function(response) {
-                $('#uploadStatus').html('<p>File upload failed.</p>');
-            }
-        });
-    });
-});
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-$(document).ready(function() {
-    $('#input__file__excel').on('change', function() {
-        let formData = new FormData();
-        let file = this.files[0];
-        formData.append('excel', file);
-
-        $.ajax({
-            type: 'POST',
-            url: '/api/v2/upload-excel',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                $('#uploadStatus').html('<p>' + response + '</p>');
-            },
-            error: function(response) {
-                $('#uploadStatus').html('<p>File upload failed.</p>');
-            }
-        });
-    });
-});
-
-$(document).ready(function() {
-    $('#input__file__zip').on('change', function() {
-        let formData = new FormData();
-        let file = this.files[0];
-
-        formData.append('zip', file);
-
-        $.ajax({
-            type: 'POST',
-            url: '/api/v1/upload-zip-file',
-            data: formData,
-            contentType: false,
-            processData: false,
-            timeout: 600000,
-            success: function(response) {
-                $('#uploadStatus').html('<p>' + response + '</p>');
-            },
-            error: function(response) {
-                $('#uploadStatus').html('<p>File upload failed.</p>');
-            }
-        });
-    });
-});
-
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = 'protocols.docx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+}
