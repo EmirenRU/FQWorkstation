@@ -31,11 +31,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function fileToByteArray(file) {
+    return new Promise((resolve, reject) => {
+        try {
+            let reader = new FileReader();
+            let fileByteArray = [];
+            reader.readAsArrayBuffer(file);
+            reader.onloadend = (evt) => {
+                if (evt.target.readyState == FileReader.DONE) {
+                    let arrayBuffer = evt.target.result,
+                        array = new Uint8Array(arrayBuffer);
+                    for (byte of array) {
+                        fileByteArray.push(byte);
+                    }
+                }
+                resolve(fileByteArray);
+            }
+        }
+        catch (e) {
+            reject(e);
+        }
+    })
+}
+
+function formHash(file){
+    return new Promise(function (resolve){
+
+        let reader = new FileReader();
+        reader.onload = function(event) {
+            sha256(reader.result)
+            resolve(sha256(reader.result))
+        };
+        reader.readAsText(file)
+    })
+}
+
 
 async function uploadFileAndDownload() {
     let id = new Date().toJSON();
     let formData = new FormData();
     let file = $('#input__file')[0].files[0];
+    let hashId = await formHash(file);
+    // file.readAsArrayBuffer()
+    console.log(hashId)
 
     if (!file) {
         $('#uploadProtocolStatus').text("Please select a file.");

@@ -51,14 +51,11 @@ public class ApplicationProgrammingInterfaceController {
     private final WordService wordService;
 
     private final FunctionsController functionsController;
-//    private final SimpMessagingTemplate messagingTemplate;
-
+    private final SimpMessagingTemplate messagingTemplate;
 
     private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
 
-    @Autowired
     private DateFormat dateFormat;
-    private Date date;
 
     List<List<String>> data;
     @Autowired
@@ -77,8 +74,10 @@ public class ApplicationProgrammingInterfaceController {
                                                      FileService fileService,
                                                      DeserializationService deserializationService,
                                                      DownloadService downloadService,
-                                                     WordService wordService, FunctionsController functionsController
-//                                                     SimpMessagingTemplate messagingTemplate
+                                                     WordService wordService, FunctionsController functionsController,
+
+                                                     DateFormat dateFormat,
+                                                     SimpMessagingTemplate messagingTemplate
     ) {
         this.studentService = studentService;
         this.departmentService = departmentService;
@@ -95,7 +94,8 @@ public class ApplicationProgrammingInterfaceController {
         this.yearStudentService = yearStudentService;
 
         this.functionsController = functionsController;
-//        this.messagingTemplate = messagingTemplate;
+        this.messagingTemplate = messagingTemplate;
+        this.dateFormat = dateFormat;
     }
 
     FileHolder fileHolder = new FileHolder();
