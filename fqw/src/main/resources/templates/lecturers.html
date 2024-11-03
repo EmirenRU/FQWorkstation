@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th='http://thymeleaf.org'
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title>Document</title>
+    <script defer src="/js/download_table.js"></script>
+</head>
+
+<body layout:fragment="body">
+    <main layout:fragment="main">
+        <section  class="contacts-form">
+            <div class="container form-container">
+                <h2 class="section-header form-header">Получить документ</h2>
+                <div class="form-space flex">
+                    <form method="post" class="form-body" th:action="@{/sql/lecturers}">
+
+                        <div class="selector-patch">
+                            <label class="selection-param">Направление
+                                <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation">
+                                    <option th:value="-1">
+                                        Выберите Направление
+                                    </option>
+                                    <option th:each="orientation :${orientations_selector}"
+                                            th:value="${orientation.code}"
+                                            th:text="${orientation.toString()}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="selector-patch">
+                            <label class="selection-param">Кафедра
+                                <select name="department" class="slider-val"  onChange="saveInputs(name, value)" id="department">
+                                    <option th:value="-1">
+                                        Выберите кафедру
+                                    </option>
+                                    <option th:each="department :${departments_selector}"
+                                            th:value="${department.code}"
+                                            th:text="${department.name}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="selector-patch-2">
+                            <label class="selection-param">Дата защиты
+                                <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                            </label>
+                        </div>
+                        <div class="selector-patch-2">
+                            <label class="selection-param">Тема
+                                <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'" onChange="saveInputs(name, value)" id="themes">
+                                    <option th:value="-1">Выберите тему: </option>
+                                    <option th:each="theme : ${themes_selector}"
+                                            th:text="${theme.name}"
+                                            th:value="${theme.name}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="selector-patch-2 margin-fix">
+                            <label class="selection-param">Науч рук
+                                <select name="lecturer" class="slider-val" onChange="saveInputs(name, value)" id="lecturer">
+                                    <option th:value="-1">
+                                        Выберите преподавателя
+                                    </option>
+                                    <option th:each="lecturer : ${lecturers_selector}"
+                                            th:value="${lecturer.id}"
+                                            th:text="${lecturer.name}">
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                        <button class="btn-reset form-button list-button" onclick="toggleDisplayAndSaveState()">Получить</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section  class="display" th:if="${flag} == true">
+            
+            <div class="container-fluid display-section", id="display-container">
+                <div class="container-fluid leveling">
+                    <table class="columns">
+                        <thead>
+                            <tr class="tr-table">
+                                <th class="td-table">ФИО Преподавателя</th>
+                                <th class="td-table">Ученная степень</th>
+                                <th class="td-table">Должность</th>
+                                <th class="td-table">Кафедра</th>
+                                <th class="td-table">ФИО Студента</th>
+                                <th class="td-table">Студ.Номер</th>
+                                <th class="td-table">Гражданство</th>
+                                <th class="td-table">Тема</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
+                                <td class="td-table lecturer_name" th:text="${stlec.lecturer.name}"></td>
+                                <td class="td-table academic_degree" th:text="${stlec.lecturer.academicDegree}"></td>
+                                <td class="td-table lecturer_position" th:text="${stlec.lecturer.position}"></td>
+                                <td class="td-table department_name" th:text="${stlec.lecturer.department.name}"></td>
+                                <td class="td-table student_name" th:text="${stlec.student.name}"></td>
+                                <td class="td-table stud_num" th:text="${stlec.student.stud_num}"></td>
+                                <td class="td-table student_citizenship" th:text="${stlec.student.citizenship}"></td>
+                                <td class="td-table fqw_name" th:text="${stlec.student.fqw.name}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="download">
+                    <a class="download-button table-download-btn" type="button">Скачать таблицу</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
