@@ -9,6 +9,11 @@
 <body>
 <div class="container">
     <h1>Welcome to Your Home Page</h1>
+    <div  th:each="list : ${addNameLater} " th:if="${not #lists.isEmpty(list)}">
+        <span th:text="${list[0]}"></span>
+        <a th:action="@{${list[1]} }"></a>
+        <img th:src="@{${list[2]} }">
+    </div>
 <!--    <a th:href="@{/faq}" class="btn">Go to FAQ</a>-->
 <!--    <a th:href="@{/support}" class="btn">Go to Support</a>-->
 </div>

@@ -8,6 +8,10 @@
     <packaging>jar</packaging>
 
     <parent>
+<!--        <groupId>ru.emiren</groupId>-->
+<!--        <artifactId>info-system-department</artifactId>-->
+<!--        <version>1.0.0-STABLE</version>-->
+<!--        <relativePath>../pom.xml</relativePath>-->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.3</version>
