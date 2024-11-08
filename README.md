@@ -72,4 +72,8 @@ $ make compose
 ## Contributing 
 
 - Emil Yusupov - Backend (Java, Spring Boot, PostgreSQL, JS, Ajax, Thymeleaf) 
+<<<<<<< HEAD
 - Ivan Podlesniy - Frontend (HTML, CSS, JS)
+=======
+- Ivan Podlesniy - Frontend (HTML, CSS, JS)
+>>>>>>> dc23438d79718ab865be4a9dbb0fd74bc59e7d94
