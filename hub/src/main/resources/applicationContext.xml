@@ -10,15 +10,15 @@
                 <bean class="ru.emiren.hub.Model.Website">
                     <!--(Website Name -> URL -> ImgPath)-->
                     <constructor-arg value="FQW"/>
-                    <constructor-arg value="127.0.0.1:8080"/>
-                    <constructor-arg value="img/temp.jpg"/>
+                    <constructor-arg value="google.com"/>
+                    <constructor-arg value="temp.jpg"/>
                 </bean>
 
                 <bean class="ru.emiren.hub.Model.Website">
                     <!--(Website Name -> URL -> ImgPath)-->
                     <constructor-arg value="Hub"/>
-                    <constructor-arg value="127.0.0.1:8081"/>
-                    <constructor-arg value="img/temp.jpg"/>
+                    <constructor-arg value="pixiv.net"/>
+                    <constructor-arg value="temp.jpg"/>
                 </bean>
             </list>
         </constructor-arg>

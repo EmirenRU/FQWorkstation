@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/hub")
+@RequestMapping("")
 public class HubController {
 
     private final WebSiteHolder webSiteHolder;
@@ -26,9 +26,14 @@ public class HubController {
     }
 
     @GetMapping("")
+    public String home(Model model) {
+        return "redirect:/hub";
+    }
+
+    @GetMapping("/hub")
     public String createHubPage(Model model){
-        model.addAttribute("websiteList", webSiteHolder.getWebsites());
-        System.out.println(webSiteHolder);
+//        model.addAttribute("websiteList", webSiteHolder.getWebsites());
+//        System.out.println(webSiteHolder);
         return "index";
     }
 }

@@ -26,6 +26,10 @@ public class WebSiteHolder {
         this.websites = websites;
     }
 
+    public Website getWebsite(int index){
+        return websites.get(index);
+    }
+
     public int getNumberOfWebsites(){
         return websites.size();
     }
