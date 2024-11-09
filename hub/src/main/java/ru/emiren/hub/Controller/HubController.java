@@ -25,6 +25,7 @@ public class HubController {
         this.webSiteHolder = webSiteHolder;
     }
 
+
     @GetMapping("")
     public String home(Model model) {
         return "redirect:/hub";
