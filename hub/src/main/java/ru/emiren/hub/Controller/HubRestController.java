@@ -25,39 +25,35 @@ import java.io.InputStream;
 @Log4j2
 public class HubRestController {
 
-
-    private WebSiteHolder     webSiteHolder;
-    private ClassLoader       classLoader;
-
+    private final WebSiteHolder webSiteHolder;
 
     @Autowired
     HubRestController(WebSiteHolder webSiteHolder) {
-
         this.webSiteHolder = webSiteHolder;
     }
 
-    @GetMapping("get-grid")
+    @GetMapping("/get-grid")
     public ResponseEntity<Integer> getNumber() {
+        log.info("get-grid");
         return ResponseEntity.status(HttpStatus.OK).body(webSiteHolder.getNumberOfWebsites());
     }
 
     @GetMapping("/recieve/{id}")
-    public ResponseEntity<?> recieve(@PathVariable Integer id) {
+    public ResponseEntity<String> recieve(@PathVariable Integer id) {
+        log.info("In Recieve method");
         return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(webSiteHolder.getWebsite(id)));
     }
 
     @GetMapping("/recieve_img/{id}")
     public ResponseEntity<?> recieveImg(@PathVariable String id) {
+        log.info("In Recieve Img method");
         try {
             File file = ResourceUtils.getFile(String.format("classpath:static/img/%s", id));
-
-            String contentType = id.endsWith(".png") ? "image/png" : "image/jpeg";
-            MediaType mediaType = MediaType.parseMediaType(contentType);
-
             byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
 
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(mediaType);
+            httpHeaders.setContentType(MediaType.parseMediaType(id.endsWith(".png") ? "image/png" : "image/jpeg"));
+
             return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(bytes);
         } catch (IOException e) {
             log.warn(e.getMessage());
