@@ -35,7 +35,7 @@ let appContainer = document.getElementById("application-container");
         let imageName = document.createElement('span');
         let url;
         let imageData = await fetch(
-            '/api/recieve/' + i,
+            '/api/receive/' + i,
             {method: 'GET'}
         );
         if (imageData.ok) {
@@ -44,7 +44,7 @@ let appContainer = document.getElementById("application-container");
 
             url = json.url;
             let id = json.imgPath;
-            let imgBlob = await fetch('/api/recieve_img/' + id, {
+            let imgBlob = await fetch('/api/receive_img/' + id, {
                 method: 'GET',
                 headers: {
                     Accept: 'image/jpeg',

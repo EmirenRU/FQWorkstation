@@ -34,19 +34,20 @@ public class HubRestController {
 
     @GetMapping("/get-grid")
     public ResponseEntity<Integer> getNumber() {
-        log.info("get-grid");
-        return ResponseEntity.status(HttpStatus.OK).body(webSiteHolder.getNumberOfWebsites());
+        int size = webSiteHolder.getNumberOfWebsites();
+        log.info("In get-grid method and returned size {}", size );
+        return ResponseEntity.status(HttpStatus.OK).body(size);
     }
 
-    @GetMapping("/recieve/{id}")
-    public ResponseEntity<String> recieve(@PathVariable Integer id) {
-        log.info("In Recieve method");
+    @GetMapping("/receive/{id}")
+    public ResponseEntity<String> receive(@PathVariable Integer id) {
+        log.info("In Receive method ");
         return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(webSiteHolder.getWebsite(id)));
     }
 
-    @GetMapping("/recieve_img/{id}")
-    public ResponseEntity<?> recieveImg(@PathVariable String id) {
-        log.info("In Recieve Img method");
+    @GetMapping("/receive_img/{id}")
+    public ResponseEntity<?> receiveImg(@PathVariable String id) {
+        log.info("In receive Img method");
         try {
             File file = ResourceUtils.getFile(String.format("classpath:static/img/%s", id));
             byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
