@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="websites" class="ru.emiren.hub.Model.WebSiteHolder">
+        <constructor-arg>
+            <list>
+                <!-- Example how to write properties for WebsiteHolder -->
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="FQW"/>
+                    <constructor-arg value="google.com"/>
+                    <constructor-arg value="temp.jpg"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="Hub"/>
+                    <constructor-arg value="pixiv.net"/>
+                    <constructor-arg value="temp.jpg"/>
+                </bean>
+            </list>
+        </constructor-arg>
+
+    </bean>
+</beans>

@@ -13,6 +13,7 @@ public class MailServerProperties {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
+        // TODO DELETE TWO PROPS
         mailSender.setUsername("emilsamigullin217@gmail.com");
         mailSender.setPassword("repz hunw blgj butc");
 

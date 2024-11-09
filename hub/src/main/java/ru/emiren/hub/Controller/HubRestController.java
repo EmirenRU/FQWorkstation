@@ -1,18 +1,67 @@
 package ru.emiren.hub.Controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import com.google.gson.Gson;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.emiren.hub.Model.WebSiteHolder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 @RestController
 @RequestMapping("/api")
+@Log4j2
 public class HubRestController {
 
-    @GetMapping("get-number")
+
+    private WebSiteHolder     webSiteHolder;
+    private ClassLoader       classLoader;
+
+
+    @Autowired
+    HubRestController(WebSiteHolder webSiteHolder) {
+
+        this.webSiteHolder = webSiteHolder;
+    }
+
+    @GetMapping("get-grid")
     public ResponseEntity<Integer> getNumber() {
-        return ResponseEntity.status(HttpStatus.OK).body(1);
+        return ResponseEntity.status(HttpStatus.OK).body(webSiteHolder.getNumberOfWebsites());
+    }
+
+    @GetMapping("/recieve/{id}")
+    public ResponseEntity<?> recieve(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(webSiteHolder.getWebsite(id)));
+    }
+
+    @GetMapping("/recieve_img/{id}")
+    public ResponseEntity<?> recieveImg(@PathVariable String id) {
+        try {
+            File file = ResourceUtils.getFile(String.format("classpath:static/img/%s", id));
+
+            String contentType = id.endsWith(".png") ? "image/png" : "image/jpeg";
+            MediaType mediaType = MediaType.parseMediaType(contentType);
+
+            byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(mediaType);
+            return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(bytes);
+        } catch (IOException e) {
+            log.warn(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
