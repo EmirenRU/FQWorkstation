@@ -8,17 +8,76 @@
             <list>
                 <!-- Example how to write properties for WebsiteHolder -->
                 <bean class="ru.emiren.hub.Model.Website">
-                    <!--(Website Name -> URL -> ImgPath)-->
-                    <constructor-arg value="FQW"/>
-                    <constructor-arg value="google.com"/>
-                    <constructor-arg value="temp.jpg"/>
+                    <!--(Website Name -> URL -> ImgPath -> Dimension)-->
+                    <constructor-arg value="half-life"/>
+                    <constructor-arg value="steampowered.com"/>
+                    <constructor-arg value="half-life.512x506.png"/>
+                    <constructor-arg value="512x506"/>
                 </bean>
 
                 <bean class="ru.emiren.hub.Model.Website">
                     <!--(Website Name -> URL -> ImgPath)-->
-                    <constructor-arg value="Hub"/>
+                    <constructor-arg value="keepas"/>
+                    <constructor-arg value="localhost:8080"/>
+                    <constructor-arg value="keepass.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="krita"/>
                     <constructor-arg value="pixiv.net"/>
-                    <constructor-arg value="temp.jpg"/>
+                    <constructor-arg value="krita.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="Teams"/>
+                    <constructor-arg value="teams.com"/>
+                    <constructor-arg value="microsoft-teams.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="PowerPoint"/>
+                    <constructor-arg value="pixiv.net"/>
+                    <constructor-arg value="ms-powerpoint.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="Word"/>
+                    <constructor-arg value="pixiv.net"/>
+                    <constructor-arg value="ms-word.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="Playstation"/>
+                    <constructor-arg value="Playstation.com"/>
+                    <constructor-arg value="playstation.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="Portal"/>
+                    <constructor-arg value="steamcommunity.com"/>
+                    <constructor-arg value="portal.512x506.png"/>
+                    <constructor-arg value="512x506"/>
+                </bean>
+
+                <bean class="ru.emiren.hub.Model.Website">
+                    <!--(Website Name -> URL -> ImgPath)-->
+                    <constructor-arg value="VSCode"/>
+                    <constructor-arg value="pixiv.net"/>
+                    <constructor-arg value="visual-studio-code.512x506.png"/>
+                    <constructor-arg value="512x506"/>
                 </bean>
             </list>
         </constructor-arg>
