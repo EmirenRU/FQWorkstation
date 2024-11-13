@@ -25,6 +25,7 @@ public class HubController {
         this.webSiteHolder = webSiteHolder;
     }
 
+
     @GetMapping("")
     public String home(Model model) {
         return "redirect:/hub";
@@ -32,8 +33,6 @@ public class HubController {
 
     @GetMapping("/hub")
     public String createHubPage(Model model){
-//        model.addAttribute("websiteList", webSiteHolder.getWebsites());
-//        System.out.println(webSiteHolder);
         return "index";
     }
 }

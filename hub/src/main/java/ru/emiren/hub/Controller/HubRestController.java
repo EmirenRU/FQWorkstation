@@ -25,39 +25,36 @@ import java.io.InputStream;
 @Log4j2
 public class HubRestController {
 
-
-    private WebSiteHolder     webSiteHolder;
-    private ClassLoader       classLoader;
-
+    private final WebSiteHolder webSiteHolder;
 
     @Autowired
     HubRestController(WebSiteHolder webSiteHolder) {
-
         this.webSiteHolder = webSiteHolder;
     }
 
-    @GetMapping("get-grid")
+    @GetMapping("/get-grid")
     public ResponseEntity<Integer> getNumber() {
-        return ResponseEntity.status(HttpStatus.OK).body(webSiteHolder.getNumberOfWebsites());
+        int size = webSiteHolder.getNumberOfWebsites();
+        log.info("In get-grid method and returned size {}", size );
+        return ResponseEntity.status(HttpStatus.OK).body(size);
     }
 
-    @GetMapping("/recieve/{id}")
-    public ResponseEntity<?> recieve(@PathVariable Integer id) {
+    @GetMapping("/receive/{id}")
+    public ResponseEntity<String> receive(@PathVariable Integer id) {
+        log.info("In Receive method ");
         return ResponseEntity.status(HttpStatus.OK).body(new Gson().toJson(webSiteHolder.getWebsite(id)));
     }
 
-    @GetMapping("/recieve_img/{id}")
-    public ResponseEntity<?> recieveImg(@PathVariable String id) {
+    @GetMapping("/receive_img/{id}")
+    public ResponseEntity<?> receiveImg(@PathVariable String id) {
+        log.info("In receive Img method");
         try {
             File file = ResourceUtils.getFile(String.format("classpath:static/img/%s", id));
-
-            String contentType = id.endsWith(".png") ? "image/png" : "image/jpeg";
-            MediaType mediaType = MediaType.parseMediaType(contentType);
-
             byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
 
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(mediaType);
+            httpHeaders.setContentType(MediaType.parseMediaType(id.endsWith(".png") ? "image/png" : "image/jpeg"));
+
             return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(bytes);
         } catch (IOException e) {
             log.warn(e.getMessage());
