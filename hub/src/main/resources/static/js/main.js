@@ -31,8 +31,11 @@ let appContainer = document.getElementById("application-container");
 
     for (let i = 0; i < gridCells; i++) {
         let applicationContainer = document.createElement("div");
+        applicationContainer.classList.add('hub__application__space');
         let image = document.createElement('img');
-        let imageName = document.createElement('span');
+        image.classList.add('hub__application__icon')
+
+        let imageName ;
         let url;
         let imageData = await fetch(
             '/api/receive/' + i,
@@ -40,7 +43,7 @@ let appContainer = document.getElementById("application-container");
         );
         if (imageData.ok) {
             let json = await imageData.json();
-            imageName.textContent = json.name;
+            imageName= json.name;
 
             url = json.url;
             let id = json.imgPath;
