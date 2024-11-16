@@ -169,7 +169,7 @@ main {
 
 .form-body {
 	display: flex;
-	flex-shrink: 1;
+	flex-wrap: wrap;
 	flex-direction: row;
 	margin: 0;
 	align-items: center;
@@ -204,21 +204,31 @@ main {
 	line-height: 21px;
 	font-size: 12px;
 	min-height: 43px;
-	width: 100%;
+	max-width: 240px;
 }
+
+.selection-param__years{
+	display:flex;
+	flex-direction: row;
+}
+.selection-param__years__text{
+	font-size: 16px;
+	margin-right: 7px;
+	margin-left: 7px;
+}
+.selection-param__years__text:first-child {
+font-size: 16px;
+margin-right: 7px;
+	margin-left: 0;
+}
+
 
 .selector-patch {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: left;
-	max-width: 141px!important;
-
 	position: relative
-}
-
-.selector-patch:first-child {
-	max-width: 210px!important;
 }
 
 .select2-container {
@@ -230,7 +240,7 @@ main {
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: left;
-	max-width: 145px;
+	max-width: 185px;
 	text-overflow: ellipsis;
 }
 

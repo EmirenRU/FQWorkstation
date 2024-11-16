@@ -45,8 +45,13 @@
                         </div>
 
                         <div class="selector-patch-2">
-                            <label class="selection-param">Дата защиты
-                                <input type="date" name="date" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                            <label class="selection-param">Годы работ
+                                <div class="selection-param__years flex">
+                                    <span class="selection-param__years__text" >с  </span>
+                                    <input type="text" name="date" class="val" value="2020" maxlength="4" placeholder="2020">
+                                    <span class="selection-param__years__text" >до  </span>
+                                    <input type="text" name="date" class="val" value="2024" maxlength="4" placeholder="2021">
+                                </div>
                             </label>
                         </div>
                         <div class="selector-patch-2">
