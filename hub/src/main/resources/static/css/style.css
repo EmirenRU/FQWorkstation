@@ -22,11 +22,13 @@ body{
 }
 
 .hub__header{
-	margin-bottom: 50px;
+	margin-bottom: 80px;
 }
 
 
 .hub__header__container {
+	padding-top: 20px;
+	padding-bottom: 20px;
     display: flex;
     flex-direction: row;
     align-content: stretch;
@@ -46,10 +48,19 @@ body{
 }
 
 .hub__main__container__header{
+	margin: 0;
+	margin-bottom: 50px;
 	font-size: 28px;
 	font-weight: bold;
 	text-decoration: none;
 	color:#0570b8;
+}
+
+.hub__header__container__links{
+	width: 70%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between
 }
 
 .hub__main__container{
@@ -68,12 +79,15 @@ body{
     align-content: center;
 }
 
+main{
+	margin-bottom: 50px;
+}
+
+
 .footer{
 	background-color: rgb(73, 73, 73);
-	position: fixed;
-	left: 0;
-	bottom: 0;
 	width: 100%;
+
 }
 
 .hub__footer__container{
@@ -135,4 +149,19 @@ body{
 	margin-right: 50px;
 	width: 60px;
 	display: inline-block;
+}
+
+
+.hub__application__icon{
+	max-width: 240px;
+	max-height: 240px;
+}
+
+.hub__application__space{
+    display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    min-height: 320px;
+    flex-wrap: wrap;
+    align-items: center;
 }

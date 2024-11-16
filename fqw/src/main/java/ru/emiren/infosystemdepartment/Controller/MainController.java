@@ -16,5 +16,7 @@ public class MainController {
     @GetMapping("/giveup")
     public String giveup(){ return "redirect:https://youtu.be/dQw4w9WgXcQ?si=_A7-90hHkk9D5RRy"; }
 
+    @GetMapping("/admin/console")
+    public String console(){ return "console"; }
 
 }

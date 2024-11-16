@@ -18,8 +18,8 @@ public class WebSiteHolder {
         this.websites = websites;
     }
 
-    public void storeWebsiteDetails(String name, String URL, String imgPath){
-        websites.add(new Website(name, URL, imgPath));
+    public void storeWebsiteDetails(String name, String URL, String imgPath, String dimension){
+        websites.add(new Website(name, URL, imgPath, dimension));
     }
 
     public void setWebsites(List<Website> websites) {

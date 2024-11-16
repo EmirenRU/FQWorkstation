@@ -27,12 +27,14 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             "((sl.student.orientation.code = :orientationCode) OR (:orientationCode = '-1') ) AND " +
             "((sl.student.department.code = :departmentCode) OR (:departmentCode = -1)) AND " +
             "((sl.student.fqw.name = :theme) OR (:theme = '-1')) " +
-            "AND ( (p.dateOfProtection = :date) OR (cast(:date as DATE) IS null)) " +
+            "AND ( ( (:dateFrom IS null) OR (p.dateOfProtection >= :dateFrom) ) AND ( (p.dateOfProtection <= :dateTo) OR ( :dateTo IS null ) )   ) " +
             "ORDER BY sl.lecturer.name")
+    // OR (cast(:dateFrom as DATE) IS null)
     List<StudentLecturers> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (String orientationCode,
              Long departmentCode,
-             LocalDate date,
+             java.time.Year dateFrom,
+             java.time.Year dateTo,
              String theme,
              Long lecturerId);
 

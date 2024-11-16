@@ -2,11 +2,12 @@ $(document).ready(function() {
     if ($.fn.select2){
         $('.slider-val').select2({ // Changed selector to match the class in HTML
             placeholder: $('.slider-val').data('placeholder'), // Set placeholder text
-            width:fit-content,
+            // width:fit-content,
             tags: true // Enable tagging/searching for options
         });
     }
 });
+
 
 
 $(document).ready(function() {

@@ -11,6 +11,7 @@ public class Website {
     private String name;
     private String url;
     private String imgPath;
+    private String dimension;
 
 
     @Override
@@ -19,6 +20,7 @@ public class Website {
                 "name='" + name + '\'' +
                 ", url='" + url + '\'' +
                 ", imgPath='" + imgPath + '\'' +
+                ", dimension='" + dimension + '\'' +
                 '}';
     }
 }
