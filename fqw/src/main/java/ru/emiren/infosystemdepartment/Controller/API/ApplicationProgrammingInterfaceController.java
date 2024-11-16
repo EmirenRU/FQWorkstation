@@ -258,6 +258,15 @@ public class ApplicationProgrammingInterfaceController {
 
 //    @PostMapping("/v1/upload-zip-file")
 
+    @GetMapping("idk ill do it later")
+    public String getModel(){
+        return "";
+    }
+
+
+
+
+
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
         // I am not sure about liquidity of data

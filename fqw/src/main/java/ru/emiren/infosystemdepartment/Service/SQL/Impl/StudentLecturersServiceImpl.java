@@ -42,12 +42,19 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     }
 
     @Override
-    public List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(String orientationCode,
-                                                                                                          Long departmentCode, LocalDate date, String theme, Long lecturerId) {
+    public List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
+            (String orientationCode,
+             Long departmentCode,
+             java.time.Year dateFrom,
+             java.time.Year dateTo,
+             String theme,
+             Long lecturerId
+            ) {
         return studentLecturerRepository.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
         (orientationCode,
         departmentCode,
-        date,
+        dateFrom,
+        dateTo,
         theme,
         lecturerId).stream()
                 .map(StudentLecturersMapper::mapToStudentLecturersDTO)

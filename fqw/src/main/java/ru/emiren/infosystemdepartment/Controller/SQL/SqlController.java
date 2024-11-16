@@ -46,7 +46,7 @@ public class SqlController {
 
     DateTimeFormatter dateTimeFormatter;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy")
     private LocalDate date;
 
     @Autowired
@@ -128,11 +128,15 @@ public class SqlController {
         String orientationCode = request.getParameter("orientation");
         Long departmentCode = Long.valueOf(request.getParameter("department"));
         String theme = request.getParameter("themes");
-        String strDate =request.getParameter("date");
-        LocalDate date = null;
+        String strDateFrom =request.getParameter("date-from");
+        String strDateTo =request.getParameter("date-to");
 
-        if (!strDate.isEmpty()){
-            date = LocalDate.parse(strDate);
+        java.time.Year dateFrom = null;
+        java.time.Year dateTo = null;
+
+        if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
+            dateFrom = java.time.Year.parse(strDateFrom);
+            dateTo   = java.time.Year.parse(strDateTo);
         }
 
 //        redirectAttributes.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
@@ -142,7 +146,8 @@ public class SqlController {
         model.addAttribute("studentLecturers_container",
                 studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode,
                                                                                                             departmentCode,
-                                                                                                            date,
+                                                                                                            dateFrom,
+                                                                                                            dateTo,
                                                                                                     theme, lecturerId));
 
         model.addAttribute("lecturers_selector", lecturerDTOS);

@@ -48,17 +48,7 @@
 
 
 
-                    <li class="nav__item" th:if="${archiveFlag} == true">
-                        <div class="dropdown">
-                            <button class="dropbtn">Архив</button>
-                            <div class="dropdown-content">
-                                <a th:each="year: ${years_selector}"
-                                   th:text="${year.year}"
-                                   th:value="${year.year}"
-                                   th:href="@{/sql/lecturers/{year}(year=${year.year})}"></a>
-                            </div>
-                        </div>
-                    </li>
+
                 </ul>
             </nav>
         </div>

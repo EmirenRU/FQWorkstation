@@ -252,8 +252,8 @@ public class UploadDataController {
         String day = DateUtil.getDay(dateOfProtection);
 
         protection.setOrientation(orientation);
-        protection.setDateOfProtection(LocalDate.of(
-                Integer.parseInt(yearStr), Integer.parseInt(month), Integer.parseInt(day)
+        protection.setDateOfProtection(java.time.Year.of(
+                Integer.parseInt(yearStr)//, Integer.parseInt(month), Integer.parseInt(day)
         ));
 
         return protection;

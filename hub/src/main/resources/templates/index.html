@@ -13,14 +13,14 @@
 <div class="container">
     <header class="hub__header">
         <div class="container-fluid hub__header__container">
-            <a href="#">
+            <a th:href="@{}">
                 <div class="header__logo-inside flex">
                     <img src="/img/rudn-logotip.svg" fill="#0570b8" class = "logo">
                 </div>
             </a>
-            <a href ="#" class = "hub__header__link">проекты</a>
-            <a href ="#" class = "hub__header__link">поддержка</a>
-            <a href ="#" class = "hub__header__link">FAQ</a>
+            <a th:href ="@{https://github.com/EmirenRU?tab=repositories}" class = "hub__header__link">проекты</a>
+            <a th:href ="@{localhost:8080/support}" class = "hub__header__link">поддержка</a>
+            <a th:href ="@{/faq}" class = "hub__header__link">FAQ</a>
         </div>
     </header>
 
