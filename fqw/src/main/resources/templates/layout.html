@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="/thirdParty/select2/css/select2.min.css">
     <script type="text/javascript" src="/thirdParty/jquery/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="/thirdParty/select2/js/select2.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="/thirdParty/js-sha256/sha256.js"></script>
     <script defer src="/js/dataUtils.js"></script>
     <script defer src="/js/uploadDataForm.js"></script>
@@ -48,17 +47,7 @@
 
 
 
-                    <li class="nav__item" th:if="${archiveFlag} == true">
-                        <div class="dropdown">
-                            <button class="dropbtn">Архив</button>
-                            <div class="dropdown-content">
-                                <a th:each="year: ${years_selector}"
-                                   th:text="${year.year}"
-                                   th:value="${year.year}"
-                                   th:href="@{/sql/lecturers/{year}(year=${year.year})}"></a>
-                            </div>
-                        </div>
-                    </li>
+
                 </ul>
             </nav>
         </div>

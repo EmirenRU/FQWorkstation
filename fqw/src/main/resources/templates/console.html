@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th='http://thymeleaf.org'
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Web Console </title>
+  <link rel="stylesheet" th:href="@{/thirdParty/xterm/css/xterm.css}">
+  <script type="text/javascript" src="/thirdParty/xterm/lib/xterm.js"></script>
+  <script defer type="text/javascript" src="/js/console.js"></script>
+</head>
+<body>
+    <div id="terminal"></div>
+
+</body>
+</html>

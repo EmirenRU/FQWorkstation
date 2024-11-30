@@ -9,7 +9,7 @@ import ru.emiren.infosystemdepartment.Model.SQL.Protection;
 import ru.emiren.infosystemdepartment.Repository.SQL.ProtectionRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.ProtectionService;
 
-import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +30,8 @@ public class ProtectionServiceImpl implements ProtectionService {
     }
 
     @Override
-    public LocalDate getDateWithSpecificStudent(StudentLecturersDTO studentLecturersDTO, List<ProtectionDTO> protections) {
-        LocalDate date = null;
+    public Year getDateWithSpecificStudent(StudentLecturersDTO studentLecturersDTO, List<ProtectionDTO> protections) {
+        java.time.Year date = null;
         for (ProtectionDTO protectionDTO : protections) {
             if (protectionDTO.getOrientation().getCode().equals(studentLecturersDTO.getStudent().getOrientation().getCode()))
                 date = protectionDTO.getDateOfProtection();
