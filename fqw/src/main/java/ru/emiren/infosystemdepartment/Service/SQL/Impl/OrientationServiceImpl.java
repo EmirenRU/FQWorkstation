@@ -29,6 +29,11 @@ public class OrientationServiceImpl implements OrientationService {
     }
 
     @Override
+    public void deleteOrientation(Orientation orientation) {
+        orientationRepository.delete(orientation);
+    }
+
+    @Override
     public Orientation saveOrientation(Orientation orientation) {
         return orientationRepository.save(orientation);
     }

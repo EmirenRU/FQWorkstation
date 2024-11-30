@@ -20,6 +20,10 @@ public class FQWServiceImpl implements FQWService {
         this.fqwRepository = fqwRepository;
     }
 
+    @Override
+    public void deleteFQW(FQW fqw) {
+        fqwRepository.delete(fqw);
+    }
 
     @Override
     public List<FQWDTO> getAllFQW() {

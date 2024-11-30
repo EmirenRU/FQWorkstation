@@ -6,10 +6,12 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class DataDTO {
-    public Long id;
-    public String fullName;
-    public String email;
-    public String phone;
-    public String description;
+    private Long id;
+    private String fullName;
+    private String email;
+    private String phone;
+    private String description;
 }

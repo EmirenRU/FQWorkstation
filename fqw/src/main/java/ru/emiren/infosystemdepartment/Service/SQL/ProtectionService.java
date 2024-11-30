@@ -9,8 +9,7 @@ import java.util.List;
 
 public interface ProtectionService {
     List<ProtectionDTO> getAllProtections();
-
     Year getDateWithSpecificStudent(StudentLecturersDTO studentLecturersDTO, List<ProtectionDTO> protections);
-
+    void deleteProtection(Protection protection);
     Protection saveProtection(Protection protection);
 }

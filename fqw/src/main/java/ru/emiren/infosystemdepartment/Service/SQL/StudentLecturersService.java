@@ -22,4 +22,6 @@ public interface StudentLecturersService {
              Long lecturerId);
 
     List<StudentLecturersDTO> findAllAndSortedByDate(String date);
+
+    void deleteStudentLecturers(StudentLecturers sl);
 }

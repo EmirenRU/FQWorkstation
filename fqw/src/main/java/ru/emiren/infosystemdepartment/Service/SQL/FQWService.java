@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface FQWService {
     List<FQWDTO> getAllFQW();
-
+    void deleteFQW(FQW fqw);
     FQW saveFqw(FQW fqw);
 }

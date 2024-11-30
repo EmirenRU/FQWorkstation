@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

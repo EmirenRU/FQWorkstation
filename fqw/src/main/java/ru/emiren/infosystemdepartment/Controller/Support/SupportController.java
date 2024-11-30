@@ -34,10 +34,9 @@ public class SupportController {
         return "support";
     }
 
-    @Async
     @PostMapping("")
     public String saveData(@Valid @ModelAttribute("data") DataDTO data, Model model) {
-        emailService.sendSimpleMail("mrjava3300@mail.ru", "Ticket"+data.id, data.getDescription());
+        emailService.sendSimpleMail("mrjava3300@mail.ru", "Ticket"+data.getId(), data.getDescription());
         dataService.saveData(data);
         return "redirect:/support";
     }
@@ -45,10 +44,10 @@ public class SupportController {
     @GetMapping("/api/view_ticket/{id}")
     public String viewTicket(@PathVariable int id, Model model) {
         DataDTO data = dataService.getDataById(id);
-        model.addAttribute("id", data.id);
-        model.addAttribute("message", data.description);
-        model.addAttribute("email", data.email);
-        model.addAttribute("phone", data.phone);
+        model.addAttribute("id", data.getId());
+        model.addAttribute("message", data.getDescription());
+        model.addAttribute("email", data.getEmail());
+        model.addAttribute("phone", data.getPhone());
         return "ticket";
     }
 }

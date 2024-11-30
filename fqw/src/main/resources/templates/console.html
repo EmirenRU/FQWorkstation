@@ -5,13 +5,30 @@
 >
 <head>
     <meta charset="UTF-8">
-    <title>Web Console </title>
-  <link rel="stylesheet" th:href="@{/thirdParty/xterm/css/xterm.css}">
-  <script type="text/javascript" src="/thirdParty/xterm/lib/xterm.js"></script>
-  <script defer type="text/javascript" src="/js/console.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FQW Terminal</title>
+    <link rel="stylesheet" href="/css/normalize.css" />
+    <link rel="stylesheet" href="/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="/css/console.css"/>
+    <script src="/thirdParty/xterm/lib/xterm.js"></script>
 </head>
 <body>
-    <div class="terminal" id="terminal"></div>
+    <div class="container-fluid  window-styling">
+        <div id="terminal" class="terminal-styling"></div>
+    <button class="send" id="send">send</button>
+</div>
+<div class="container-fluid promt-list">
+    <h2 class="promt-list__header"> Promts</h2>
+        <ul class="promt-list__items">
+            <li class="promt-list__value"> promt</li>
+        </ul>
 
+</div>
+    <script>
+    const term = new Terminal({     fontFamily: 'Press Start 2P', fontSize : 13 });
+    const terminalContainer = document.getElementById('terminal');
+    term.open(terminalContainer);
+    term.write('Welcome to Xterm.js Demo\n');
+    </script>
 </body>
 </html>

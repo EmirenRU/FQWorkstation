@@ -25,7 +25,7 @@ public class ProtectionServiceImpl implements ProtectionService {
     @Override
     public List<ProtectionDTO> getAllProtections() {
         return protectionRepository.findAll().stream()
-                .map(ProtectionMapper::protectionDTO)
+                .map(ProtectionMapper::mapToProtectionDTO)
                 .collect(Collectors.toList());
     }
 
@@ -37,6 +37,11 @@ public class ProtectionServiceImpl implements ProtectionService {
                 date = protectionDTO.getDateOfProtection();
         }
         return date;
+    }
+
+    @Override
+    public void deleteProtection(Protection protection) {
+        protectionRepository.delete(protection);
     }
 
     @Override

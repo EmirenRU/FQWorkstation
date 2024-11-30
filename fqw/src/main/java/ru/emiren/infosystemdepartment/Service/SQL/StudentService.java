@@ -16,4 +16,6 @@ public interface StudentService {
                                                                                    String DepartmentCode);
 
     List<StudentDTO> findAllStudentByLecturerId(Long lecturerId);
+
+    void deleteStudent(Student student);
 }

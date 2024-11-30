@@ -23,12 +23,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentDTO> getAllDepartments() {
-        List<Department> departments = departmentRepository.findAll();
-        return departments.stream().map(DepartmentMapper::mapToDepartmentDTO).collect(Collectors.toList());
+        return  departmentRepository.findAll()
+                .stream()
+                .map(DepartmentMapper::mapToDepartmentDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Department saveDepartment(Department department) {
         return departmentRepository.save(department);
+    }
+
+    @Override
+    public void deleteDepartment(Department department) {
+        departmentRepository.delete(department);
     }
 }

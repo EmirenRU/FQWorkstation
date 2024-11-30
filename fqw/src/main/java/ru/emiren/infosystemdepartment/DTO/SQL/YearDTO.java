@@ -1,11 +1,14 @@
 package ru.emiren.infosystemdepartment.DTO.SQL;
 
-import ru.emiren.infosystemdepartment.Model.SQL.YearStudent;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Year {
+@Data
+@Builder
+public class YearDTO {
     private String year;
     private List<YearStudentDTO> students = new ArrayList<>();
 

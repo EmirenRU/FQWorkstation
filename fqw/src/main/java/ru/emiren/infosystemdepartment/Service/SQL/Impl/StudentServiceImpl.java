@@ -57,4 +57,9 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentMapper::mapToStudentDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteStudent(Student student) {
+        studentRepository.delete(student);
+    }
 }

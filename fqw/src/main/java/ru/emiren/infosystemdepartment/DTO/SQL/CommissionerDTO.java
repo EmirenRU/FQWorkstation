@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommisionerDTO {
+public class CommissionerDTO {
     private String name;
     private String university;
     private String department;

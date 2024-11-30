@@ -12,7 +12,7 @@ public class ProtectionMapper {
                 .build();
     }
 
-    public static ProtectionDTO protectionDTO(Protection protection){
+    public static ProtectionDTO mapToProtectionDTO(Protection protection){
         return ProtectionDTO.builder()
                 .id(protection.getId())
                 .orientation(protection.getOrientation())

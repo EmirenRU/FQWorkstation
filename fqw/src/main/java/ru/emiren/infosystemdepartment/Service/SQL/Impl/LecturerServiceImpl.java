@@ -58,4 +58,9 @@ public class LecturerServiceImpl implements LecturerService {
     public Lecturer saveLecturer(Lecturer lecturerDTO) {
         return lecturerRepository.save(lecturerDTO);
     }
+
+    @Override
+    public void deleteLecturer(Lecturer lecturer) {
+        lecturerRepository.delete(lecturer);
+    }
 }

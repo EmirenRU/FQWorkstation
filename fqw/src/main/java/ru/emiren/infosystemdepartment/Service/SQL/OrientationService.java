@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface OrientationService {
     List<OrientationDTO> getAllOrientations();
-
+    void deleteOrientation(Orientation orientation);
     Orientation saveOrientation(Orientation orientation);
 }

@@ -50,7 +50,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-full -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -58,6 +65,14 @@
             <version>5.3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,7 +87,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>junit</groupId>
@@ -113,10 +127,6 @@
             <artifactId>tika-core</artifactId>
             <version>2.9.2</version>
         </dependency>
-
-
-
-
         <!-- https://mvnrepository.com/artifact/technology.tabula/tabula -->
         <dependency>
             <groupId>technology.tabula</groupId>
@@ -170,7 +180,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.36</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -205,10 +216,12 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
