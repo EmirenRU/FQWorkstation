@@ -9,13 +9,6 @@ $(document).ready(function() {
 });
 
 
-$(document).ready(function() {
-  if ($.ui && $.ui.select2) {
-      $('.slider-val').select2({
-          tags: true
-      });
-  }
-});
 
 function toggleDisplayAndSaveState() {
     let x = document.getElementById("display-container");

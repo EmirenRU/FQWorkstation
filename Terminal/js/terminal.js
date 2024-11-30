@@ -11,8 +11,8 @@ send.addEventListener('submit', (e) => {
     e.preventDefault();
     socket.send(command + '\n');
 
-    socket.onmessage = (event) => {
-        term.write(event.data);
+socket.onmessage = (event) => {
+    term.write(event.data);
 }
 
 })
