@@ -40,7 +40,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentDTO getDepartmentById(Long id) {
+    public Department getDepartmentById(Long id) {
+        return departmentRepository
+                .findById(String.valueOf(id))
+                .orElse(null);
+    }
+
+    @Override
+    public DepartmentDTO getDepartmentDTOById(Long id) {
         return departmentRepository
                 .findById(String.valueOf(id))
                 .map(DepartmentMapper::mapToDepartmentDTO)

@@ -42,7 +42,7 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     }
 
     @Override
-    public List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
+    public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (String orientationCode,
              Long departmentCode,
              java.time.Year dateFrom,
@@ -72,4 +72,32 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     public void deleteStudentLecturers(StudentLecturers sl) {
         studentLecturerRepository.delete(sl);
     }
-}
+
+    @Override
+    public StudentLecturers findStudentLecturerById(Long id) {
+        return studentLecturerRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public StudentLecturersDTO findStudentLecturersDTOById(Long id) {
+        return studentLecturerRepository.findById(id)
+                .map(StudentLecturersMapper::mapToStudentLecturersDTO)
+                .orElse(null);
+    }
+
+    @Override
+    public StudentLecturers updateStudentLecturers(StudentLecturers sl) {
+        StudentLecturers studentLecturers = findStudentLecturerById(sl.getId());
+
+        if (studentLecturers == null) { return studentLecturerRepository.save(sl); }
+
+        if (sl.getStudent() != null) { studentLecturers.setStudent(sl.getStudent()); }
+        if (sl.getLecturer() != null) {studentLecturers.setLecturer(sl.getLecturer()); }
+        if (sl.getIsConsultant() != null) studentLecturers.setIsConsultant(sl.getIsConsultant());
+        if (sl.getIsScientificSupervisor() != null) studentLecturers.setIsScientificSupervisor(sl.getIsScientificSupervisor());
+
+        return studentLecturerRepository.save(studentLecturers);
+    }
+
+
+} // C D

@@ -8,5 +8,9 @@ import java.util.List;
 public interface ProtocolService {
     Protocol saveProtocol(Protocol protocol);
     void deleteProtocol(Protocol protocol);
-    List<ProtocolDTO> getAllProtocol();
-}
+    List<ProtocolDTO> getAllDtoProtocol();
+
+    ProtocolDTO getDtoProtocol(String fullName);
+    Protocol getProtocol(String fullName);
+    Protocol updateProtocol(Protocol protocol);
+} // CD

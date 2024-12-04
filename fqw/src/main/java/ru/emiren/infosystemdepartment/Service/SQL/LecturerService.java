@@ -6,9 +6,10 @@ import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
 import java.util.List;
 
 public interface LecturerService {
-    LecturerDTO findByLecturerId(Long id);
+    LecturerDTO findDtoByLecturerId(Long id);
+    Lecturer findByLecturerId(Long id);
 
-    LecturerDTO findByLecturerName(String name);
+    Lecturer findByLecturerName(String name);
 
     List<LecturerDTO> getAllLecturer();
 

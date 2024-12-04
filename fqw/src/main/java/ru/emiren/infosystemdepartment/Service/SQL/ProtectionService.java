@@ -12,4 +12,8 @@ public interface ProtectionService {
     Year getDateWithSpecificStudent(StudentLecturersDTO studentLecturersDTO, List<ProtectionDTO> protections);
     void deleteProtection(Protection protection);
     Protection saveProtection(Protection protection);
+    Protection getProtectionById(Long id);
+    ProtectionDTO getProtectionDTOById(Long id);
+    Protection updateProtection(Protection protection);
+
 }

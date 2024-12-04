@@ -10,6 +10,7 @@ public interface OrientationService {
     List<OrientationDTO> getAllOrientations();
     void deleteOrientation(Orientation orientation);
     Orientation saveOrientation(Orientation orientation);
-    OrientationDTO getOrientation(String code);
+    Orientation getOrientation(String code);
+    OrientationDTO getOrientationDTO(String code);
     Orientation updateOrientation(String code, Orientation orientation);
 }

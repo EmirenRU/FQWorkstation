@@ -9,6 +9,7 @@ public interface FQWService {
     List<FQWDTO> getAllFQW();
     void deleteFQW(FQW fqw);
     FQW saveFqw(FQW fqw);
+    FQW    getFQW(String name);
     FQWDTO getFQWDTO(String name);
     FQW updateFQW(String name, FQW fqw);
 }

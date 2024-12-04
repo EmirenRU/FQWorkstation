@@ -13,7 +13,7 @@ public interface StudentLecturersService {
 
     List<StudentLecturersDTO> findAllAndSortedByLecturerName();
 
-    List<StudentLecturersDTO> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
+    List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (String orientationCode,
              Long departmentCode,
              java.time.Year dateFrom,
@@ -24,4 +24,8 @@ public interface StudentLecturersService {
     List<StudentLecturersDTO> findAllAndSortedByDate(String date);
 
     void deleteStudentLecturers(StudentLecturers sl);
+
+    StudentLecturers findStudentLecturerById(Long id);
+    StudentLecturersDTO findStudentLecturersDTOById(Long id);
+    StudentLecturers updateStudentLecturers(StudentLecturers sl);
 }

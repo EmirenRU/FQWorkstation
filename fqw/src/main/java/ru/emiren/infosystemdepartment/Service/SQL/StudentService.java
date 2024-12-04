@@ -18,4 +18,8 @@ public interface StudentService {
     List<StudentDTO> findAllStudentByLecturerId(Long lecturerId);
 
     void deleteStudent(Student student);
-}
+
+    Student findStudentById(Long id);
+    StudentDTO findStudentDTOById(Long id);
+    Student updateStudent(Student studentDTO);
+} // CD

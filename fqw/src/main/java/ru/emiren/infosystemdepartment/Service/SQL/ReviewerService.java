@@ -9,4 +9,8 @@ public interface ReviewerService {
     Reviewer saveReviewer(Reviewer reviewer);
     void deleteReviewer(Reviewer reviewer);
     List<ReviewerDTO> getAllReviewer();
+
+    Reviewer    getReviewer(Long id);
+    ReviewerDTO getReviewerDTO(Long id);
+    Reviewer    updateReviewer(Reviewer reviewer);
 }

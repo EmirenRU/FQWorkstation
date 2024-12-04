@@ -62,4 +62,33 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Student student) {
         studentRepository.delete(student);
     }
+
+    @Override
+    public Student findStudentById(Long id) {
+        return studentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public StudentDTO findStudentDTOById(Long id) {
+        return studentRepository.findById(id).map(StudentMapper::mapToStudentDTO).orElse(null);
+    }
+
+    @Override
+    public Student updateStudent(Student st) {
+        Student s = findStudentById(st.getId());
+        if (s == null) return studentRepository.save(st);
+
+        if (st.getName() != null) s.setName(st.getName());
+        if (st.getCitizenship() != null) s.setCitizenship(st.getCitizenship());
+        if (st.getStud_num() != null) s.setStud_num(st.getStud_num());
+        if (st.getFqw() != null) s.setFqw(st.getFqw());
+        if (st.getYearStudents() != null) s.setYearStudents(st.getYearStudents());
+        if (st.getDepartment() != null) s.setDepartment(st.getDepartment());
+        if (st.getClassifier() != null) s.setClassifier(st.getClassifier());
+        if (st.getLecturers() != null) s.setLecturers(st.getLecturers());
+        if (st.getLoe() != null) s.setLoe(st.getLoe());
+        if (st.getOrientation() != null) s.setOrientation(st.getOrientation());
+
+        return studentRepository.save(s);
+    }
 }

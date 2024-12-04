@@ -39,4 +39,29 @@ public class YearStudentServiceImpl implements YearStudentService {
     public YearStudent saveYearStudent(YearStudent ys) {
         return yearStudentRepository.save(ys);
     }
+
+    @Override
+    public void deleteYearStudent(YearStudent ys) {
+        yearStudentRepository.delete(ys);
+    }
+
+    @Override
+    public YearStudent getYearStudent(Long id) {
+        return yearStudentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public YearStudentDTO getYearStudentDTO(Long id) {
+        return yearStudentRepository.findById(id).map(YearStudentMapper::mapToYearStudentDTO).orElse(null);
+    }
+
+    @Override
+    public YearStudent updateYearStudent(YearStudent ys) {
+        YearStudent y = getYearStudent(ys.getId());
+
+        if (y == null) {return yearStudentRepository.save(ys);}
+        if (ys.getStudent() != null) y.setStudent(ys.getStudent());
+        if (ys.getYear() != null) y.setYear(ys.getYear());
+        return yearStudentRepository.save(y);
+    }
 }

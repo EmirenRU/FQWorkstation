@@ -38,4 +38,29 @@ public class ReviewerServiceImpl implements ReviewerService {
                 .map(ReviewerMapper::mapToReviewerDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Reviewer getReviewer(Long id) {
+        return reviewerRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public ReviewerDTO getReviewerDTO(Long id) {
+        return reviewerRepository.findById(id)
+                .map(ReviewerMapper::mapToReviewerDTO)
+                .orElse(null);
+    }
+
+    @Override
+    public Reviewer updateReviewer(Reviewer reviewer) {
+        Reviewer upd = getReviewer(reviewer.getId());
+
+        if (upd == null) { return reviewerRepository.save(reviewer); }
+
+        if (reviewer.getName() != null) upd.setName(reviewer.getName());
+        if (reviewer.getPosition() != null) upd.setPosition(reviewer.getPosition());
+        if (reviewer.getAcademicDegree() != null) upd.setAcademicDegree(reviewer.getAcademicDegree());
+
+        return reviewerRepository.save(upd);
+    }
 }

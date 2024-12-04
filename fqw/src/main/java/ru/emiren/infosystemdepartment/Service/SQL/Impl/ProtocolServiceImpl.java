@@ -31,10 +31,36 @@ public class ProtocolServiceImpl implements ProtocolService {
     }
 
     @Override
-    public List<ProtocolDTO> getAllProtocol() {
+    public List<ProtocolDTO> getAllDtoProtocol() {
         return protocolRepository.findAll()
                 .stream()
                 .map(ProtocolMapper::mapToProtocolDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProtocolDTO getDtoProtocol(String fullName) {
+        return protocolRepository.findById(fullName)
+                .map(ProtocolMapper::mapToProtocolDTO)
+                .orElse(null);
+    }
+
+    @Override
+    public Protocol getProtocol(String fullName) {
+        return protocolRepository.findById(fullName).orElse(null);
+    }
+
+    @Override
+    public Protocol updateProtocol(Protocol protocol) {
+        Protocol upd = getProtocol(protocol.getFioStudent());
+        if (upd == null) return protocolRepository.save(protocol);
+
+        if (protocol.getGrade() != null) upd.setGrade(protocol.getGrade());
+        if (protocol.getVolume() != null) upd.setVolume(protocol.getVolume());
+        if (protocol.getReview() != null) upd.setReview(protocol.getReview());
+        if (protocol.getFqwName() != null) upd.setFqwName(protocol.getFqwName());
+        if (protocol.getHeadOfTheFQW() != null) upd.setHeadOfTheFQW(protocol.getHeadOfTheFQW());
+
+        return protocolRepository.save(upd);
     }
 }

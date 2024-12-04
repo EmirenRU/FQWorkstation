@@ -55,10 +55,12 @@ public class CommissionerServiceImpl implements CommissionerService {
     }
 
     @Override
-    public CommissionerDTO getCommissioner(Long id) {
-        return commisionerRepository
-                .findById(String.valueOf(id))
-                .map(CommissionerMapper::mapToCommisionerDTO)
-                .orElse(null);
+    public Commissioner getCommissioner(Long id) {
+        return commisionerRepository.findById(id);
+    }
+
+    @Override
+    public CommissionerDTO getCommissionerDTO(Long id) {
+        return CommissionerMapper.mapToCommisionerDTO(commisionerRepository.findById(id));
     }
 }

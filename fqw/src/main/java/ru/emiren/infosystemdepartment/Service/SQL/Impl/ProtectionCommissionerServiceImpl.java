@@ -42,7 +42,12 @@ public class ProtectionCommissionerServiceImpl implements ProtectionCommissioner
     }
 
     @Override
-    public ProtectionCommissionerDTO getPCById(Long id) {
+    public ProtectionCommissioner getProtectionCommissionerById(Long id) {
+        return protectionCommissionerRepository.findProtectionCommissionersById(id);
+    }
+
+    @Override
+    public ProtectionCommissionerDTO getProtectioCommissionerDTOById(Long id) {
         return protectionCommissionerRepository.findById(id);
     }
 

@@ -144,7 +144,7 @@ public class SqlController {
 
 
         model.addAttribute("studentLecturers_container",
-                studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode,
+                studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode,
                                                                                                             departmentCode,
                                                                                                             dateFrom,
                                                                                                             dateTo,
@@ -168,7 +168,7 @@ public class SqlController {
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
 
-        LecturerDTO lecturerDTO = lecturerService.findByLecturerId(lecturerId);
+        LecturerDTO lecturerDTO = lecturerService.findDtoByLecturerId(lecturerId);
 
         model.addAttribute("specificLecturer", lecturerDTO);
 

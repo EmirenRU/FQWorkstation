@@ -37,4 +37,23 @@ public class YearServiceImpl implements YearService {
     public void deleteYear(Year year) {
 
     }
+
+    @Override
+    public Year getYear(String year) {
+        return yearRepository.findById(year).orElse(null);
+    }
+
+    @Override
+    public YearDTO getYearDTO(String year) {
+        return yearRepository.findById(year).map(YearMapper::mapToYearDTO).orElse(null);
+    }
+
+    @Override
+    public Year updateYear(Year year) {
+        Year y = getYear(year.getYear());
+        if (y == null) { return yearRepository.save(year); }
+
+        if (year.getStudents() != null) y.setStudents(year.getStudents());
+        return yearRepository.save(y);
+    }
 }

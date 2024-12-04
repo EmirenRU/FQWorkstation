@@ -6,4 +6,6 @@ import ru.emiren.infosystemdepartment.Model.SQL.ProtectionCommissioner;
 
 public interface ProtectionCommissionerRepository extends JpaRepository<ProtectionCommissioner,Integer> {
     ProtectionCommissionerDTO findById(Long id);
+
+    ProtectionCommissioner findProtectionCommissionersById(Long id);
 }

@@ -39,6 +39,11 @@ public class FQWServiceImpl implements FQWService {
     }
 
     @Override
+    public FQW getFQW(String name) {
+        return fqwRepository.findByName(name);
+    }
+
+    @Override
     public FQWDTO getFQWDTO(String name) {
         return fqwRepository.findByName(name);
     }

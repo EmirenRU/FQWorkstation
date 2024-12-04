@@ -5,4 +5,5 @@ import ru.emiren.infosystemdepartment.Model.SQL.Commissioner;
 
 public interface CommisionerRepository extends JpaRepository<Commissioner, String> {
 
+    Commissioner findById(Long id);
 }

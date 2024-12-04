@@ -7,6 +7,11 @@ import java.util.List;
 
 public interface YearStudentService {
     List<YearStudentDTO> getAllYearStudent();
-
     YearStudent saveYearStudent(YearStudent ys);
+    void deleteYearStudent(YearStudent ys);
+    YearStudent getYearStudent(Long id);
+    YearStudentDTO getYearStudentDTO(Long id);
+    YearStudent updateYearStudent(YearStudent ys);
+
+
 }

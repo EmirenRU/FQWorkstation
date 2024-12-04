@@ -39,7 +39,12 @@ public class OrientationServiceImpl implements OrientationService {
     }
 
     @Override
-    public OrientationDTO getOrientation(String code) {
+    public Orientation getOrientation(String code) {
+        return orientationRepository.findOrientationByCode(code);
+    }
+
+    @Override
+    public OrientationDTO getOrientationDTO(String code) {
         return orientationRepository.findById(code)
                 .map(OrientationMapper::mapToOrientationDTO)
                 .orElse(null);

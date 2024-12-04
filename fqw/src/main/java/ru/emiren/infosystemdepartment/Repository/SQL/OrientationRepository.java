@@ -10,4 +10,6 @@ public interface OrientationRepository extends JpaRepository<Orientation, String
 
 
     OrientationDTO findByCode(String code);
+
+    Orientation findOrientationByCode(String code);
 }

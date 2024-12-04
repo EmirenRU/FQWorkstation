@@ -23,27 +23,33 @@ public class LecturerServiceImpl implements LecturerService {
 
 
     @Override
-    public LecturerDTO findByLecturerId(Long id) {
-        return LecturerMapper.mapToLecturerDTO(lecturerRepository.findById(id).get());
+    public LecturerDTO findDtoByLecturerId(Long id) {
+        return lecturerRepository.findById(id)
+                .map(LecturerMapper::mapToLecturerDTO)
+                .orElse(null);
     }
 
     @Override
-    public LecturerDTO findByLecturerName(String name) {
-        return null;
+    public Lecturer findByLecturerId(Long id) {
+        return lecturerRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Lecturer findByLecturerName(String name) {
+        return lecturerRepository.findLecturerByName(name);
     }
 
     @Override
     public List<LecturerDTO> getAllLecturer() {
-        List<LecturerDTO> lecturers = lecturerRepository.findAll()
-                .stream().map(LecturerMapper::mapToLecturerDTO).collect(Collectors.toList());
-        return lecturers;
+        return lecturerRepository.findAll()
+                .stream()
+                .map(LecturerMapper::mapToLecturerDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public LecturerDTO createDummyLecturer() {
-        return new LecturerDTO().builder()
-                .id(null)
-                .build();
+        return new LecturerDTO().builder().id(null).build();
     }
 
     @Override

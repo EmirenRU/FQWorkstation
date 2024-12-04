@@ -9,6 +9,7 @@ public interface ProtectionCommissionerService {
     ProtectionCommissioner saveProtectionCommissioner(ProtectionCommissioner pc);
     List<ProtectionCommissionerDTO> getAllPC();
     void deleteProtectionCommissioner(ProtectionCommissioner pc);
-    ProtectionCommissionerDTO getPCById(Long id);
+    ProtectionCommissioner    getProtectionCommissionerById(Long id);
+    ProtectionCommissionerDTO getProtectioCommissionerDTOById(Long id);
     ProtectionCommissioner updatePC(ProtectionCommissioner pc);
 }

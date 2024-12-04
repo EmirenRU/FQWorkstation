@@ -48,4 +48,26 @@ public class ProtectionServiceImpl implements ProtectionService {
     public Protection saveProtection(Protection protection) {
         return protectionRepository.save(protection);
     }
+
+    @Override
+    public Protection getProtectionById(Long id) {
+        return protectionRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public ProtectionDTO getProtectionDTOById(Long id) {
+        return protectionRepository.findById(id).map(ProtectionMapper::mapToProtectionDTO).orElse(null);
+    }
+
+    @Override
+    public Protection updateProtection(Protection protection) {
+        Protection oldProtection = getProtectionById(protection.getId());
+        if (oldProtection == null) { return protectionRepository.save(protection); }
+
+        if (protection.getDateOfProtection() != null) { oldProtection.setDateOfProtection(protection.getDateOfProtection()); }
+        if (protection.getOrientation() != null) { oldProtection.setOrientation(protection.getOrientation()); }
+        if (protection.getCommissioners() != null) { oldProtection.setCommissioners(protection.getCommissioners()); }
+
+        return protectionRepository.save(oldProtection);
+    }
 }
