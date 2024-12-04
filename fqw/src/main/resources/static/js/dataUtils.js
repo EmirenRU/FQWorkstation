@@ -18,6 +18,9 @@ let savedData = [];
 function saveInputs(name, value){
     //console.log(name);
     //console.log(value);
+    if (value == ""){
+        value = -1;
+    }
     let saveEntry = {
         name: name,
         value: value

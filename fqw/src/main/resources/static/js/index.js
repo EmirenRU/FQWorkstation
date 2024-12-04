@@ -1,12 +1,48 @@
-$(document).ready(function() {
-    if ($.fn.select2){
-        $('.slider-val').select2({ // Changed selector to match the class in HTML
-            placeholder: $('.slider-val').data('placeholder'), // Set placeholder text
-            // width:fit-content,
-            tags: true // Enable tagging/searching for options
-        });
+/* TIME TO END THIS */
+$('select').select2()
+
+$('#orientation').on('select2:close', function() {
+alert('Here')
+  let select = $(this)
+  let returnObj = document.createElement('li');
+  let closeSpan = document.createElement('span');
+  closeSpan.classList.add("select2-selection__choice__remove");    
+  closeSpan.textContent = '▼';
+  closeSpan.setAttribute("role","presentation")
+  returnObj.classList.add('select2-selection__choice')
+  $(this).next('span.select2').find('ul').html(function() {
+    let count = select.select2('data').length
+    if(count == 0 ){
+        returnObj.textContent = " Выбрано " +  count + " Oбъектов ";
+        returnObj.prepend(closeSpan)
+        return returnObj;
     }
+    console.log(select.select2('data')[count-1].text)
+
+
+    returnObj.textContent = " Выбрано " +  count + " -- "+  select.select2('data')[count-1].text;
+    returnObj.prepend(closeSpan)
+    
+    return returnObj;
+  })
+})
+
+
+/* TIME TO END THIS */
+
+
+$(document).ready(function() {
+    console.log($('#orientation'))
+    $('.slider-val').select2({ // Changed selector to match the class in HTML
+        placeholder: $('.slider-val').data('placeholder'), // Set placeholder text
+        tags: true // Enable tagging/searching for options
+    });
+    $('#orientation').select2({ // Changed selector to match the class in HTML
+        placeholder: $('#orientation').data('placeholder'), // Set placeholder text
+        tags: true // Enable tagging/searching for options
+    });
 });
+
 
 
 function toggleDisplayAndSaveState() {
@@ -16,6 +52,11 @@ function toggleDisplayAndSaveState() {
     }
 }
 
+alert($('#orientation'))
+
+$('#orientation').select2({
+    closeOnSelect: true
+});
 document.addEventListener('DOMContentLoaded', function() {
     let x = document.getElementById("display-container");
     if (x!==null) {
@@ -23,95 +64,97 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function formHash(file){
-    return new Promise(function (resolve){
+$(document).ready(function() {
+    $('#input__file').on('change', function() {
+        let formData = new FormData();
+        let file = this.files[0];
+        formData.append('protocol', file);
 
-        let reader = new FileReader();
-        reader.onload = function(event) {
-            sha256(reader.result)
-            resolve(sha256(reader.result))
-        };
-        reader.readAsText(file)
-    })
-}
-
-async function uploadFileAndDownload() {
-    let id = new Date().toJSON();
-    let formData = new FormData();
-    let file = $('#input__file')[0].files[0];
-    let hashId = await formHash(file);
-    console.log(hashId)
-
-    if (!file) {
-        $('#uploadProtocolStatus').text("Please select a file.");
-        return;
-    }
-
-    formData.append('file', file);
-    formData.append('id', hashId);
-
-    // Upload the file
-    let settings = {
-        method: 'POST',
-        body: formData,
-    };
-
-    try {
-        let response = await fetch('/api/v2/upload_file', settings);
-        let respData = await response.json();
-
-        if (respData.status === '200') {
-            $('#uploadProtocolStatus').text("File uploaded successfully!");
-            await checkFileAvailability(hashId);
-        } else {
-            $('#uploadProtocolStatus').text("Error uploading file: " + respData.status);
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        $('#uploadProtocolStatus').text("Error: " + error.message);
-    }
-}
-
-async function checkFileAvailability(id) {
-    let isAvailable = false;
-    let settings = {
-        method: "POST",
-    };
-
-    while (!isAvailable) {
-        console.log("Checking file availability...");
-        let response = await fetch("/api/v2/check_file_availability/" + id, settings);
-
-        if (await response.text() === '200') {
-            console.log("File is available. Proceeding to download...");
-            isAvailable = true;
-            await downloadFile(id);
-        } else {
-
-            await new Promise(r => setTimeout(r, 3000));
-        }
-    }
-}
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/deserialization-data',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                $('#uploadStatus').html('<p>' + response + '</p>');
+            },
+            error: function(response) {
+                $('#uploadStatus').html('<p>File upload failed.</p>');
+            }
+        });
+    });
+});
 
 
-async function downloadFile(options) {
-    try {
-        const response = await fetch("/api/v2/download_file/" + options, { method: "GET" });
+$(document).ready(function() {
+    $('#input__file__excel').on('change', function() {
+        let formData = new FormData();
+        let file = this.files[0];
+        formData.append('excel', file);
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        $.ajax({
+            type: 'POST',
+            url: '/api/v2/upload-excel',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                $('#uploadStatus').html('<p>' + response + '</p>');
+            },
+            error: function(response) {
+                $('#uploadStatus').html('<p>File upload failed.</p>');
+            }
+        });
+    });
+});
 
-        const blob = await response.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = objectUrl;
-        link.download = 'protocols.docx';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(objectUrl);
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-    }
-}
+$(document).ready(function() {
+    $('#input__file__excel').on('change', function() {
+        let formData = new FormData();
+        let file = this.files[0];
+        formData.append('excel', file);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v2/upload-excel',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                $('#uploadStatus').html('<p>' + response + '</p>');
+            },
+            error: function(response) {
+                $('#uploadStatus').html('<p>File upload failed.</p>');
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+    $('#input__file__zip').on('change', function() {
+        let formData = new FormData();
+        let file = this.files[0];
+
+        formData.append('zip', file);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/upload-zip-file',
+            data: formData,
+            contentType: false,
+            processData: false,
+            timeout: 600000,
+            success: function(response) {
+                $('#uploadStatus').html('<p>' + response + '</p>');
+            },
+            error: function(response) {
+                $('#uploadStatus').html('<p>File upload failed.</p>');
+            }
+        });
+    });
+});
+
+$('select[data-plugin="select2"]').select2({
+    dropdownParent: $("#selectParent")
+ });
