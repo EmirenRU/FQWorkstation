@@ -38,5 +38,23 @@ public class OrientationServiceImpl implements OrientationService {
         return orientationRepository.save(orientation);
     }
 
+    @Override
+    public OrientationDTO getOrientation(String code) {
+        return orientationRepository.findById(code)
+                .map(OrientationMapper::mapToOrientationDTO)
+                .orElse(null);
+    }
+
+    @Override
+    public Orientation updateOrientation(String code, Orientation orientation) {
+        Orientation upd = orientationRepository.findById(code).orElse(new Orientation());
+
+        if (orientation.getCode() != null) { upd.setCode(orientation.getCode()); }
+        if (orientation.getName() != null) { upd.setName(orientation.getName()); }
+        if (orientation.getProtection() != null) { upd.setProtection(orientation.getProtection()); }
+
+        return orientationRepository.save(upd);
+    }
+
 
 }

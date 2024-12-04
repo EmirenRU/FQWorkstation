@@ -10,5 +10,6 @@ public interface CommissionerService {
     Commissioner saveCommissioner(Commissioner commissioner);
     void deleteCommissioner(Commissioner commissioner);
     List<CommissionerDTO> getAllCommissioners();
-
+    Commissioner updateCommissioner(Long id, Commissioner commissioner);
+    CommissionerDTO getCommissioner(Long id);
 }

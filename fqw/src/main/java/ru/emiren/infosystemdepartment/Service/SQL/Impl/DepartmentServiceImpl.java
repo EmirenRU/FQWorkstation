@@ -38,4 +38,24 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void deleteDepartment(Department department) {
         departmentRepository.delete(department);
     }
+
+    @Override
+    public DepartmentDTO getDepartmentById(Long id) {
+        return departmentRepository
+                .findById(String.valueOf(id))
+                .map(DepartmentMapper::mapToDepartmentDTO)
+                .orElse(null);
+    }
+
+    @Override
+    public Department updateDepartment(Long id, Department department) {
+        Department upd = departmentRepository.findById(String.valueOf(id)).orElse(new Department());
+
+        if (department.getName() != null) {
+            upd.setName(department.getName());
+        } if (department.getCode() != null) {
+            upd.setCode(department.getCode());
+        }
+        return departmentRepository.save(upd);
+    }
 }

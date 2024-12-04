@@ -37,4 +37,31 @@ public class FQWServiceImpl implements FQWService {
     public FQW saveFqw(FQW fqw) {
         return fqwRepository.save(fqw);
     }
+
+    @Override
+    public FQWDTO getFQWDTO(String name) {
+        return fqwRepository.findByName(name);
+    }
+
+    @Override
+    public FQW updateFQW(String name, FQW fqw) {
+        FQW upd = fqwRepository
+                .findById(name)
+                .orElse(new FQW());
+
+        if (!name.isEmpty()) {
+            upd.setName(name);
+        } if (fqw.getClassifier() != null) {
+            upd.setClassifier(fqw.getClassifier());
+        } if (fqw.getUniqueness() != null) {
+            upd.setUniqueness(fqw.getUniqueness());
+        } if (fqw.getFeedback() != null) {
+        upd.setFeedback(fqw.getFeedback());
+        } if (fqw.getVolume() != null) {
+            upd.setVolume(fqw.getVolume());
+        } if (fqw.getReviewer() != null) {
+            upd.setReviewer(fqw.getReviewer());
+        }
+        return fqwRepository.save(upd);
+    }
 }

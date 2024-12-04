@@ -19,4 +19,6 @@ public interface LecturerService {
     Lecturer saveLecturer(Lecturer lecturerDTO);
 
     void deleteLecturer(Lecturer lecturer);
+
+    Lecturer updateLecturer(Long id, Lecturer lecturer);
 }

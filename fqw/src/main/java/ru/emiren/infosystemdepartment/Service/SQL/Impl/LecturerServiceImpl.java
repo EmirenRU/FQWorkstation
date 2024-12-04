@@ -63,4 +63,17 @@ public class LecturerServiceImpl implements LecturerService {
     public void deleteLecturer(Lecturer lecturer) {
         lecturerRepository.delete(lecturer);
     }
+
+    @Override
+    public Lecturer updateLecturer(Long id, Lecturer lecturer) {
+        Lecturer oldLecturer = lecturerRepository.findById(id).orElse(new Lecturer());
+
+        if (lecturer.getName() != null) { oldLecturer.setName(lecturer.getName()); }
+        if (lecturer.getAcademicDegree() != null) { oldLecturer.setAcademicDegree(lecturer.getAcademicDegree());}
+        if (lecturer.getPosition() != null) { oldLecturer.setPosition(lecturer.getPosition());}
+        if (lecturer.getDepartment() != null) { oldLecturer.setDepartment(lecturer.getDepartment());}
+        if (lecturer.getStudents() != null) { oldLecturer.setStudents(lecturer.getStudents());}
+
+        return lecturerRepository.save(oldLecturer);
+    }
 }

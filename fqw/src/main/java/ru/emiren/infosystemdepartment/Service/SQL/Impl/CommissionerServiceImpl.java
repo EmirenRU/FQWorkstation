@@ -38,4 +38,27 @@ public class CommissionerServiceImpl implements CommissionerService {
                 .map(CommissionerMapper::mapToCommisionerDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Commissioner updateCommissioner(Long id, Commissioner commissioner) {
+        Commissioner updated = commisionerRepository
+                               .findById(String.valueOf(id))
+                               .orElse(new Commissioner());
+        updated.setId(id);
+
+        if (commissioner.getName() != null)  { updated.setName(commissioner.getName()); }
+        if (commissioner.getDepartment() != null) { updated.setDepartment(commissioner.getDepartment());}
+        if (commissioner.getUniversity() != null) { updated.setUniversity(commissioner.getUniversity());}
+        if (commissioner.getProtectionCommissioners() != null) { updated.setProtectionCommissioners(commissioner.getProtectionCommissioners());}
+
+        return commisionerRepository.save(updated);
+    }
+
+    @Override
+    public CommissionerDTO getCommissioner(Long id) {
+        return commisionerRepository
+                .findById(String.valueOf(id))
+                .map(CommissionerMapper::mapToCommisionerDTO)
+                .orElse(null);
+    }
 }
