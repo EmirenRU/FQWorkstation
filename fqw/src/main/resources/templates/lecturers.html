@@ -9,25 +9,16 @@
 </head>
 
 <body layout:fragment="body">
-<<<<<<< HEAD
-    <main layout:fragment="main">
-        <section  class="selector-form">
-            <div class="container-fluid form-container">
-                <h2 class="section-header form-header">Получить документ</h2>
-                <div class="form-space flex">
-                    <form method="post" class="form-body" th:action="@{/sql/lecturers}">
-=======
 <main layout:fragment="main">
     <section  class="section-form">
         <div class="container-fluid form-container">
             <h2 class="section-header form-header">Получить документ</h2>
             <div class="form-space flex">
                 <form method="post" class="form-body" th:action="@{/sql/lecturers}">
->>>>>>> main
 
                     <div class="selector-patch">
                         <label class="selection-param">Направление
-                            <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation">
+                            <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation" multiple >
                                 <option th:value="-1">
                                     Выберите Направление
                                 </option>
@@ -53,29 +44,6 @@
                         </label>
                     </div>
 
-<<<<<<< HEAD
-                        <div class="selector-patch-2">
-                            <label class="selection-param">Годы работ
-                                <div class="selection-param__years flex">
-                                    <span class="selection-param__years__text" >с  </span>
-                                    <input type="text" name="date" class="val" value="2020" maxlength="4" placeholder="2020">
-                                    <span class="selection-param__years__text" >до  </span>
-                                    <input type="text" name="date" class="val" value="2024" maxlength="4" placeholder="2021">
-                                </div>
-                            </label>
-                        </div>
-                        <div class="selector-patch-2">
-                            <label class="selection-param">Тема
-                                <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'" onChange="saveInputs(name, value)" id="themes">
-                                    <option th:value="-1">Выберите тему: </option>
-                                    <option th:each="theme : ${themes_selector}"
-                                            th:text="${theme.name}"
-                                            th:value="${theme.name}">
-                                    </option>
-                                </select>
-                            </label>
-                        </div>
-=======
                     <div class="selector-patch-2">
                         <label class="selection-param">Годы работ
                             <div class="selection-param__years flex">
@@ -97,7 +65,6 @@
                             </select>
                         </label>
                     </div>
->>>>>>> main
 
                     <div class="selector-patch-2 margin-fix">
                         <label class="selection-param">Науч рук
