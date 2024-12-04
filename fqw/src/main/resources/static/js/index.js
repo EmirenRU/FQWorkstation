@@ -52,7 +52,6 @@ function toggleDisplayAndSaveState() {
     }
 }
 
-alert($('#orientation'))
 
 $('#orientation').select2({
     closeOnSelect: true
