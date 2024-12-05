@@ -23,20 +23,20 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
     @Query("SELECT sl FROM StudentLecturers sl " +
             "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code " +
             "WHERE " +
-            "((sl.lecturer.id = :lecturerId) OR (:lecturerId = -1)) AND " +
-            "((sl.student.orientation.code = :orientationCode) OR (:orientationCode = '-1') ) AND " +
-            "((sl.student.department.code = :departmentCode) OR (:departmentCode = -1)) AND " +
-            "((sl.student.fqw.name = :theme) OR (:theme = '-1')) " +
-            "AND ( ( (:dateFrom IS null) OR (p.dateOfProtection >= :dateFrom) ) AND ( (p.dateOfProtection <= :dateTo) OR ( :dateTo IS null ) )   ) " +
+            " ((sl.lecturer.id = :lecturerId                     ) OR (:lecturerId = -1                 ) ) AND " +
+            " ((sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes        ) ) AND " +
+            " ((sl.student.department.code = :departmentCode     ) OR (:departmentCode = -1             ) ) AND " +
+            " ((sl.student.fqw.name = :theme                     ) OR (:theme = '-1'                    ) ) " +
+            "AND ((CAST(:dateFrom as integer) IS null                             ) OR (CAST(p.dateOfProtection AS integer) >= CAST(:dateFrom as integer))        ) " + // The problem part
+            "AND ((CAST(:dateTo as integer) IS null                               ) OR (CAST(p.dateOfProtection AS integer) <= CAST(:dateTo as integer))          ) " + // The problem part
             "ORDER BY sl.lecturer.name")
-    // OR (cast(:dateFrom as DATE) IS null)
-    List<StudentLecturers> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
-            (String orientationCode,
-             Long departmentCode,
-             java.time.Year dateFrom,
-             java.time.Year dateTo,
-             String theme,
-             Long lecturerId);
+    List<StudentLecturers> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
+            @Param("orientationCodes") List<String> orientationCodes,
+            @Param("departmentCode") Long departmentCode,
+            @Param("dateFrom") java.time.Year dateFrom,
+            @Param("dateTo") java.time.Year dateTo,
+            @Param("theme") String theme,
+            @Param("lecturerId") Long lecturerId);
 
     @Query("SELECT sl from StudentLecturers sl " +
             "JOIN year_student yr ON yr.student.stud_num = sl.student.stud_num " +

@@ -33,4 +33,5 @@ public class Lecturer {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id")
     private List<StudentLecturers> students = new ArrayList<>();
+
 }

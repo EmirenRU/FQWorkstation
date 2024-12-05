@@ -18,10 +18,7 @@
 
                     <div class="selector-patch">
                         <label class="selection-param">Направление
-                            <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation">
-                                <option th:value="-1">
-                                    Выберите Направление
-                                </option>
+                            <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation" multiple>
                                 <option th:each="orientation :${orientations_selector}"
                                         th:value="${orientation.code}"
                                         th:text="${orientation.toString()}">

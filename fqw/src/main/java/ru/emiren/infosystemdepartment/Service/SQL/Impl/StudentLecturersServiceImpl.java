@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Mapper.SQL.LecturerMapper;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StudentLecturersServiceImpl implements StudentLecturersService {
     StudentLecturerRepository studentLecturerRepository;
 
@@ -43,22 +45,29 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
 
     @Override
     public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
-            (String orientationCode,
+            (List<String> orientationCodes,
              Long departmentCode,
              java.time.Year dateFrom,
              java.time.Year dateTo,
              String theme,
              Long lecturerId
             ) {
+        log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
+                lecturerId,
+                orientationCodes,
+                departmentCode,
+                theme,
+                dateFrom,
+                dateTo);
         return studentLecturerRepository.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
-        (orientationCode,
+        (orientationCodes,
         departmentCode,
         dateFrom,
         dateTo,
         theme,
         lecturerId).stream()
                 .map(StudentLecturersMapper::mapToStudentLecturersDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

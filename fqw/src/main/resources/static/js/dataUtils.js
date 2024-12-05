@@ -1,4 +1,4 @@
- function dataToJson(data){
+function dataToJson(data){
     return JSON.stringify(data);
 }
 
@@ -18,6 +18,9 @@ let savedData = [];
 function saveInputs(name, value){
     //console.log(name);
     //console.log(value);
+    if (value == ""){
+        value = -1;
+    }
     let saveEntry = {
         name: name,
         value: value
@@ -28,7 +31,7 @@ function saveInputs(name, value){
         savedData.push(saveEntry);
     }
     else{
-        
+
         savedData.splice(savedData.indexOf(searchSimilar),1);
         savedData.push(saveEntry);
         console.log('Saved data ', savedData);

@@ -14,7 +14,7 @@ public interface StudentLecturersService {
     List<StudentLecturersDTO> findAllAndSortedByLecturerName();
 
     List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
-            (String orientationCode,
+            (List<String> orientationCode,
              Long departmentCode,
              java.time.Year dateFrom,
              java.time.Year dateTo,

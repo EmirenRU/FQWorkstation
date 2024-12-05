@@ -45,7 +45,7 @@ public class FQWServiceImpl implements FQWService {
 
     @Override
     public FQWDTO getFQWDTO(String name) {
-        return fqwRepository.findByName(name);
+        return fqwRepository.findDtoByName(name);
     }
 
     @Override

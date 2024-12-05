@@ -1,6 +1,8 @@
 package ru.emiren.infosystemdepartment.Controller.SQL;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
+import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Year;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
@@ -21,13 +24,13 @@ import java.io.OutputStream;
 import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/sql")
+@Slf4j
 public class SqlController {
 
-    private final LecturerRepository lecturerRepository;
     StudentService studentService;
     DepartmentService departmentService;
     LecturerService lecturerService;
@@ -49,6 +52,14 @@ public class SqlController {
     @DateTimeFormat(pattern = "yyyy")
     private LocalDate date;
 
+    private final List<String> params = new ArrayList<>(
+            List.of("lecturers_selector", "departments_selector",
+                    "orientations_selector", "themes_selector",
+                    "years_selector", "specificLecturer",
+                    "studentLecturers_container"
+                    )
+    );
+
     @Autowired
     public SqlController(StudentService studentService,
                          DepartmentService departmentService,
@@ -56,7 +67,6 @@ public class SqlController {
                          OrientationService orientationService,
                          ProtectionService protectionService,
                          StudentLecturersService studentLecturersService,
-                         LecturerRepository lecturerRepository,
                          FQWService fqwService,
                          YearRepository yearRepository,
                          WordService wordService){
@@ -66,16 +76,16 @@ public class SqlController {
         this.orientationService         = orientationService;
         this.protectionService          = protectionService;
         this.studentLecturersService    = studentLecturersService;
-        this.lecturerRepository         = lecturerRepository;
         this.fqwService                 = fqwService;
         this.wordService                = wordService;
         this.yearRepository             = yearRepository;
-        lecturerDTOS = lecturerService.getAllLecturer();
-        departmentDTOS = departmentService.getAllDepartments();
-        orientationDTOS = orientationService.getAllOrientations();
-        years = yearRepository.findAll();
-        fqwdtos = fqwService.getAllFQW();
-        dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        
+        lecturerDTOS       = lecturerService.getAllLecturer();
+        departmentDTOS     = departmentService.getAllDepartments();
+        orientationDTOS    = orientationService.getAllOrientations();
+        years              = yearRepository.findAll();
+        fqwdtos            = fqwService.getAllFQW();
+        dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     }
 
     @GetMapping("lecturers")
@@ -85,19 +95,19 @@ public class SqlController {
 
     @GetMapping("lecturers/view")
     public String viewLecturer(Model model){
-        model.addAttribute("lecturers_selector", lecturerDTOS);
-        model.addAttribute("departments_selector", departmentDTOS);
-        model.addAttribute("orientations_selector", orientationDTOS);
-        model.addAttribute("themes_selector", fqwdtos);
-        model.addAttribute("years_selector", years);
-        model.addAttribute("archiveFlag", true);
+
+        model.addAttribute(params.getFirst(), lecturerDTOS);
+        model.addAttribute(params.get(1), departmentDTOS);
+        model.addAttribute(params.get(2), orientationDTOS);
+        model.addAttribute(params.get(3), fqwdtos);
+        model.addAttribute(params.get(4), years);
+
         return "lecturers";
     }
 
     @GetMapping("/upload-data-form")
     public String UploadDataForm(Model model){
-//        model.addAttribute();
-        
+
         return "uploadDataForm";
     }
 
@@ -111,12 +121,10 @@ public class SqlController {
         }
 
         request.setAttribute("flag", true);
-        request.setAttribute("specificLecturer", lecturerService.createDummyLecturer());
-        request.setAttribute("studentLecturers_container", list);
+        request.setAttribute(params.get(5), lecturerService.createDummyLecturer());
+        request.setAttribute(params.get(6), list);
         return "forward:/sql/lecturers/view";
     }
-
-
 
     @PostMapping("lecturers")
     public String getLecturers(HttpServletRequest request,
@@ -124,12 +132,21 @@ public class SqlController {
                                RedirectAttributes redirectAttributes){
 
 
-        Long lecturerId = Long.valueOf(request.getParameter("lecturer"));
-        String orientationCode = request.getParameter("orientation");
+        Long lecturerId = Long.parseLong(request.getParameter("lecturer"));
+        String[] orientationParams = request.getParameterValues("orientation");
+        List<String> orientationCodes = (orientationParams != null) ? Arrays.asList(orientationParams) : List.of("-1");
         Long departmentCode = Long.valueOf(request.getParameter("department"));
         String theme = request.getParameter("themes");
         String strDateFrom =request.getParameter("date-from");
         String strDateTo =request.getParameter("date-to");
+
+        log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
+                lecturerId,
+                orientationParams,
+                departmentCode,
+                theme,
+                strDateFrom,
+                strDateTo);
 
         java.time.Year dateFrom = null;
         java.time.Year dateTo = null;
@@ -139,28 +156,30 @@ public class SqlController {
             dateTo   = java.time.Year.parse(strDateTo);
         }
 
-//        redirectAttributes.addAttribute("studentLecturers_container", studentLecturersService.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode, departmentCode, date, theme, lecturerId));
-//        redirectAttributes.addAttribute("flag", true);
+        log.info("date from and to: {} and {}", dateFrom, dateTo );
 
+        List<StudentLecturersDTO> res = studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
+                orientationCodes,
+                departmentCode,
+                dateFrom,
+                dateTo,
+                theme,
+                lecturerId
+        );
 
-        model.addAttribute("studentLecturers_container",
-                studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(orientationCode,
-                                                                                                            departmentCode,
-                                                                                                            dateFrom,
-                                                                                                            dateTo,
-                                                                                                    theme, lecturerId));
+        model.addAttribute(params.get(6), res);
+        log.info("The result is {}", res);
 
-        model.addAttribute("lecturers_selector", lecturerDTOS);
-        model.addAttribute("departments_selector", departmentDTOS);
-        model.addAttribute("orientations_selector", orientationDTOS);
-        model.addAttribute("themes_selector", fqwdtos);
-        model.addAttribute("years_selector", years);
+        model.addAttribute(params.getFirst(), lecturerDTOS);
+        model.addAttribute(params.get(1), departmentDTOS);
+        model.addAttribute(params.get(2), orientationDTOS);
+        model.addAttribute(params.get(3), fqwdtos);
+        model.addAttribute(params.get(4), years);
 
         model.addAttribute("flag", true);
 
         if (lecturerId == -1){
-            model.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
-//            redirectAttributes.addAttribute("specificLecturer", lecturerService.createDummyLecturer());
+            model.addAttribute(params.get(5), lecturerService.createDummyLecturer());
             return "lecturers";
         }
 
@@ -170,7 +189,7 @@ public class SqlController {
 
         LecturerDTO lecturerDTO = lecturerService.findDtoByLecturerId(lecturerId);
 
-        model.addAttribute("specificLecturer", lecturerDTO);
+        model.addAttribute(params.get(5), lecturerDTO);
 
         return "lecturers";
     }

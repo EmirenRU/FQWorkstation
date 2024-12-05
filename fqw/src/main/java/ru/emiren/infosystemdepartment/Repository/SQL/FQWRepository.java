@@ -5,7 +5,7 @@ import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 
 public interface FQWRepository extends JpaRepository<FQW, String> {
-    FQWDTO findByName(String name);
+    FQWDTO findDtoByName(String name);
 
     FQW findByName(String name);
 }

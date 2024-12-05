@@ -3,7 +3,7 @@
     display:inline-block;
     margin:0;
     position:relative;
-    vertical-align:middle
+    vertical-align:middle;
 }
 .select2-container .select2-selection--single{
     box-sizing:border-box;
@@ -41,7 +41,7 @@
     overflow:hidden;
     padding-left:8px;
     text-overflow:ellipsis;
-    white-space:nowrap
+    white-space:nowrap;
 }
 .select2-container .select2-search--inline{
     float:left
@@ -71,6 +71,7 @@
     display:block
 }
 .select2-results__options{
+
     list-style:none;
     margin:0;
     padding:0
@@ -196,9 +197,10 @@
 }
 .select2-container--default .select2-selection--multiple{
     background-color:white;
-    border-bottom: 1px solid #aaa;
+    /*  border-bottom: 1px solid #aaa;*/
     border-radius:0;
-    cursor:text
+    cursor:text;
+    transform: translateY(-5px);
 }
 .select2-container--default .select2-selection--multiple .select2-selection__rendered{
     box-sizing:border-box;
@@ -219,14 +221,14 @@
     padding:1px
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice{
-    background-color:#e4e4e4;
+    /*background-color:#e4e4e4;*/
     border-bottom: 1px solid #aaa;
     border-radius:0;
     cursor:default;
     float:left;
     margin-right:5px;
-    margin-top:5px;
-    padding:0 5px
+    margin-top:6px;
+    padding:2px 5px
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
     color:#999;
@@ -267,6 +269,7 @@
 .select2-container--default.select2-container--open.select2-container--below .select2-selection--single,.select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple{
     border-bottom-left-radius:0;
     border-bottom-right-radius:0
+
 }
 .select2-container--default .select2-search--dropdown .select2-search__field{
     border:1px solid #aaa
@@ -319,7 +322,7 @@
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected]{
     background-color:#5897fb;
-    color:white
+    color:white;
 }
 .select2-container--default .select2-results__group{
     cursor:default;
@@ -483,7 +486,7 @@
 .select2-container--classic.select2-container--open.select2-container--below .select2-selection--multiple{
     border-bottom:none;
     border-bottom-left-radius:0;
-    border-bottom-right-radius:0
+    border-bottom-right-radius:0;
 }
 .select2-container--classic .select2-search--dropdown .select2-search__field{
     border-bottom: 1px solid #aaa;
