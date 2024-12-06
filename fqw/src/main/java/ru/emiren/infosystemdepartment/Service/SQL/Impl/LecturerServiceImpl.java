@@ -23,7 +23,7 @@ public class LecturerServiceImpl implements LecturerService {
 
 
     @Override
-    public LecturerDTO findDtoByLecturerId(Long id) {
+    public LecturerDTO findDtoByLecturerId(List<Long> id) {
         return lecturerRepository.findById(id)
                 .map(LecturerMapper::mapToLecturerDTO)
                 .orElse(null);

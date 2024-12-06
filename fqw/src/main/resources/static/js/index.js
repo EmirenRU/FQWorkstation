@@ -2,7 +2,6 @@
 $('select').select2()
 
 $('#orientation').on('select2:close', function() {
-    alert('Here')
     let select = $(this)
     let returnObj = document.createElement('li');
     let closeSpan = document.createElement('span');
@@ -13,14 +12,14 @@ $('#orientation').on('select2:close', function() {
     $(this).next('span.select2').find('ul').html(function() {
         let count = select.select2('data').length
         if(count == 0 ){
-            returnObj.textContent = " Выбрано " +  count + " Oбъектов ";
+            // returnObj.textContent = " Выбрано " +  count + " Oбъектов "; // default value not that better to delete
             returnObj.prepend(closeSpan)
             return returnObj;
         }
         console.log(select.select2('data')[count-1].text)
 
 
-        returnObj.textContent = " Выбрано " +  count + " -- "+  select.select2('data')[count-1].text;
+        returnObj.textContent = select.select2('data')[count-1].text; // do something with that I don't like it
         returnObj.prepend(closeSpan)
 
         return returnObj;

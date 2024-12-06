@@ -131,17 +131,21 @@ public class SqlController {
                                Model model,
                                RedirectAttributes redirectAttributes){
 
+        // TODO add toString to models
 
-        Long lecturerId = Long.parseLong(request.getParameter("lecturer"));
+        String[] lecturerParams = request.getParameterValues("lecturer"); // Long
+        List<Long> lecturerIds = (lecturerParams != null) ? Arrays.stream(lecturerParams).map(x -> Long.parseLong(x)).toList() : List.of((long) -1);
         String[] orientationParams = request.getParameterValues("orientation");
         List<String> orientationCodes = (orientationParams != null) ? Arrays.asList(orientationParams) : List.of("-1");
-        Long departmentCode = Long.valueOf(request.getParameter("department"));
-        String theme = request.getParameter("themes");
+        String[] departmentParams = request.getParameterValues("department"); // Long
+        List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(x -> Long.parseLong(x)).toList() : List.of((long) -1);
+        String[] themeParams = request.getParameterValues("themes");
+        List<String> theme = (themeParams != null) ? Arrays.asList(themeParams) : List.of("-1");
         String strDateFrom =request.getParameter("date-from");
         String strDateTo =request.getParameter("date-to");
 
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
-                lecturerId,
+                lecturerIds,
                 orientationParams,
                 departmentCode,
                 theme,
@@ -164,7 +168,7 @@ public class SqlController {
                 dateFrom,
                 dateTo,
                 theme,
-                lecturerId
+                lecturerIds
         );
 
         model.addAttribute(params.get(6), res);
@@ -178,7 +182,7 @@ public class SqlController {
 
         model.addAttribute("flag", true);
 
-        if (lecturerId == -1){
+        if (lecturerIds.getFirst() == -1){
             model.addAttribute(params.get(5), lecturerService.createDummyLecturer());
             return "lecturers";
         }
@@ -187,7 +191,7 @@ public class SqlController {
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
 
-        LecturerDTO lecturerDTO = lecturerService.findDtoByLecturerId(lecturerId);
+        LecturerDTO lecturerDTO = lecturerService.findDtoByLecturerId(lecturerIds);
 
         model.addAttribute(params.get(5), lecturerDTO);
 

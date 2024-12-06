@@ -46,11 +46,11 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     @Override
     public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (List<String> orientationCodes,
-             Long departmentCode,
+             List<Long> departmentCode,
              java.time.Year dateFrom,
              java.time.Year dateTo,
-             String theme,
-             Long lecturerId
+             List<String> theme,
+             List<Long> lecturerId
             ) {
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
                 lecturerId,

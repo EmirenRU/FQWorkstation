@@ -23,20 +23,20 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
     @Query("SELECT sl FROM StudentLecturers sl " +
             "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code " +
             "WHERE " +
-            " ((sl.lecturer.id = :lecturerId                     ) OR (:lecturerId = -1                 ) ) AND " +
+            " ((sl.lecturer.id IN :lecturerId                     ) OR (-1 IN :lecturerId                 ) ) AND " +
             " ((sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes        ) ) AND " +
-            " ((sl.student.department.code = :departmentCode     ) OR (:departmentCode = -1             ) ) AND " +
-            " ((sl.student.fqw.name = :theme                     ) OR (:theme = '-1'                    ) ) " +
+            " ((sl.student.department.code IN :departmentCode     ) OR (-1 IN :departmentCode             ) ) AND " +
+            " ((sl.student.fqw.name IN :theme                     ) OR ( '-1' IN :theme                    ) ) " +
             "AND ((CAST(:dateFrom as integer) IS null                             ) OR (CAST(p.dateOfProtection AS integer) >= CAST(:dateFrom as integer))        ) " + // The problem part
             "AND ((CAST(:dateTo as integer) IS null                               ) OR (CAST(p.dateOfProtection AS integer) <= CAST(:dateTo as integer))          ) " + // The problem part
             "ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
             @Param("orientationCodes") List<String> orientationCodes,
-            @Param("departmentCode") Long departmentCode,
+            @Param("departmentCode") List<Long> departmentCode,
             @Param("dateFrom") java.time.Year dateFrom,
             @Param("dateTo") java.time.Year dateTo,
-            @Param("theme") String theme,
-            @Param("lecturerId") Long lecturerId);
+            @Param("theme") List<String> theme,
+            @Param("lecturerId") List<Long> lecturerId);
 
     @Query("SELECT sl from StudentLecturers sl " +
             "JOIN year_student yr ON yr.student.stud_num = sl.student.stud_num " +

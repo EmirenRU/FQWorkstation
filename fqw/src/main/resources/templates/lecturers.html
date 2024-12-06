@@ -19,6 +19,7 @@
                     <div class="selector-patch">
                         <label class="selection-param">Направление
                             <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation" multiple>
+                                <option th:value="-1" disabled>Выберите направление: </option>
                                 <option th:each="orientation :${orientations_selector}"
                                         th:value="${orientation.code}"
                                         th:text="${orientation.toString()}">
@@ -29,10 +30,9 @@
 
                     <div class="selector-patch">
                         <label class="selection-param">Кафедра
-                            <select name="department" class="slider-val"  onChange="saveInputs(name, value)" id="department">
-                                <option th:value="-1">
-                                    Выберите кафедру
-                                </option>
+                            <select name="department" class="slider-val" onChange="saveInputs(name, value)" id="department" multiple>
+                                <option th:value="-1" disabled>Выберите кафедру: </option>
+
                                 <option th:each="department :${departments_selector}"
                                         th:value="${department.code}"
                                         th:text="${department.name}">
@@ -53,8 +53,8 @@
                     </div>
                     <div class="selector-patch-2">
                         <label class="selection-param">Тема
-                            <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'" onChange="saveInputs(name, value)" id="themes">
-                                <option th:value="-1">Выберите тему: </option>
+                            <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'" onChange="saveInputs(name, value)" id="themes" multiple>
+                                <option th:value="-1" disabled>Выберите тему: </option>
                                 <option th:each="theme : ${themes_selector}"
                                         th:text="${theme.name}"
                                         th:value="${theme.name}">
@@ -65,10 +65,8 @@
 
                     <div class="selector-patch-2 margin-fix">
                         <label class="selection-param">Науч рук
-                            <select name="lecturer" class="slider-val" onChange="saveInputs(name, value)" id="lecturer">
-                                <option th:value="-1">
-                                    Выберите преподавателя
-                                </option>
+                            <select name="lecturer" class="slider-val" onChange="saveInputs(name, value)" id="lecturer" multiple>
+                                <option th:value="-1" disabled>Выберите преподавателя: </option>
                                 <option th:each="lecturer : ${lecturers_selector}"
                                         th:value="${lecturer.id}"
                                         th:text="${lecturer.name}">

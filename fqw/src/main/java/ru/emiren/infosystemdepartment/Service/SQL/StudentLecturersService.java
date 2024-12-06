@@ -15,11 +15,11 @@ public interface StudentLecturersService {
 
     List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (List<String> orientationCode,
-             Long departmentCode,
+             List<Long> departmentCode,
              java.time.Year dateFrom,
              java.time.Year dateTo,
-             String theme,
-             Long lecturerId);
+             List<String> theme,
+             List<Long> lecturerId);
 
     List<StudentLecturersDTO> findAllAndSortedByDate(String date);
 
