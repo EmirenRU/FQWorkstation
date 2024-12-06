@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.emiren</groupId>
     <artifactId>hub</artifactId>
-    <version>0.0.1</version>
+    <version>0.5.0</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

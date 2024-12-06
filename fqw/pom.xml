@@ -12,8 +12,8 @@
         <relativePath/>
     </parent>
     <groupId>ru.emiren</groupId>
-    <artifactId>app</artifactId>
-    <version>1.0.0</version>
+    <artifactId>fqw</artifactId>
+    <version>1.0.2</version>
 	<packaging>jar</packaging>
     <name>info-system-department</name>
     <description>info-system-department</description>
