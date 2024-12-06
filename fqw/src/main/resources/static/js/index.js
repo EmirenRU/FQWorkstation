@@ -2,7 +2,6 @@
 $('select').select2()
 
 $('#orientation').on('select2:close', function() {
-alert('Here')
   let select = $(this)
   let returnObj = document.createElement('li');
   let closeSpan = document.createElement('span');
@@ -22,7 +21,7 @@ alert('Here')
 
     returnObj.textContent = " Выбрано " +  count + " -- "+  select.select2('data')[count-1].text;
     returnObj.prepend(closeSpan)
-    
+    returnObj.value = $(select).val();
     return returnObj;
   })
 })
@@ -37,10 +36,6 @@ $(document).ready(function() {
         placeholder: $('.slider-val').data('placeholder'), // Set placeholder text
         tags: true // Enable tagging/searching for options
     });
-    $('#orientation').select2({ // Changed selector to match the class in HTML
-        placeholder: $('#orientation').data('placeholder'), // Set placeholder text
-        tags: true // Enable tagging/searching for options
-    });
 });
 
 
@@ -52,6 +47,7 @@ function toggleDisplayAndSaveState() {
     }
 }
 
+//alert($('#orientation'))
 
 $('#orientation').select2({
     closeOnSelect: true
