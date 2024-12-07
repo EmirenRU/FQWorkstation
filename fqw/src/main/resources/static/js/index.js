@@ -13,6 +13,7 @@ $('#orientation').on('select2:close', function() {
         let count = select.select2('data').length - 1 // - 1 is necessary
         if(count == 0 ){
             // returnObj.textContent = " Выбрано " +  count + " Oбъектов "; // default value not that better to delete
+            // Fullscreen to minimal and minimal to fullscreen are destroying layout
             returnObj.prepend(closeSpan)
             return returnObj;
         }
