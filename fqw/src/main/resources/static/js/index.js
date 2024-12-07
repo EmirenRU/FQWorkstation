@@ -11,23 +11,24 @@ $('#orientation').on('select2:close', function() {
     returnObj.classList.add('select2-selection__choice')
     $(this).next('span.select2').find('ul').html(function() {
         let count = select.select2('data').length - 1 // - 1 is necessary
-        if(count == 0 ){
-            // returnObj.textContent = " Выбрано " +  count + " Oбъектов "; // default value not that better to delete
-            // Fullscreen to minimal and minimal to fullscreen are destroying layout
+        if(count === 0 ){
+            // returnObj.textContent = " Выбрано " +  count + " Oбъектов "; // Emiren: default value not that better to delete
+            // Emiren:  Fullscreen to minimal and minimal to fullscreen are destroying layout
             returnObj.prepend(closeSpan)
             return returnObj;
         }
         console.log(select.select2('data')[count-1].text)
 
         if (count >= 1) {
-            returnObj.textContent = " Выбрано " + count + " направления "; // do something with that I don't like it // select.select2('data')[count-1].text
+            returnObj.textContent = " Выбрано " + count + " направления "; // Emiren: do something with that I don't like it // select.select2('data')[count-1].text
             returnObj.prepend(closeSpan)
         }
         return returnObj;
     })
 })
 
-
+// Emiren: Try to do it and don't forget about another select2
+// Emiren: In theme section make all other section by default
 /* TIME TO END THIS */
 
 
