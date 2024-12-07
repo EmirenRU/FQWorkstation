@@ -10,7 +10,7 @@ $('#orientation').on('select2:close', function() {
     closeSpan.setAttribute("role","presentation")
     returnObj.classList.add('select2-selection__choice')
     $(this).next('span.select2').find('ul').html(function() {
-        let count = select.select2('data').length
+        let count = select.select2('data').length - 1 // - 1 is necessary
         if(count == 0 ){
             // returnObj.textContent = " Выбрано " +  count + " Oбъектов "; // default value not that better to delete
             returnObj.prepend(closeSpan)
@@ -18,10 +18,10 @@ $('#orientation').on('select2:close', function() {
         }
         console.log(select.select2('data')[count-1].text)
 
-
-        returnObj.textContent = select.select2('data')[count-1].text; // do something with that I don't like it
-        returnObj.prepend(closeSpan)
-
+        if (count >= 1) {
+            returnObj.textContent = " Выбрано " + count + " направления "; // do something with that I don't like it // select.select2('data')[count-1].text
+            returnObj.prepend(closeSpan)
+        }
         return returnObj;
     })
 })
