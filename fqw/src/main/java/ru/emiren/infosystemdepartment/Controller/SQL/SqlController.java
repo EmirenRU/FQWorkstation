@@ -134,11 +134,11 @@ public class SqlController {
         // TODO add toString to models
 
         String[] lecturerParams = request.getParameterValues("lecturer"); // Long
-        List<Long> lecturerIds = (lecturerParams != null) ? Arrays.stream(lecturerParams).map(x -> Long.parseLong(x)).toList() : List.of((long) -1);
+        List<Long> lecturerIds = (lecturerParams != null) ? Arrays.stream(lecturerParams).map(Long::parseLong).toList() : List.of((long) -1);
         String[] orientationParams = request.getParameterValues("orientation");
         List<String> orientationCodes = (orientationParams != null) ? Arrays.asList(orientationParams) : List.of("-1");
         String[] departmentParams = request.getParameterValues("department"); // Long
-        List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(x -> Long.parseLong(x)).toList() : List.of((long) -1);
+        List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(Long::parseLong).toList() : List.of((long) -1);
         String[] themeParams = request.getParameterValues("themes");
         List<String> theme = (themeParams != null) ? Arrays.asList(themeParams) : List.of("-1");
         String strDateFrom =request.getParameter("date-from");
@@ -172,7 +172,7 @@ public class SqlController {
         );
 
         model.addAttribute(params.get(6), res);
-        log.info("The result is {}", res);
+        log.info("The result is {} empty", res.isEmpty());
 
         model.addAttribute(params.getFirst(), lecturerDTOS);
         model.addAttribute(params.get(1), departmentDTOS);

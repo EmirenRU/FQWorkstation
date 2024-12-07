@@ -44,4 +44,13 @@ public class Student {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="student_id")
     private List<YearStudent> yearStudents = new ArrayList<>();
+
+
+    @Override
+    public String toString() {
+        return "Student [id=" + id + ", stud_num=" +   stud_num + ", name="         + name +
+                ", citizenship=" + citizenship + ", loe=" + loe + ", classifier=" + classifier +
+                ", fqw=" + fqw + ", orientation=" + orientation + ", department=" + department +
+                ", yearStudents=" + yearStudents + "]";
+    }
 }
