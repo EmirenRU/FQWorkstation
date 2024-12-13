@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="/css/normalize.css" />
     <link rel="stylesheet" href="/css/bootstrap-grid.min.css" />
     <link rel="stylesheet" href="/css/console.css"/>
-    <script src="/thirdParty/xterm/lib/xterm.js"></script>
+<!--    <link rel="stylesheet" href="/thirdParty/xterm/css/xterm.css">-->
+<!--    <script defer src="/thirdParty/xterm/lib/xterm.js"></script>-->
+    <script defer src="/js/console.js"></script>
 </head>
 <body>
     <div class="container-fluid  window-styling">
@@ -24,11 +26,6 @@
         </ul>
 
 </div>
-    <script>
-    const term = new Terminal({     fontFamily: 'Press Start 2P', fontSize : 13 });
-    const terminalContainer = document.getElementById('terminal');
-    term.open(terminalContainer);
-    term.write('Welcome to Xterm.js Demo\n');
-    </script>
+
 </body>
 </html>

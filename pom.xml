@@ -7,6 +7,18 @@
 	<version>1.0.0-STABLE</version>
 	<packaging>pom</packaging>
 
+	<developers>
+		<developer>
+			<id></id>
+			<name>Emil Yusupov</name>
+			<email>yusupov.emil.ru@yandex.com</email>
+			<url>https://github.com/EmirenRU</url>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 	<modules>
 		<module>fqw</module>
 		<module>hub</module>
