@@ -9,8 +9,11 @@ import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.rest.core.mapping.RepositoryResourceMappings;
 import org.springframework.http.*;
+import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +63,9 @@ public class ApplicationProgrammingInterfaceController {
     List<List<String>> data;
     @Autowired
     private RepositoryResourceMappings resourceMappings;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ApplicationProgrammingInterfaceController(StudentService studentService,
@@ -136,6 +142,32 @@ public class ApplicationProgrammingInterfaceController {
             headers.put("id", fileId);
             return ResponseEntity.status(HttpStatus.OK).body(headers);
         }
+    }
+
+    @PostMapping("/v1/upload_data_to_sql")
+    public ResponseEntity<?> handleDataUpload(@PathVariable("message") String message) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("message", message);
+
+        try {
+            jdbcTemplate.execute(message);
+        }  catch (BadSqlGrammarException e) {
+            System.err.println("SQL Syntax Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
+
+        } catch (DataAccessException e) {
+            System.err.println("Database Access Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
+        }
+        if (headers.containsKey("error")) {
+            headers.put("status", "500");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(headers);
+        }
+        headers.put("status", "200");
+        return ResponseEntity.status(HttpStatus.OK).body(headers);
     }
 
     /* TODO CREATION,CHECK,DELETE,HOLDING for File delete last pages of word
@@ -256,12 +288,8 @@ public class ApplicationProgrammingInterfaceController {
         }
     }
 
-//    @PostMapping("/v1/upload-zip-file")
 
-    @GetMapping("idk ill do it later")
-    public String getModel(){
-        return "";
-    }
+
 
 
 
