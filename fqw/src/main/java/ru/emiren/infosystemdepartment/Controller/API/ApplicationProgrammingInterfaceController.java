@@ -149,17 +149,18 @@ public class ApplicationProgrammingInterfaceController {
         Map<String, String> headers = new HashMap<>();
         headers.put("message", message);
 
-        try {
-            jdbcTemplate.execute(message);
-        }  catch (BadSqlGrammarException e) {
-            System.err.println("SQL Syntax Error: " + e.getMessage());
-            headers.put("error", e.getMessage());
+        // TODO Write more safe query
 
+        try {
+            jdbcTemplate.execute(message); // Rewrite to more safe one
+        }  catch (BadSqlGrammarException e) {
+            log.error("SQL Syntax Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
         } catch (DataAccessException e) {
-            System.err.println("Database Access Error: " + e.getMessage());
+            log.error("Database Access Error: " + e.getMessage());
             headers.put("error", e.getMessage());
         } catch (Exception e) {
-            System.err.println("Unexpected Error: " + e.getMessage());
+            log.error("Unexpected Error: " + e.getMessage());
             headers.put("error", e.getMessage());
         }
         if (headers.containsKey("error")) {
