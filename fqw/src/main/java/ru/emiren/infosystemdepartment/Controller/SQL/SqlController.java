@@ -26,6 +26,7 @@ import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/sql")
@@ -163,12 +164,17 @@ public class SqlController {
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
 
+        String stringForQuery = String.join("||",
+                theme.stream()
+                        .map(word -> "%" + word + "%").collect(Collectors.toList())
+        ); // TODO convert list to sql format string for comparisons
+
         List<StudentLecturersDTO> res = studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
                 orientationCodes,
                 departmentCode,
                 dateFrom,
                 dateTo,
-                theme,
+                stringForQuery,
                 lecturerIds
         );
 

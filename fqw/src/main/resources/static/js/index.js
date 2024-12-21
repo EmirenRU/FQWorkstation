@@ -10,25 +10,23 @@ $('#orientation').on('select2:close', function() {
     closeSpan.setAttribute("role","presentation")
     returnObj.classList.add('select2-selection__choice')
     $(this).next('span.select2').find('ul').html(function() {
-        let count = select.select2('data').length - 1 // - 1 is necessary
-        if(count === 0 ){
-            // returnObj.textContent = " Выбрано " +  count + " Oбъектов "; // Emiren: default value not that better to delete
-            // Emiren:  Fullscreen to minimal and minimal to fullscreen are destroying layout
+        let count = select.select2('data').length
+        if(count == 0 ){
+            returnObj.textContent = " Выбрано " +  count + " Oбъектов ";
             returnObj.prepend(closeSpan)
             return returnObj;
         }
         console.log(select.select2('data')[count-1].text)
 
-        if (count >= 1) {
-            returnObj.textContent = " Выбрано " + count + " направления "; // Emiren: do something with that I don't like it // select.select2('data')[count-1].text
-            returnObj.prepend(closeSpan)
-        }
+
+        returnObj.textContent = " Выбрано " +  count + " -- "+  select.select2('data')[count-1].text;
+        returnObj.prepend(closeSpan)
+        returnObj.value = $(select).val();
         return returnObj;
     })
 })
 
-// Emiren: Try to do it and don't forget about another select2
-// Emiren: In theme section make all other section by default
+
 /* TIME TO END THIS */
 
 
@@ -36,10 +34,6 @@ $(document).ready(function() {
     console.log($('#orientation'))
     $('.slider-val').select2({ // Changed selector to match the class in HTML
         placeholder: $('.slider-val').data('placeholder'), // Set placeholder text
-        tags: true // Enable tagging/searching for options
-    });
-    $('#orientation').select2({ // Changed selector to match the class in HTML
-        placeholder: $('#orientation').data('placeholder'), // Set placeholder text
         tags: true // Enable tagging/searching for options
     });
 });
@@ -53,6 +47,7 @@ function toggleDisplayAndSaveState() {
     }
 }
 
+//alert($('#orientation'))
 
 $('#orientation').select2({
     closeOnSelect: true
