@@ -9,6 +9,7 @@ import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.rest.core.mapping.RepositoryResourceMappings;
 import org.springframework.http.*;
@@ -61,11 +62,8 @@ public class ApplicationProgrammingInterfaceController {
     private DateFormat dateFormat;
 
     List<List<String>> data;
-    @Autowired
-    private RepositoryResourceMappings resourceMappings;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ApplicationProgrammingInterfaceController(StudentService studentService,
@@ -81,10 +79,11 @@ public class ApplicationProgrammingInterfaceController {
                                                      DeserializationService deserializationService,
                                                      DownloadService downloadService,
                                                      WordService wordService, FunctionsController functionsController,
-
+                                                     @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
                                                      DateFormat dateFormat,
                                                      SimpMessagingTemplate messagingTemplate
     ) {
+        this.jdbcTemplate = jdbcTemplate;
         this.studentService = studentService;
         this.departmentService = departmentService;
         this.lecturerService = lecturerService;
