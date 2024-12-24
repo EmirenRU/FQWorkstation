@@ -17,7 +17,7 @@
                 <form method="post" class="form-body" th:action="@{/sql/lecturers}">
                     <div class="selector-patch">
                         <label class="selection-param">Направление
-                            <select name="orientation" class="slider-val" onChange="saveInputs(name, value)" id="orientation" multiple>
+                            <select name="orientation" class="selectpicker" onChange="saveInputs(name, value)" id="orientation" multiple data-live-search="true">
                                 <option th:value="-1" disabled>Выберите направление: </option>
                                 <option th:each="orientation :${orientations_selector}"
                                         th:value="${orientation.code}"
@@ -29,7 +29,7 @@
 
                     <div class="selector-patch">
                         <label class="selection-param">Кафедра
-                            <select name="department" class="slider-val" onChange="saveInputs(name, value)" id="department" multiple>
+                            <select name="department" class="selectpicker" onChange="saveInputs(name, value)" id="department" multiple >
                                 <option th:value="-1" disabled>Выберите кафедру: </option>
 
                                 <option th:each="department :${departments_selector}"
@@ -44,15 +44,15 @@
                         <label class="selection-param">Годы работ
                             <div class="selection-param__years flex">
                                 <span class="selection-param__years__text" >с  </span>
-                                <input type="text" name="date-from" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy')}" maxlength="4" placeholder="2020">
+                                <input type="text" minlength="4" name="from" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy')}" maxlength="4" placeholder="2020">
                                 <span class="selection-param__years__text" >до  </span>
-                                <input type="text" name="date-to" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy')}" maxlength="4" placeholder="2021">
+                                <input type="text" minlength="4" name="to" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy')}" maxlength="4" placeholder="2021">
                             </div>
                         </label>
                     </div>
                     <div class="selector-patch-2">
                         <label class="selection-param">Тема
-                            <select class="slider-val" name="themes" th:attr="data-placeholder='Select or type to search'" onChange="saveInputs(name, value)" id="themes" multiple>
+                            <select class="selectpicker" name="themes" th:attr="data-placeholder='Select or type to search'" onChange="saveInputs(name, value)" id="themes" multiple data-live-search="true">
                                 <option th:value="-1" disabled>Выберите тему: </option>
                                 <option th:each="theme : ${themes_selector}"
                                         th:text="${theme.name}"
@@ -64,7 +64,7 @@
 
                     <div class="selector-patch-2 margin-fix">
                         <label class="selection-param">Науч рук
-                            <select name="lecturer" class="slider-val" onChange="saveInputs(name, value)" id="lecturer" multiple>
+                            <select name="lecturer" class="selectpicker" onChange="saveInputs(name, value)" id="lecturer" multiple data-live-search="true">
                                 <option th:value="-1" disabled>Выберите преподавателя: </option>
                                 <option th:each="lecturer : ${lecturers_selector}"
                                         th:value="${lecturer.id}"

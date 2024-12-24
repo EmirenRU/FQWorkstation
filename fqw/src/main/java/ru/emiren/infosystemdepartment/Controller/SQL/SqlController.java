@@ -143,8 +143,8 @@ public class SqlController {
         List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(Long::parseLong).toList() : List.of((long) -1);
         String[] themeParams = request.getParameterValues("themes");
         List<String> theme = (themeParams != null) ? Arrays.asList(themeParams) : List.of("-1");
-        String strDateFrom =request.getParameter("date-from");
-        String strDateTo =request.getParameter("date-to");
+        String strDateFrom =request.getParameter("from");
+        String strDateTo =request.getParameter("to");
 
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
                 lecturerIds,
