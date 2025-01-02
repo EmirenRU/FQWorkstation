@@ -13,9 +13,6 @@ public class TerminalWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession socketSession, TextMessage message) throws Exception {
         String clientMessage = message.getPayload();
         log.info("Received: " + clientMessage);
-
-
-
     }
 
 

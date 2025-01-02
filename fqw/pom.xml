@@ -23,6 +23,7 @@
         <spring-modulith.version>1.1.2</spring-modulith.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+
     </properties>
 
 
@@ -202,10 +203,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>6.1.5</version>
         </dependency>
     </dependencies>
     <dependencyManagement>

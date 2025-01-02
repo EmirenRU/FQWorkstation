@@ -1,26 +1,23 @@
-package ru.emiren.infosystemdepartment.Controller.API;
+package ru.emiren.infosystemdepartment.Service.api.Impl;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
-import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.rest.core.mapping.RepositoryResourceMappings;
-import org.springframework.http.*;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
 import ru.emiren.infosystemdepartment.Model.Temporal.FileHolder;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
@@ -29,86 +26,24 @@ import ru.emiren.infosystemdepartment.Service.Download.DownloadService;
 import ru.emiren.infosystemdepartment.Service.File.FileService;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
+import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
 
+@Service
 @Slf4j
-@RestController
-@RequestMapping("/api")
-public class ApplicationProgrammingInterfaceController {
-    // todo make json getter for models
-    // todo make api for ajax
-    private final LecturerRepository lecturerRepository;
-    private final StudentService studentService;
-    private final DepartmentService departmentService;
-    private final LecturerService lecturerService;
-    private final OrientationService orientationService;
-    private final ProtectionService protectionService;
-    private final StudentLecturersService studentLecturersService;
-    private final FQWService fqwService;
-    private final YearStudentService yearStudentService;
-    private final FileService fileService;
-    private final DeserializationService deserializationService;
-    private final DownloadService downloadService;
-    private final WordService wordService;
+public class ApiServiceImpl implements ApiService {
 
-    private final FunctionsController functionsController;
-    private final SimpMessagingTemplate messagingTemplate;
-
-    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
-
-    private DateFormat dateFormat;
-
-    List<List<String>> data;
-
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ApplicationProgrammingInterfaceController(StudentService studentService,
-                                                     DepartmentService departmentService,
-                                                     LecturerService lecturerService,
-                                                     OrientationService orientationService,
-                                                     ProtectionService protectionService,
-                                                     StudentLecturersService studentLecturersService,
-                                                     LecturerRepository lecturerRepository,
-                                                     FQWService fqwService,
-                                                     YearStudentService yearStudentService,
-                                                     FileService fileService,
-                                                     DeserializationService deserializationService,
-                                                     DownloadService downloadService,
-                                                     WordService wordService, FunctionsController functionsController,
-                                                     @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
-                                                     DateFormat dateFormat,
-                                                     SimpMessagingTemplate messagingTemplate
-    ) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.studentService = studentService;
-        this.departmentService = departmentService;
-        this.lecturerService = lecturerService;
-        this.orientationService = orientationService;
-        this.protectionService = protectionService;
-        this.studentLecturersService = studentLecturersService;
-        this.lecturerRepository = lecturerRepository;
-        this.fqwService = fqwService;
-        this.fileService = fileService;
-        this.deserializationService = deserializationService;
-        this.downloadService = downloadService;
-        this.wordService = wordService;
-        this.yearStudentService = yearStudentService;
-
-        this.functionsController = functionsController;
-        this.messagingTemplate = messagingTemplate;
-        this.dateFormat = dateFormat;
+    @Override
+    public String downloadProtocols(HttpServletResponse response) throws IOException {
+        downloadService.generateAndSendFile(data, response);
+        return "redirect:/functions";
     }
 
-    FileHolder fileHolder = new FileHolder();
-
-    @PostMapping("v2/upload_file")
-    public ResponseEntity<?> handleFileUpload(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("id") String fileId) {
+    @Override
+    public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId) {
         Map<String, String> headers = new HashMap<>();
         log.info("Received file upload with ID: {}", fileId);
 
@@ -143,8 +78,8 @@ public class ApplicationProgrammingInterfaceController {
         }
     }
 
-    @PostMapping("/v1/upload_data_to_sql")
-    public ResponseEntity<?> handleDataUpload(@PathVariable("message") String message) {
+    @Override
+    public ResponseEntity<?> handleDataUpload(String message) {
         Map<String, String> headers = new HashMap<>();
         headers.put("message", message);
 
@@ -170,28 +105,18 @@ public class ApplicationProgrammingInterfaceController {
         return ResponseEntity.status(HttpStatus.OK).body(headers);
     }
 
-    /* TODO CREATION,CHECK,DELETE,HOLDING for File delete last pages of word
-    *
-    */
-    @PostMapping("/v2/check_file_availability/{id}")
-    public ResponseEntity<?> checkFileAvailability(@PathVariable("id") String id ) {
+    @Override
+    public ResponseEntity<?> checkFileAvailability(String id) {
         log.info(id);
-        ResponseEntity<?> response;
-
         if (fileHolder.containsDocument(id)) {
-            response = ResponseEntity.status(HttpStatus.OK).body("200");
-            return response;
-//            return new HashMap<String, String>(Map.of("status", "200"));
+            return ResponseEntity.status(HttpStatus.OK).body("200");
         } else {
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not Found");
-            return response;
-//            return new HashMap<String, String>(Map.of("status", "File not found"));
-
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not Found");
         }
     }
 
-    @GetMapping("/v2/download_file/{id}")
-    public ResponseEntity<String> downloadFile(@PathVariable("id") String id, HttpServletResponse response) {
+    @Override
+    public ResponseEntity<String> downloadFile(String id, HttpServletResponse response) {
         log.info("DownloadWordFile is activated with id: {}", id );
         Date date = new Date();
         if (fileHolder.containsDocument(id)) {
@@ -225,32 +150,33 @@ public class ApplicationProgrammingInterfaceController {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("/v1/download_protocols")
-    public String downloadProtocols(HttpServletResponse response) throws IOException {
-        downloadService.generateAndSendFile(data, response);
-        return "redirect:/functions";
+    @Override
+    public String generateAndSendFile(HttpServletResponse response) throws IOException {
+        return "";
     }
 
-    @PostMapping("/v1/upload-data")
-    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request, RedirectAttributes red) throws IOException {
+    @Override
+    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request) {
         MultipartFile file = request.getFile("data");
 
         return ResponseEntity.status(HttpStatus.OK).body("Proceed");
     }
 
-    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
-        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
-        Arrays.stream(FileData.values()).forEach(fileData -> {
-            Map<String, List<FileHeader>> typeMap = new HashMap<>();
-            if (fileData == FileData.PRO) {
-                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
-            } else {
-                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
-                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
-            }
-            map.put(fileData.getData(), typeMap);
-        });
-        return map;
+    public enum FileData {
+        FQW("fqw"),
+        GOV("gos"),
+        REV("rev"),
+        COM("com"),
+        PRO("pro");
+
+        private final String data;
+
+        FileData(String data) {
+            this.data = data;
+        }
+        public String getData() {
+            return data;
+        }
     }
 
     public enum FileTypes {
@@ -269,32 +195,6 @@ public class ApplicationProgrammingInterfaceController {
             return extension;
         }
     }
-
-    public enum FileData {
-        FQW("fqw"),
-        GOV("gos"),
-        REV("rev"),
-        COM("com"),
-        PRO("pro");
-
-        private final String data;
-
-        FileData(String data) {
-            this.data = data;
-        }
-
-        public String getData() {
-            return data;
-        }
-    }
-
-
-
-
-
-
-
-
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
         // I am not sure about liquidity of data
@@ -330,17 +230,84 @@ public class ApplicationProgrammingInterfaceController {
 
         }
     }
+
+    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
+        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
+        Arrays.stream(FileData.values()).forEach(fileData -> {
+            Map<String, List<FileHeader>> typeMap = new HashMap<>();
+            if (fileData == FileData.PRO) {
+                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
+            } else {
+                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
+                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
+            }
+            map.put(fileData.getData(), typeMap);
+        });
+        return map;
+    }
+
+    private final LecturerRepository lecturerRepository;
+    private final StudentService studentService;
+    private final DepartmentService departmentService;
+    private final LecturerService lecturerService;
+    private final OrientationService orientationService;
+    private final ProtectionService protectionService;
+    private final StudentLecturersService studentLecturersService;
+    private final FQWService fqwService;
+    private final YearStudentService yearStudentService;
+    private final FileService fileService;
+    private final DeserializationService deserializationService;
+    private final DownloadService downloadService;
+    private final WordService wordService;
+
+    private final FunctionsController functionsController;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
+
+    private DateFormat dateFormat;
+
+    List<List<String>> data;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    FileHolder fileHolder = new FileHolder();
+
+    @Autowired
+    ApiServiceImpl(StudentService studentService,
+                   DepartmentService departmentService,
+                   LecturerService lecturerService,
+                   OrientationService orientationService,
+                   ProtectionService protectionService,
+                   StudentLecturersService studentLecturersService,
+                   LecturerRepository lecturerRepository,
+                   FQWService fqwService,
+                   YearStudentService yearStudentService,
+                   FileService fileService,
+                   DeserializationService deserializationService,
+                   DownloadService downloadService,
+                   WordService wordService, FunctionsController functionsController,
+                   @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
+                   DateFormat dateFormat,
+                   SimpMessagingTemplate messagingTemplate
+    ){
+        this.jdbcTemplate = jdbcTemplate;
+        this.studentService = studentService;
+        this.departmentService = departmentService;
+        this.lecturerService = lecturerService;
+        this.orientationService = orientationService;
+        this.protectionService = protectionService;
+        this.studentLecturersService = studentLecturersService;
+        this.lecturerRepository = lecturerRepository;
+        this.fqwService = fqwService;
+        this.fileService = fileService;
+        this.deserializationService = deserializationService;
+        this.downloadService = downloadService;
+        this.wordService = wordService;
+        this.yearStudentService = yearStudentService;
+
+        this.functionsController = functionsController;
+        this.messagingTemplate = messagingTemplate;
+        this.dateFormat = dateFormat;
+    }
 }
-
-
-//                addStudentToDb();
-//                addLecturersToDb();
-//                addFqwToDb();
-//                addYearDepToDb();
-//                addProtocolToDb();
-//                addReviewerToDb();
-//                addProtectionToDb();
-//                addOrientationToDb();
-//                addDepartmentsToDb();
-//                addCommisionerToDb();
-

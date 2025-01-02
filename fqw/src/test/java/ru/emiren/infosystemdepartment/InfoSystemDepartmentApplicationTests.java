@@ -1,16 +1,6 @@
 package ru.emiren.infosystemdepartment;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.emiren.infosystemdepartment.Controller.API.ApplicationProgrammingInterfaceController;
-import ru.emiren.infosystemdepartment.Controller.API.InterAppLayerController;
-import ru.emiren.infosystemdepartment.Controller.Excel.ExcelController;
-import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
-import ru.emiren.infosystemdepartment.Controller.SQL.SqlController;
-import ru.emiren.infosystemdepartment.Controller.Support.SupportController;
-import ru.emiren.infosystemdepartment.Service.SQL.*;
 
 @SpringBootTest
 class InfoSystemDepartmentApplicationTests {
