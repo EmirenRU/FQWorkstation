@@ -1,4 +1,4 @@
-package ru.emiren.infosystemdepartment.Controller.api;
+package ru.emiren.infosystemdepartment.Controller.API;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
