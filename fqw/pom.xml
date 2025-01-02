@@ -18,6 +18,13 @@
     <name>info-system-department</name>
     <description>info-system-department</description>
 
+    <scm>
+        <connection>scm:git:git:@github.com:gatling/gatling-maven-plugin.git</connection>
+        <developerConnection>scm:git:git:@github.com:gatling/gatling-maven-plugin.git</developerConnection>
+        <tag>c88da27b188ed992dab79ed8388dc4a634d055fd</tag>
+        <url>https://github.com/gatling/gatling-maven-plugin</url>
+    </scm>
+
     <properties>
         <java.version>21</java.version>
         <spring-modulith.version>1.1.2</spring-modulith.version>
@@ -208,21 +215,31 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>3.13.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-app</artifactId>
+            <version>3.13.1</version>
+        </dependency>
     </dependencies>
-    <dependencyManagement>
-        <dependencies>
 
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.gatling</groupId>
+                <artifactId>gatling-maven-plugin</artifactId>
+                <version>4.12.2</version>
 
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
-
                 <configuration>
 <!--                    <excludes>-->
 <!--                        <exclude>-->
@@ -231,7 +248,6 @@
 <!--                        </exclude>-->
 <!--                    </excludes>-->
                 </configuration>
-
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

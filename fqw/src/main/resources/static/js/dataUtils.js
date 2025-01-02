@@ -15,17 +15,20 @@ function getLocalData(name){
 let savedData = [];
 
 
-function saveInputs(name, value){
-    //console.log(name);
-    //console.log(value);
+function saveInputs(name, value,flag){
+    console.log(flag)
     let saveEntry = {
         name: name,
         value: value
     }
-    if(name === "orientation"){
-        let selectedItem = $('#orientation').val();
-        saveEntry.value = selectedItem;
-        alert(selectedItem);
+    if(name === "orientation" || name === "themes" || name === "lecturer"){
+        let idVal = "#" + name;
+        let selectedItem = $(idVal).val();
+        console.log("Compare values ", (saveEntry.value)," and ", selectedItem)
+        if(flag === undefined){
+            saveEntry.value = selectedItem;
+        }
+
 
     }
 
@@ -51,30 +54,35 @@ function saveInputs(name, value){
 
 function loadSaved(){
 
+    window.onload = function() {
+        let loaded = getLocalData('Restore data');
+        console.log('loaded',loaded)
+        for(let i = 0; i < loaded.length; i++){
+            let e = $("#"+loaded[i].name);
+            if(loaded[i].name === "orientation" || loaded[i].name === "themes" || loaded[i].name === "lecturer"){
+                e[0].value= loaded[i].value ;
+                let strVal = loaded[i].name;
+                let idVal = "#" + loaded[i].name;
+                console.log("Here's your val ", loaded[i].value);
+                let orientationData = loaded[i].value;
+                saveInputs(strVal, orientationData, "load")
+                $(idVal).selectpicker("val",orientationData);
+                $(idVal).trigger("change");
+                $(idVal).selectpicker('render');
+                e[0].dispatchEvent(new Event('change'))
 
-    let loaded = getLocalData('Restore data');
-    console.log('loaded',loaded)
-    for(let i = 0; i < loaded.length; i++){
-        let e = $("#"+loaded[i].name);
-        if(loaded[i].name === "orientation"){
-            console.log('i is', i)
-            console.log('E is ', (e[0]) );
-            e[0].value= loaded[i].value ;
+            }
+            else{
+                console.log('loaded',loaded);
+                console.log('i is', i)
+                console.log('E is ', e[i]);
 
-            console.log("Here's your val ", loaded[i].value);
-            let orientationData = loaded[i].value;
-            $('#orientation').val(orientationData);
-            $("#orientation").multiselect("refresh");
-            e[0].dispatchEvent(new Event('change'))
+                e[0].value = loaded[i].value;
+                e[0].dispatchEvent(new Event('change'))
 
+            }
         }
-        console.log('loaded',loaded);
-        console.log('i is', i)
-        console.log('E is ', e[i]);
-        e[0].value = loaded[i].value;
-        e[0].dispatchEvent(new Event('change'))
     }
-
 }
 
 loadSaved();

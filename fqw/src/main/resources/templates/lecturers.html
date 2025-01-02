@@ -43,11 +43,11 @@
 
                     <div class="selector-patch-2">
                         <label class="selection-param">Годы работ
-                            <div class="selection-param__years flex">
-                                <span class="selection-param__years__text" >с  </span>
-                                <input type="text" minlength="4" name="from" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy')}" maxlength="4" placeholder="2020">
-                                <span class="selection-param__years__text" >до  </span>
-                                <input type="text" minlength="4" name="to" class="val" th:value="${#dates.format(#dates.createNow(), 'yyyy')}" maxlength="4" placeholder="2021">
+                            <div class="selection-paramyears flex">
+                                <span class="selection-paramyearstext" >с</span>
+                                <input type="text" name="from" id = "from" class="val" value="2020" onChange="saveInputs(name, value)">
+                                <span class="selection-paramyears__text" > до</span>
+                                <input type="text" name="to" id = "to" class="val" value="2024" onChange="saveInputs(name, value)">
                             </div>
                         </label>
                     </div>
@@ -97,7 +97,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec) &amp;&amp; (stlec.lecturer.id == specificLecturer.id || specificLecturer.id == null)}">
+                    <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec)}">
                         <td class="td-table lecturer_name" th:text="${stlec.lecturer.name}"></td>
                         <td class="td-table academic_degree" th:text="${stlec.lecturer.academicDegree}"></td>
                         <td class="td-table lecturer_position" th:text="${stlec.lecturer.position}"></td>

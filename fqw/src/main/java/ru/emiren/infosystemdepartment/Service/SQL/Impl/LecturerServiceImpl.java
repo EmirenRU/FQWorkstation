@@ -23,10 +23,11 @@ public class LecturerServiceImpl implements LecturerService {
 
 
     @Override
-    public LecturerDTO findDtoByLecturerId(List<Long> id) {
+    public List<LecturerDTO> findDtoByLecturerId(List<Long> id) {
         return lecturerRepository.findById(id)
+                .stream()
                 .map(LecturerMapper::mapToLecturerDTO)
-                .orElse(null);
+                .collect(Collectors.toList());
     }
 
     @Override

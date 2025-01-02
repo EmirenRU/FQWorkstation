@@ -26,6 +26,7 @@ import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Controller
@@ -43,10 +44,22 @@ public class SqlController {
         return "forward:lecturers/view";
     }
 
+
     @GetMapping("lecturers/view")
     public String viewLecturer(Model model){
         return sqlService.viewLecturer(model);
     }
+
+//    @GetMapping("lecturers/view")
+//    public CompletableFuture<String> viewLecturer(Model model){
+//        return sqlService.viewLecturerAsync(model)
+//                .thenApply(
+//                result-> {
+//                    log.info("Async viewLecturer is complete");
+//                    return result;
+//                }
+//        );
+//    }
 
     @GetMapping("/upload-data-form")
     public String uploadDataForm(Model model){
@@ -58,6 +71,15 @@ public class SqlController {
         return sqlService.createLectureForm(model, year, request);
     }
 
+//    @PostMapping("lecturers")
+//    public CompletableFuture<String> getLecturers(HttpServletRequest request, Model model){
+//        return sqlService.getLecturersAsync(request, model).thenApply( result -> {
+//            log.info("Async getLecturers is complete");
+//            return result;
+//        }); }
+
     @PostMapping("lecturers")
-    public String getLecturers(HttpServletRequest request, Model model){ return sqlService.getLecturers(request, model); }
+    public String getLecturers(HttpServletRequest request, Model model) {
+        return sqlService.getLecturers(request, model);
+    }
 }
