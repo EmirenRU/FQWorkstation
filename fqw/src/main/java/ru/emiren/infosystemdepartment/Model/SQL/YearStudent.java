@@ -6,7 +6,6 @@ import lombok.*;
 import java.util.ArrayList;
 
 @Entity(name = "year_student")
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +24,9 @@ public class YearStudent {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "year_date", referencedColumnName = "year")
     private Year year;
+
+    @Override
+    public String toString() {
+        return "YearStudent[id = " + id + ", student = " + student + ", year = " + year + "]";
+    }
 }

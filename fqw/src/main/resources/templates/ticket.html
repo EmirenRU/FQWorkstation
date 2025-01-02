@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th='http://thymeleaf.org'>
+<html lang="en" xmlns:th='http://thymeleaf.org'
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${'Ticket №' + id}"></title>
 </head>
-<body>
+
+<body layout:fragment="body">
+<main layout:fragment="main">
 <h1 th:text="${id}"></h1>
 <h1 th:text="${email}"></h1>
 <h1 th:text="${phone}"></h1>
 <h1 th:text="${message}"></h1>
-
+</main>
 </body>
+
+<
 </html>

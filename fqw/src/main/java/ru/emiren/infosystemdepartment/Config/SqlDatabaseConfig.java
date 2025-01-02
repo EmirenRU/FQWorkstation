@@ -8,7 +8,9 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -29,6 +31,7 @@ import java.util.HashMap;
         transactionManagerRef = "sqlTransactionManager",
         basePackages = {"ru.emiren.infosystemdepartment.Model.SQL", "ru.emiren.infosystemdepartment.Repository.SQL"}
 )
+@Primary
 public class SqlDatabaseConfig {
     PostgreSQLDataSourceProperties postgreSQLDataSourceProperties;
 
@@ -80,5 +83,11 @@ public class SqlDatabaseConfig {
     public PlatformTransactionManager dataTransactionManager
             (@Qualifier("sqlEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+
+    @Bean(name = "sqlJdbcTemplate")
+    public JdbcTemplate jdbcTemplate(@Qualifier("sqlDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 }

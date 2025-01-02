@@ -9,7 +9,7 @@
 
 /// <reference lib="dom"/>
 
-declare module 'static/xterm/typings/xterm' {
+declare module '@xterm/xterm' {
   /**
    * A string or number representing text font weight.
    */

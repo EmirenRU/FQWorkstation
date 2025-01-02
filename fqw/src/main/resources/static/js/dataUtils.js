@@ -18,13 +18,17 @@ let savedData = [];
 function saveInputs(name, value){
     //console.log(name);
     //console.log(value);
-    if (value == ""){
-        value = -1;
-    }
     let saveEntry = {
         name: name,
         value: value
     }
+    if(name === "orientation"){
+        let selectedItem = $('#orientation').val();
+        saveEntry.value = selectedItem;
+        alert(selectedItem);
+
+    }
+
     console.log(saveEntry)
     let searchSimilar = savedData.find((element) => (element.name === saveEntry.name))
     if(searchSimilar === undefined){
@@ -52,6 +56,18 @@ function loadSaved(){
     console.log('loaded',loaded)
     for(let i = 0; i < loaded.length; i++){
         let e = $("#"+loaded[i].name);
+        if(loaded[i].name === "orientation"){
+            console.log('i is', i)
+            console.log('E is ', (e[0]) );
+            e[0].value= loaded[i].value ;
+
+            console.log("Here's your val ", loaded[i].value);
+            let orientationData = loaded[i].value;
+            $('#orientation').val(orientationData);
+            $("#orientation").multiselect("refresh");
+            e[0].dispatchEvent(new Event('change'))
+
+        }
         console.log('loaded',loaded);
         console.log('i is', i)
         console.log('E is ', e[i]);

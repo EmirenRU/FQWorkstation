@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { FontWeight, Terminal } from 'static/xterm/typings/xterm';
+import { FontWeight, Terminal } from '@xterm/xterm';
 import { IColorSet, ITerminal } from 'browser/Types';
 import { IDisposable } from 'common/Types';
 import { IEvent } from 'common/EventEmitter';
