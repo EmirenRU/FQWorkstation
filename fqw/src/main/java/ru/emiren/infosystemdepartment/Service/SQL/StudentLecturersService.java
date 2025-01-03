@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import jakarta.transaction.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 
@@ -13,6 +14,7 @@ public interface StudentLecturersService {
 
     List<StudentLecturersDTO> findAllAndSortedByLecturerName();
 
+    @Transactional
     List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (List<String> orientationCode,
              List<Long> departmentCode,

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th='http://thymeleaf.org'
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FQW Terminal</title>
+    <link rel="stylesheet" href="./static/css/normalize.css" />
+    <link rel="stylesheet" href="./static/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="./static/css/console.css"/>
+    <link rel="stylesheet" href="/thirdParty/@xterm/xterm/css/xterm.css" />
+    <script src="/thirdParty/@xterm/xterm/lib/xterm.js"></script>
+    <script src="/js/index-term.js"></script>
+</head>
+<body>
+    <div class="container-fluid  window-styling">
+        <div id="terminal" class="terminal-styling">
+
+            <script>
+                let terminalWindow = document.getElementById("terminal");
+                let term = new Terminal({cursorBlink: "block"});
+                // const ws = new WebSocket("ws://localhost:8080/ws", "echo-protocol");
+                let curr_line = "";
+                let entries = [];
+                term.open(terminalWindow);
+                term.write("web shell $ ");
+                term.onKey(ev => {
+                    console.log(ev.domEvent.key);
+                    if (ev.domEvent.key == "Enter") {
+                        if (curr_line) {
+                            entries.push(curr_line);
+                            term.write("\r\n");
+                            //Send cmd to backend here!
+                            let s = entries.join("")
+                            let entry = new Map().set("message", s);
+                            console.log(JSON.stringify(entry))
+                            let answer = sendData(s);
+                            answer = answer.json();
+                            term.write(answer);
+                            entries.clear()
+                            
+                        }
+                    } 
+
+                    
+                    else if (ev.domEvent.key === "Backspace") {
+                    // Backspace
+                        if (curr_line) {
+                            console.log("TRUE")
+                            curr_line = curr_line.slice(0,- 1);
+                            term.write('\b \b');    
+                        }
+                    }
+                    else {
+                        curr_line += ev.key
+                        term.write(ev.key);
+                    }
+                }
+                );
+
+              </script>
+        </div>
+    <button class="send" id="send">send</button>
+</div>
+<div class="container-fluid promt-list">
+    <h2 class="promt-list__header"> Promts</h2>
+        <ul class="promt-list__items">
+            <li class="promt-list__value"> promt</li>
+        </ul>
+
+</div>
+
+</body>
+</html>

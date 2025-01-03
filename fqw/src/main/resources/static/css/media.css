@@ -1,4 +1,4 @@
-@media(max-width: 1180px){
+@media(max-width: 1280px){
   body {
       align-items: center;
     }
@@ -82,21 +82,16 @@
         max-width: 100%;
       }
 
-      .selector-patch{
-        max-width: 120px !important;
+      .selector-patch {
+        max-width: 180px ;
         min-width: 100px;
-        margin-right: 1.2%;
       }
 
-      .selector-patch:first-child {
-        max-width: 170px !important;
-      }
 
 
       .selector-patch-2{
-        max-width: 120px;
+        max-width: 140px;
         min-width: 115px;
-        margin-right: 1.2%;
       }
 
       .slider-val{

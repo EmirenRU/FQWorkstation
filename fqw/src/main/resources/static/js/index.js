@@ -12,7 +12,7 @@ $(document).ready(function() {
 function toggleDisplayAndSaveState() {
     let x = document.getElementById("display-container");
     if (x.style.display === "none") {
-        x.style.display = "flex";
+        x.style.display = "flex"; 
     }
 }
 

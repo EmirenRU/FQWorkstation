@@ -3,28 +3,28 @@ let direction = 0;
 
 function Init(){
 let tableHead = document.querySelector('thead');
-console.log(tableHead);
+//console.log(tableHead);
 
 let headers = tableHead.getElementsByClassName('td-table');
-console.log(headers[0]);
+//console.log(headers[0]);
 
 let tableBody = document.querySelector('tbody');
 
-console.log(tableBody);
+//console.log(tableBody);
 
 let tableRows = tableBody.getElementsByClassName('tr-table');
 
 //Name extraction test
 let name1 =  tableRows[0].getElementsByClassName("lecturer_name")[0];
-console.log('YOLO 420 BL4Z3 IT', (name1.textContent))
+//console.log('YOLO 420 BL4Z3 IT', (name1.textContent))
 //successfull
 
 for(let i = 0; i< headers.length; i++){
     headers[i].addEventListener('click', function(e){
         e.preventDefault();
         let res = sortOut(i, tableRows);
-        console.log('RES is ',res);
-        console.log(typeof res[0]);
+        //console.log('RES is ',res);
+       // console.log(typeof res[0]);
         tableBody.remove();
         let table = document.getElementsByClassName('columns')[0];
         for(let j = 0; j < res.length; j++){

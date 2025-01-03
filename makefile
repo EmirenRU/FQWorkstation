@@ -13,9 +13,11 @@ else
 compose:
     @echo "Not Supported OS"
 endif
-
 rundocker:
     docker run -t java-server:latest
+
+test-load:
+    mvn gatling:test
 
 all: compose rundocker
 

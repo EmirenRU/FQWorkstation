@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Controller.API;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -30,8 +34,13 @@ public class ApplicationProgrammingInterfaceController {
     }
 
     @PostMapping("/v1/upload_data_to_sql")
-    public ResponseEntity<?> handleDataUpload(@PathVariable("message") String message) {
-        return apiService.handleDataUpload(message);
+    public CompletableFuture<ResponseEntity<?>> handleDataUpload(HttpServletRequest request, HttpServletResponse response, @RequestBody String message) {
+        log.info("{}, {}", request.getAttribute("message"), message);
+        return apiService.handleDataUpload(message).thenApply(
+                res -> {
+                    log.info("has completed handling data upload with message {}", message);
+                    return res;
+                });
     }
 
 

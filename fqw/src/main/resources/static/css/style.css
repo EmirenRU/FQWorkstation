@@ -191,10 +191,10 @@ main {
 .bootstrap-select .dropdown-menu span.text {
 	display: block !important;
 	text-overflow: ellipsis !important;
-}
+  }
 
-.bootstrap-select.show-tick .dropdown-menu li a span.text {
-	margin-right: 0 !important;
+  .bootstrap-select.show-tick .dropdown-menu li a span.text {
+     margin-right: 0 !important; 
 }
 
 .selector-patch {
@@ -208,14 +208,14 @@ main {
 }
 
 .selector-patch-2 {
-	display: flex;
-	flex-direction: column;
-	max-width: 185px;
-	text-overflow: ellipsis;
-	justify-content: flex-end;
-	flex-wrap: wrap;
-	align-content: stretch;
-	min-height: 49px;
+    display: flex;
+    flex-direction: column;
+    max-width: 185px;
+    text-overflow: ellipsis;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    align-content: stretch;
+    min-height: 49px;
 }
 
 .val {
@@ -249,8 +249,8 @@ main {
 }
 
 .selection-param__years__text:first-child {
-	font-size: 16px;
-	margin-right: 7px;
+    font-size: 16px;
+    margin-right: 7px;
 	margin-left: 0;
 }
 
@@ -344,9 +344,9 @@ main {
 
 .display-section {
 	display: flex;
-	flex-direction: column;
-	max-width: 100%;
-	align-items: center;
+    flex-direction: column;
+    max-width: 100%;
+    align-items: center;
 }
 
 .footer {
@@ -703,10 +703,10 @@ main {
 	border: 2px #4670e4 solid;
 	border-radius: 3px;
 	background-color: #4670e4;
-	padding: 10px 50px;
+    padding: 10px 50px;
 	justify-content: center;
 	max-width: 265px;
-
+	
 }
 
 .download-button{
@@ -897,7 +897,7 @@ main {
 	width: 85%;
 	margin-bottom: 20px;
 	flex-wrap: wrap;
-	align-content: space-between;
+    align-content: space-between;
 	line-height: 20px;
 }
 
@@ -908,10 +908,10 @@ main {
 
 .text-space{
 	width: 65%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-start;
-	align-content: space-around;
-	flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-content: space-around;
+    flex-wrap: wrap;
 }

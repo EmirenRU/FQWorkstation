@@ -29,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.DELETE).hasRole(ADMIN_ACCESS)
-                        .requestMatchers("/admin/**").hasRole(ADMIN_ACCESS)
+//                        .requestMatchers("/admin/**").hasRole(ADMIN_ACCESS)
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole(ADMIN_ACCESS)
                         .requestMatchers("/login/**").hasAnyAuthority(JS_ACCESS)
@@ -42,4 +42,5 @@ public class SecurityConfig {
         ;
         return http.build();
     }
+
 }

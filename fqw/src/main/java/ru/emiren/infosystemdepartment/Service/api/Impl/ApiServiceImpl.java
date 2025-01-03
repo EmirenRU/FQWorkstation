@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -31,6 +32,7 @@ import ru.emiren.infosystemdepartment.Service.api.ApiService;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -79,14 +81,26 @@ public class ApiServiceImpl implements ApiService {
     }
 
     @Override
-    public ResponseEntity<?> handleDataUpload(String message) {
+    @Async
+    public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message) {
         Map<String, String> headers = new HashMap<>();
         headers.put("message", message);
+        log.info("Message received: {}", message);
 
         // TODO Write more safe query
 
         try {
-            jdbcTemplate.execute(message); // Rewrite to more safe one
+            if (message.toUpperCase().contains("SELECT")){
+                headers.put("result", String.valueOf(jdbcTemplate.queryForList(message)));
+            } else if (message.toUpperCase().contains("INSERT")){
+                headers.put("result", "INSERT");
+            } else if (message.toUpperCase().contains("UPDATE")){
+                headers.put("result", "UPDATE");
+            } else if (message.toUpperCase().contains("DELETE")){
+                headers.put("result", "DELETE");
+            } else {
+                headers.put("result", "ERROR");
+            }
         }  catch (BadSqlGrammarException e) {
             log.error("SQL Syntax Error: " + e.getMessage());
             headers.put("error", e.getMessage());
@@ -99,10 +113,10 @@ public class ApiServiceImpl implements ApiService {
         }
         if (headers.containsKey("error")) {
             headers.put("status", "500");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(headers);
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(headers));
         }
         headers.put("status", "200");
-        return ResponseEntity.status(HttpStatus.OK).body(headers);
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(headers));
     }
 
     @Override
@@ -261,7 +275,6 @@ public class ApiServiceImpl implements ApiService {
     private final WordService wordService;
 
     private final FunctionsController functionsController;
-    private final SimpMessagingTemplate messagingTemplate;
 
     private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
 
@@ -288,8 +301,7 @@ public class ApiServiceImpl implements ApiService {
                    DownloadService downloadService,
                    WordService wordService, FunctionsController functionsController,
                    @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
-                   DateFormat dateFormat,
-                   SimpMessagingTemplate messagingTemplate
+                   DateFormat dateFormat
     ){
         this.jdbcTemplate = jdbcTemplate;
         this.studentService = studentService;
@@ -307,7 +319,6 @@ public class ApiServiceImpl implements ApiService {
         this.yearStudentService = yearStudentService;
 
         this.functionsController = functionsController;
-        this.messagingTemplate = messagingTemplate;
         this.dateFormat = dateFormat;
     }
 }

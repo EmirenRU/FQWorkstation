@@ -1,7 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -97,19 +96,8 @@ public class SqlServiceImpl implements SqlService {
     }
 
     @Override
-    public String viewLecturerAsync(Model model) {
-        model.addAttribute(params.getFirst(), lecturerDTOS);
-        model.addAttribute(params.get(1), departmentDTOS);
-        model.addAttribute(params.get(2), orientationDTOS);
-        model.addAttribute(params.get(3), fqwdtos);
-        model.addAttribute(params.get(4), years);
-
-        return "lecturers";
-    }
-
-    @Override
     @Async
-    public CompletableFuture<String> getLecturerAsync(Model model) {
+    public CompletableFuture<String> viewLecturerAsync(Model model) {
         model.addAttribute(params.getFirst(), lecturerDTOS);
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
@@ -121,6 +109,7 @@ public class SqlServiceImpl implements SqlService {
     }
 
     @Override
+    @Async
     public CompletableFuture<String> getLecturersAsync(HttpServletRequest request, Model model) {
         String[] lecturerParams = request.getParameterValues("lecturer"); // Long
         List<Long> lecturerIds = (lecturerParams != null) ? Arrays.stream(lecturerParams).map(Long::parseLong).toList() : List.of((long) -1);
@@ -151,10 +140,8 @@ public class SqlServiceImpl implements SqlService {
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
 
-        String stringForQuery = String.join("||",
-                theme.stream()
-                        .map(word -> "%" + word + "%").collect(Collectors.toList())
-        ); // TODO convert list to sql format string for comparisons
+        String stringForQuery = theme.stream()
+                .map(word -> "%" + word + "%").collect(Collectors.joining("||"));
 
         List<StudentLecturersDTO> res = studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
                 orientationCodes,
@@ -182,14 +169,8 @@ public class SqlServiceImpl implements SqlService {
             return CompletableFuture.completedFuture("lecturers");
         }
 
-        // TODO make one or ALL
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
-
-        List<LecturerDTO> lecturerDTO = lecturerService.findDtoByLecturerId(lecturerIds);
-
-        model.addAttribute(params.get(5), lecturerDTO);
-
         log.info("Async getLecturer task has completed");
         return CompletableFuture.completedFuture("lecturers");
     }
