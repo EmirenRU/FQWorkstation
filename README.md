@@ -9,6 +9,8 @@
 
 ## Installation
 
+0. Install requirements from https://github.com/EmirenRU/FQWorkstation/releases/tag/installer-windows
+
 1. PostgreSQL settings
 
 ```psql
