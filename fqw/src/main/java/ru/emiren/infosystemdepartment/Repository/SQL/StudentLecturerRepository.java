@@ -1,13 +1,10 @@
 package ru.emiren.infosystemdepartment.Repository.SQL;
 
-import jakarta.persistence.OrderBy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface StudentLecturerRepository extends JpaRepository<StudentLecturers, Long> {
@@ -17,8 +14,6 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
 
     // TODO make a javadoc for every methods and README.md for structure of project
     // TODO make a annual year backup for data_${year}.sql
-    // TODO make student [1 or(N)]<->1 RelevantNotRelevant
-    // TODO make an api for minimal saving from HttpRequest (REST)
     // TODO to write a letter about dhcp server and about static ip-address
     @Query( "SELECT sl FROM StudentLecturers sl " +
             "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code " +
@@ -40,7 +35,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
 
     @Query("SELECT sl from StudentLecturers sl " +
             "JOIN year_student yr ON yr.student.stud_num = sl.student.stud_num " +
-            "WHERE yr.year.year = :date AND :date IS NOT NULL " +
+            "WHERE yr.year.yearDate = CAST(:date AS integer) AND :date IS NOT NULL " +
             "ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllSortedByDate(String date);
 }

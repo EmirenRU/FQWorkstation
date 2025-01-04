@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class YearDTO {
-    private String year;
+    private Long yearDate;
     private List<YearStudentDTO> students = new ArrayList<>();
 
 }

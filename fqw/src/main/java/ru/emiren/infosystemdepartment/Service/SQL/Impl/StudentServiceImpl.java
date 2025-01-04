@@ -9,6 +9,7 @@ import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Repository.SQL.StudentRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.StudentService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,12 +17,10 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
-    private final LecturerRepository lecturerRepository;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, LecturerRepository lecturerRepository){
+    public StudentServiceImpl(StudentRepository studentRepository){
         this.studentRepository = studentRepository;
-        this.lecturerRepository = lecturerRepository;
     }
 
 
@@ -33,13 +32,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDTO> findAllStudent() {
         List<Student> student = studentRepository.findAll();
-        return student.stream().map(StudentMapper::mapToStudentDTO).collect(Collectors.toList());
+        return student.stream().map(StudentMapper::mapToStudentDTO).toList();
     }
 
     @Override
     public List<Student> findAllStudentById(Long id) {
-
-        return null;
+        return studentRepository.findAllById(Collections.singleton(id));
     }
 
     @Override
@@ -47,7 +45,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAllStudentByLecturerIdAndOrientationCodeAndDepartmentCode(lecturerId, OrientationCode, DepartmentCode)
                 .stream()
                 .map(StudentMapper::mapToStudentDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -55,7 +53,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findStudentsByLecturerId(lecturerId)
                 .stream()
                 .map(StudentMapper::mapToStudentDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -90,5 +88,10 @@ public class StudentServiceImpl implements StudentService {
         if (st.getOrientation() != null) s.setOrientation(st.getOrientation());
 
         return studentRepository.save(s);
+    }
+
+    @Override
+    public Student findStudentByName(String studName) {
+        return studentRepository.findByName(studName);
     }
 }

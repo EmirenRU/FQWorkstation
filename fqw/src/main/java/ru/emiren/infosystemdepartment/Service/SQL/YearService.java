@@ -10,7 +10,7 @@ public interface YearService {
     List<YearDTO> getYears();
     void deleteYear(Year year);
 
-    Year getYear(String year);
-    YearDTO getYearDTO(String year);
+    Year getYear(Long year);
+    YearDTO getYearDTO(Long year);
     Year updateYear(Year year);
 }

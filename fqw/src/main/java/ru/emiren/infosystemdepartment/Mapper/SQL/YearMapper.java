@@ -8,15 +8,15 @@ import java.util.stream.Collectors;
 public class YearMapper {
     public static Year mapToYear(YearDTO yr){
         return Year.builder()
-                .year(yr.getYear())
-                .students(yr.getStudents().stream().map(YearStudentMapper::mapToYearStudent).collect(Collectors.toList()))
+                .yearDate(yr.getYearDate())
+                .students(yr.getStudents().stream().map(YearStudentMapper::mapToYearStudent).toList())
                 .build();
     }
 
     public static YearDTO mapToYearDTO(Year year){
         return YearDTO.builder()
-                .year(year.getYear())
-                .students(year.getStudents().stream().map(YearStudentMapper::mapToYearStudentDTO).collect(Collectors.toList()))
+                .yearDate(year.getYearDate())
+                .students(year.getStudents().stream().map(YearStudentMapper::mapToYearStudentDTO).toList())
                 .build();
     }
 }

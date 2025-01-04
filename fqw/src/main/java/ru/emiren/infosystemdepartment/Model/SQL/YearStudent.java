@@ -3,8 +3,6 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-
 @Entity(name = "year_student")
 @Builder
 @AllArgsConstructor
@@ -22,7 +20,7 @@ public class YearStudent {
     private Student student;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "year_date", referencedColumnName = "year")
+    @JoinColumn(name = "year_date", referencedColumnName = "yearDate")
     private Year year;
 
     @Override

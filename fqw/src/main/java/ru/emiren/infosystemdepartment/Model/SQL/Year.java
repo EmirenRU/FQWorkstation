@@ -3,7 +3,6 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
 public class Year {
 
     @Id
-    private String year;
+    private Long yearDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "year_date")

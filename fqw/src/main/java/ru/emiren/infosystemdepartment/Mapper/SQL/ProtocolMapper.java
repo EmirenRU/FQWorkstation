@@ -6,8 +6,8 @@ import ru.emiren.infosystemdepartment.Model.SQL.Protocol;
 public class ProtocolMapper {
     public static Protocol mapToProtocol(ProtocolDTO protocolDTO){
         return Protocol.builder()
-                .fioStudent(protocolDTO.getFioStudent())
-                .fqwName(protocolDTO.getFqwName())
+                .student(StudentMapper.mapToStudent(protocolDTO.getStudent()))
+                .fqw(FQWMapper.mapToFQW(protocolDTO.getTheme()))
                 .headOfTheFQW(protocolDTO.getHeadOfTheFQW())
                 .review(protocolDTO.getReview())
                 .volume(protocolDTO.getVolume())
@@ -17,8 +17,8 @@ public class ProtocolMapper {
 
     public static ProtocolDTO mapToProtocolDTO(Protocol protocol){
         return ProtocolDTO.builder()
-                .fioStudent(protocol.getFioStudent())
-                .fqwName(protocol.getFqwName())
+                .student(StudentMapper.mapToStudentDTO(protocol.getStudent()))
+                .theme(FQWMapper.mapToFQWDTO(protocol.getFqw()))
                 .headOfTheFQW(protocol.getHeadOfTheFQW())
                 .review(protocol.getReview())
                 .volume(protocol.getVolume())

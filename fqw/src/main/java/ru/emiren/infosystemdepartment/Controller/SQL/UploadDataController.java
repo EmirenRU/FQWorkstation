@@ -1,14 +1,12 @@
 package ru.emiren.infosystemdepartment.Controller.SQL;
 
-import com.google.gson.Gson;
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Util.DateUtil;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,15 +60,10 @@ public class UploadDataController {
         this.protectionCommissionerService = protectionCommissionerService;
     }
 
-
-
-
-
-
     @PostMapping("/api/add-data")
-    public String AddData(@RequestBody Map<String, String> request){//        BufferedReader reader = request.getReader();
-        System.out.println(request);
-        System.out.println(request.get("isScientificSupervisor")+ " " + request.get("dateOfProtection"));
+    public String addData(@RequestBody Map<String, String> request){
+        log.info(request.toString());
+        log.info(request.get("isScientificSupervisor")+ " " + request.get("dateOfProtection"));
 
         Date dateOfProtection = DateUtil.stringToDate(request.get("dateOfProtection"));
 
@@ -82,8 +75,8 @@ public class UploadDataController {
         Orientation orientation = createOrientation(request);
         FQW fqw = createFQW(request, reviewer);
         Protocol protocol = createProtocol(request);
-        Protection protection = createProtection(request, orientation, dateOfProtection);
-        Year year = createYear(request, dateOfProtection);
+        Protection protection = createProtection(orientation, dateOfProtection);
+        Year year = createYear(dateOfProtection);
         YearStudent ys = createYearStudent(year, student);
         Commissioner commissioner1 = createCommissioner(request, "1");
         Commissioner commissioner2 = createCommissioner(request, "2");
@@ -125,16 +118,14 @@ public class UploadDataController {
         protectionCommissionerService.saveProtectionCommissioner(pc2);
         protectionCommissionerService.saveProtectionCommissioner(pc3);
 
-
-
         return "redirect:/upload-data-form";
     }
 
 
-
+    private static String studNameStr = "studName";
 
     private static Student createStudent(Map<String, String> request) {
-        String studName = request.get("studName");
+        String studName = request.get(studNameStr);
         Long studNum = Long.parseLong(request.get("studNum"));
         String citizenship = request.get("citizenship");
         String loe = request.get("loe");
@@ -232,37 +223,49 @@ public class UploadDataController {
         return fqw;
     }
 
-    private static Protocol createProtocol(Map<String, String> request) {
+    private Protocol createProtocol(Map<String, String> request) {
         Protocol protocol = new Protocol();
 
-        protocol.setFioStudent(request.get("studName"));
+        Student student = studentService.findStudentByName(request.get(studNameStr));
+        if (student == null) {
+            student = new Student();
+            student.setName(request.get(studNameStr));
+            studentService.saveStudent(student);
+        }
+
+        FQW fqw = fqwService.getFQW(request.get("themeName"));
+        if (fqw == null) {
+            fqw = new FQW();
+            fqw.setName(request.get("fqwName"));
+            fqwService.saveFqw(fqw);
+        }
+
+        protocol.setStudent(student);
         protocol.setVolume(Integer.parseInt(request.get("volume")));
         protocol.setHeadOfTheFQW(request.get("headOfTheFQW"));
         protocol.setReview(request.get("review"));
         protocol.setGrade(Integer.parseInt(request.get("grade")));
-        protocol.setFqwName(request.get("themeName"));
+        protocol.setFqw(fqw);
         return protocol;
     }
 
-    private static Protection createProtection(Map<String, String> request, Orientation orientation, Date dateOfProtection) {
+    private static Protection createProtection(Orientation orientation, Date dateOfProtection) {
         Protection protection = new Protection();
 
         String yearStr = DateUtil.getYear(dateOfProtection);
-        String month = DateUtil.getMonth(dateOfProtection);
-        String day = DateUtil.getDay(dateOfProtection);
 
         protection.setOrientation(orientation);
         protection.setDateOfProtection(java.time.Year.of(
-                Integer.parseInt(yearStr)//, Integer.parseInt(month), Integer.parseInt(day)
+                Integer.parseInt(yearStr)
         ));
 
         return protection;
     }
 
-    private static Year createYear(Map<String, String> request, Date dateOfProtection) {
+    private static Year createYear( Date dateOfProtection) {
         Year year = new Year();
         String yearStr = DateUtil.getYear(dateOfProtection);
-        year.setYear(yearStr);
+        year.setYearDate(Long.valueOf(yearStr));
         return year;
     }
 

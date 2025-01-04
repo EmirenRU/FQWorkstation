@@ -30,27 +30,27 @@ public class YearServiceImpl implements YearService {
     public List<YearDTO> getYears() {
         return yearRepository.findAll()
                 .stream().map(YearMapper::mapToYearDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public void deleteYear(Year year) {
-
+        yearRepository.delete(year);
     }
 
     @Override
-    public Year getYear(String year) {
-        return yearRepository.findById(year).orElse(null);
+    public Year getYear(Long year) {
+        return yearRepository.findById(String.valueOf(year)).orElse(null);
     }
 
     @Override
-    public YearDTO getYearDTO(String year) {
-        return yearRepository.findById(year).map(YearMapper::mapToYearDTO).orElse(null);
+    public YearDTO getYearDTO(Long year) {
+        return yearRepository.findById(String.valueOf(year)).map(YearMapper::mapToYearDTO).orElse(null);
     }
 
     @Override
     public Year updateYear(Year year) {
-        Year y = getYear(year.getYear());
+        Year y = getYear(year.getYearDate());
         if (y == null) { return yearRepository.save(year); }
 
         if (year.getStudents() != null) y.setStudents(year.getStudents());
