@@ -14,6 +14,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.emiren.infosystemdepartment.Properties.PostgreSQLDataSourceProperties;
+import ru.emiren.infosystemdepartment.Properties.PostgresSupportDataSourceProperties;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -29,25 +30,28 @@ import java.util.HashMap;
         transactionManagerRef = "dataTransactionManager",
         basePackages = { "ru.emiren.infosystemdepartment.Model.Support", "ru.emiren.infosystemdepartment.Repository.Support" }
 )
-public class DataDatabaseConfig {
-    PostgreSQLDataSourceProperties postgreSQLDataSourceProperties;
+public class SupportDatabaseConfig{
+    PostgresSupportDataSourceProperties postgresSupportDataSourceProperties;
 
     /**
      * Конструктор, используемый для внедрения зависимостей.
      * @param postgreSQLDataSourceProperties объект настроек для PostgreSQL.
      */
     @Autowired
-    public DataDatabaseConfig(PostgreSQLDataSourceProperties postgreSQLDataSourceProperties) {
-        this.postgreSQLDataSourceProperties = postgreSQLDataSourceProperties;
+    public SupportDatabaseConfig(PostgresSupportDataSourceProperties postgreSQLDataSourceProperties) {
+        this.postgresSupportDataSourceProperties = postgreSQLDataSourceProperties;
     }
 
     /**
      * Определение бина источника данных для второго источника (support-datasource).
      * @return настроенный DataSource.
      */
-    @Bean(name = "dataDataSource")
-    @ConfigurationProperties(prefix = "spring.second-datasource")
-    public DataSource dataDataSource() { return DataSourceBuilder.create().build(); }
+    @Bean(name = "supportDataSource")
+    public DataSource dataDataSource() { return DataSourceBuilder.create()
+            .url(postgresSupportDataSourceProperties.getUrl())
+            .username(postgresSupportDataSourceProperties.getUsername())
+            .password(postgresSupportDataSourceProperties.getPassword())
+            .build(); }
 
 
     /**
@@ -59,10 +63,8 @@ public class DataDatabaseConfig {
     @Bean(name = "dataEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean dataEntityManagerFactory
             (EntityManagerFactoryBuilder builder,
-            @Qualifier("dataDataSource") DataSource dataSource) {
-        HashMap<String, Object> properties = (HashMap<String, Object>) postgreSQLDataSourceProperties.getProperties();
-
-
+            @Qualifier("supportDataSource") DataSource dataSource) {
+        HashMap<String, Object> properties = (HashMap<String, Object>) postgresSupportDataSourceProperties.getProperties();
         return builder.dataSource(dataSource)
                 .properties(properties)
                 .packages("ru.emiren.infosystemdepartment.Model.Support")

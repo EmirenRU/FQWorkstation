@@ -23,7 +23,7 @@ public class ProtectionDTO {
 
 //    @JsonFormat(pattern = "dd-MM-yyyy") // пока под вопросом (над сделать запрос на проверку ошибки)
     @JsonSerialize(using = YearSerializer.class)
-    private java.time.Year dateOfProtection;
+    private Integer dateOfProtection;
 
     private List<ProtectionCommissionerDTO> commissioners = new ArrayList<>();
 

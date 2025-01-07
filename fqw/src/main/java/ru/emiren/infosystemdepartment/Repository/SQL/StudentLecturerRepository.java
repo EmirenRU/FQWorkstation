@@ -21,21 +21,21 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             " ( (sl.lecturer.id IN :lecturerId) OR (-1 IN :lecturerId ) ) AND " +
             " ( (sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes) ) AND " +
             " ( (sl.student.department.code IN :departmentCode ) OR (-1 IN :departmentCode ) ) AND " +
-            " ( (sl.student.fqw.name ILIKE :theme) OR ( '-1' LIKE :theme ) ) AND " + // problem part is unnest, maybe we need to convert list to string and do something, or maybe one string only
-            " ( (CAST(:dateFrom as integer) IS null) OR (CAST(p.dateOfProtection AS integer) >= CAST(:dateFrom as integer)) ) AND " +
-            " ( (CAST(:dateTo as integer) IS null)   OR (CAST(p.dateOfProtection AS integer) <= CAST(:dateTo as integer)) ) " +
+            " ( (sl.student.fqw.name IN :theme) OR ( '-1' IN :theme ) ) AND " +
+            " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
+            " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
             " ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
             @Param("orientationCodes") List<String> orientationCodes,
             @Param("departmentCode") List<Long> departmentCode,
-            @Param("dateFrom") java.time.Year dateFrom,
-            @Param("dateTo") java.time.Year dateTo,
-            @Param("theme") String theme,
+            @Param("dateFrom") Integer dateFrom,
+            @Param("dateTo") Integer dateTo,
+            @Param("theme") List<String> theme,
             @Param("lecturerId") List<Long> lecturerId);
 
     @Query("SELECT sl from StudentLecturers sl " +
-            "JOIN year_student yr ON yr.student.stud_num = sl.student.stud_num " +
-            "WHERE yr.year.yearDate = CAST(:date AS integer) AND :date IS NOT NULL " +
+            "JOIN Protection pr ON pr.orientation.code = sl.student.orientation.code " +
+            "WHERE CAST(pr.dateOfProtection as INTEGER) = CAST(:date AS integer) AND :date IS NOT NULL " +
             "ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllSortedByDate(String date);
 }

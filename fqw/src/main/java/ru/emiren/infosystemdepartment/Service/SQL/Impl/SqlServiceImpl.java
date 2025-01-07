@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
-import ru.emiren.infosystemdepartment.Model.SQL.Year;
-import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
@@ -32,13 +31,11 @@ public class SqlServiceImpl implements SqlService {
     StudentLecturersService studentLecturersService;
     FQWService fqwService;
     WordService wordService;
-    YearRepository yearRepository;
 
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
     List<DepartmentDTO> departmentDTOS;
     List<FQWDTO> fqwdtos;
-    List<Year> years;
 
     DateTimeFormatter dateTimeFormatter;
 
@@ -61,7 +58,6 @@ public class SqlServiceImpl implements SqlService {
                           ProtectionService protectionService,
                           StudentLecturersService studentLecturersService,
                           FQWService fqwService,
-                          YearRepository yearRepository,
                           WordService wordService
     ){
         this.studentService             = studentService;
@@ -72,12 +68,10 @@ public class SqlServiceImpl implements SqlService {
         this.studentLecturersService    = studentLecturersService;
         this.fqwService                 = fqwService;
         this.wordService                = wordService;
-        this.yearRepository             = yearRepository;
 
         lecturerDTOS       = lecturerService.getAllLecturer();
         departmentDTOS     = departmentService.getAllDepartments();
         orientationDTOS    = orientationService.getAllOrientations();
-        years              = yearRepository.findAll();
         fqwdtos            = fqwService.getAllFQW();
         dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     }
@@ -90,7 +84,6 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
         model.addAttribute(params.get(3), fqwdtos);
-        model.addAttribute(params.get(4), years);
 
         return "lecturers";
     }
@@ -102,7 +95,6 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
         model.addAttribute(params.get(3), fqwdtos);
-        model.addAttribute(params.get(4), years);
 
         log.info("View Lecturer model prepared asynchronously.");
         return CompletableFuture.completedFuture("lecturers");
@@ -119,8 +111,8 @@ public class SqlServiceImpl implements SqlService {
         List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(Long::parseLong).toList() : List.of((long) -1);
         String[] themeParams = request.getParameterValues("themes");
         List<String> theme = (themeParams != null) ? Arrays.asList(themeParams) : List.of("-1");
-        String strDateFrom =request.getParameter("from");
-        String strDateTo =request.getParameter("to");
+        String strDateFrom = request.getParameter("from");
+        String strDateTo = request.getParameter("to");
 
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
                 lecturerIds,
@@ -130,25 +122,25 @@ public class SqlServiceImpl implements SqlService {
                 strDateFrom,
                 strDateTo);
 
-        java.time.Year dateFrom = null;
-        java.time.Year dateTo = null;
+        Integer dateFrom = null;
+        Integer dateTo = null;
 
         if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
-            dateFrom = java.time.Year.parse(strDateFrom);
-            dateTo   = java.time.Year.parse(strDateTo);
+            dateFrom = Integer.valueOf(strDateFrom);
+            dateTo   = Integer.valueOf(strDateTo);
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
 
-        String stringForQuery = theme.stream()
-                .map(word -> "%" + word + "%").collect(Collectors.joining("||"));
+//        String stringForQuery = theme.stream()
+//                .map(word -> "%" + word + "%").collect(Collectors.joining("|"));
 
         List<StudentLecturersDTO> res = studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
                 orientationCodes,
                 departmentCode,
                 dateFrom,
                 dateTo,
-                stringForQuery,
+                theme,
                 lecturerIds
         );
 
@@ -159,7 +151,6 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
         model.addAttribute(params.get(3), fqwdtos);
-        model.addAttribute(params.get(4), years);
 
         model.addAttribute("flag", true);
 
@@ -211,12 +202,12 @@ public class SqlServiceImpl implements SqlService {
                 strDateFrom,
                 strDateTo);
 
-        java.time.Year dateFrom = null;
-        java.time.Year dateTo = null;
+        Integer dateFrom = null;
+        Integer dateTo = null;
 
         if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
-            dateFrom = java.time.Year.parse(strDateFrom);
-            dateTo   = java.time.Year.parse(strDateTo);
+            dateFrom = Integer.valueOf(strDateFrom);
+            dateTo   = Integer.valueOf(strDateTo);
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
@@ -231,7 +222,7 @@ public class SqlServiceImpl implements SqlService {
                 departmentCode,
                 dateFrom,
                 dateTo,
-                stringForQuery,
+                theme,
                 lecturerIds
         );
 
@@ -242,7 +233,6 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
         model.addAttribute(params.get(3), fqwdtos);
-        model.addAttribute(params.get(4), years);
 
         model.addAttribute("flag", true);
 
@@ -261,5 +251,16 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.get(5), lecturerDTO);
 
         return "lecturers";
+    }
+
+
+    @Scheduled(fixedRate = 60000)
+    public void refreshData(){
+        log.info("Refreshing data...");
+        lecturerDTOS = lecturerService.getAllLecturer();
+        departmentDTOS = departmentService.getAllDepartments();
+        orientationDTOS = orientationService.getAllOrientations();
+        fqwdtos = fqwService.getAllFQW();
+        log.info("Data refreshed successfully.");
     }
 }

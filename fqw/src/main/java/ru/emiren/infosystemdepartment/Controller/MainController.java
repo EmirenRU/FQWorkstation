@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-    @GetMapping("")
+    @GetMapping("/")
     public String main(){ return "index"; }
+
+    @GetMapping("/fqw")
+    public String fqw(){ return "index"; }
+
+    @GetMapping("/error")
+    public String error(){ return "redirect:/"; }
 
     @GetMapping("/faq")
     public String faq(){ return "faq"; }

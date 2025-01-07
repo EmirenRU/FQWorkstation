@@ -49,9 +49,12 @@ public class SqlDatabaseConfig {
      * @return настроенный DataSource.
      */
     @Bean(name = "sqlDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource sqlDataSource(){
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+                .url(postgreSQLDataSourceProperties.getUrl())
+                .username(postgreSQLDataSourceProperties.getUsername())
+                .password(postgreSQLDataSourceProperties.getPassword())
+                .build();
     }
 
     /**

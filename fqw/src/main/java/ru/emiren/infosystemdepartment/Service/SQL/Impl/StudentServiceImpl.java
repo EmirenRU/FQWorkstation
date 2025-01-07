@@ -80,7 +80,6 @@ public class StudentServiceImpl implements StudentService {
         if (st.getCitizenship() != null) s.setCitizenship(st.getCitizenship());
         if (st.getStud_num() != null) s.setStud_num(st.getStud_num());
         if (st.getFqw() != null) s.setFqw(st.getFqw());
-        if (st.getYearStudents() != null) s.setYearStudents(st.getYearStudents());
         if (st.getDepartment() != null) s.setDepartment(st.getDepartment());
         if (st.getClassifier() != null) s.setClassifier(st.getClassifier());
         if (st.getLecturers() != null) s.setLecturers(st.getLecturers());

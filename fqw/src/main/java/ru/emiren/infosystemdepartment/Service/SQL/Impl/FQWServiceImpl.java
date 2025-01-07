@@ -30,7 +30,7 @@ public class FQWServiceImpl implements FQWService {
         return fqwRepository.findAll()
                 .stream()
                 .map(FQWMapper::mapToFQWDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

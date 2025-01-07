@@ -12,13 +12,14 @@ Values ('02.03.02', 'Фундаментальная информатика и и
        ('02.03.01', 'Математика и компьютерные науки'),
        ('01.04.02', 'Прикладная математика и информатика');
 
-INSERT INTO protection(orientation_code) VALUES ('02.03.02'),
-                                                ('02.04.02'),
-                                                ('09.03.03'),
-                                                ('38.03.05'),
-                                                ('01.03.02'),
-                                                ('02.03.01'),
-                                                ('01.04.02');
+INSERT INTO protection(orientation_code, dateofprotection) VALUES
+                                                ('02.03.02', 2021 ),
+                                                ('02.04.02', 2024),
+                                                ('09.03.03', 2023),
+                                                ('38.03.05', 2025),
+                                                ('01.03.02', 2022),
+                                                ('02.03.01', 2024),
+                                                ('01.04.02', 2025);
 
 
 INSERT INTO fqw(name) VALUES ('Обучение лингвистической модели путем задания контекста'),
@@ -408,6 +409,3 @@ INSERT INTO student_lecturers (student_id, lecturer_id, isconsultant, isscientif
                                                                                                   (88, 8, FALSE, TRUE),
                                                                                                   (89, 4, FALSE, TRUE);
 
-INSERT INTO year(yeardate) VALUES (2024);
-
-INSERT INTO year_student(student_id, year_date) SELECT id, '2024' FROM student;

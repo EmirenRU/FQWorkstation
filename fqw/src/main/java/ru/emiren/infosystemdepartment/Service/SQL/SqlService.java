@@ -14,4 +14,5 @@ public interface SqlService {
     public String createLectureForm(Model model, String year, HttpServletRequest request);
     public String getLecturers(HttpServletRequest request,
                                Model model);
+    public void refreshData();
 }

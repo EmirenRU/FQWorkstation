@@ -18,5 +18,5 @@ public class FQWDTO {
     private String feedback; // отзыв
     private String volume; // объем
 
-    private Reviewer reviewer;
+    private ReviewerDTO reviewer;
 }

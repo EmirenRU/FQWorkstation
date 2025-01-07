@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/login/**").hasAnyAuthority(JS_ACCESS)
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/thirdParty/", "favicon.ico",
                                 "/resources/css/**", "/resources/js/**", "/resources/img/**", "/resources/thirdParty/**").permitAll()
+                        .requestMatchers("/sql/**").permitAll()
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

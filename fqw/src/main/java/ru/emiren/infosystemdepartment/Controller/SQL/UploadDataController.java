@@ -26,8 +26,6 @@ public class UploadDataController {
     private final ProtectionService protectionService;
     private final FQWService fqwService;
     private final ProtocolService protocolService;
-    private final YearService yearService;
-    private final YearStudentService yearStudentService;
     private final ProtectionCommissionerService protectionCommissionerService;
 
 
@@ -42,8 +40,6 @@ public class UploadDataController {
                                 ProtectionService protectionService,
                                 FQWService fqwService,
                                 ProtocolService protocolService,
-                                YearService yearService,
-                                YearStudentService yearStudentService,
                                 ProtectionCommissionerService protectionCommissionerService) {
         this.studentService = studentService;
         this.lecturerService = lecturerService;
@@ -55,8 +51,6 @@ public class UploadDataController {
         this.protectionService = protectionService;
         this.fqwService = fqwService;
         this.protocolService = protocolService;
-        this.yearService = yearService;
-        this.yearStudentService = yearStudentService;
         this.protectionCommissionerService = protectionCommissionerService;
     }
 
@@ -76,8 +70,6 @@ public class UploadDataController {
         FQW fqw = createFQW(request, reviewer);
         Protocol protocol = createProtocol(request);
         Protection protection = createProtection(orientation, dateOfProtection);
-        Year year = createYear(dateOfProtection);
-        YearStudent ys = createYearStudent(year, student);
         Commissioner commissioner1 = createCommissioner(request, "1");
         Commissioner commissioner2 = createCommissioner(request, "2");
         Commissioner commissioner3 = createCommissioner(request, "3");
@@ -89,14 +81,11 @@ public class UploadDataController {
 
         student.setDepartment(department);
         student.setOrientation(orientation);
-        student.setYearStudents(List.of(ys));
         student.setFqw(fqw);
         student.setLecturers(List.of(sl));
         lecturer.setDepartment(department);
         lecturer.setStudents(List.of(sl));
         orientation.setProtection(List.of(protection));
-        year.setStudents(List.of(ys));
-        student.setYearStudents(List.of(ys));
 
 
         // TODO rewrite the mappers
@@ -112,8 +101,6 @@ public class UploadDataController {
         commissionerService.saveCommissioner(commissioner3);
         protocolService.saveProtocol(protocol);
         protectionService.saveProtection(protection);
-        yearService.saveYear(year);
-        yearStudentService.saveYearStudent(ys);
         protectionCommissionerService.saveProtectionCommissioner(pc1);
         protectionCommissionerService.saveProtectionCommissioner(pc2);
         protectionCommissionerService.saveProtectionCommissioner(pc3);
@@ -255,25 +242,11 @@ public class UploadDataController {
         String yearStr = DateUtil.getYear(dateOfProtection);
 
         protection.setOrientation(orientation);
-        protection.setDateOfProtection(java.time.Year.of(
+        protection.setDateOfProtection(
                 Integer.parseInt(yearStr)
-        ));
+        );
 
         return protection;
-    }
-
-    private static Year createYear( Date dateOfProtection) {
-        Year year = new Year();
-        String yearStr = DateUtil.getYear(dateOfProtection);
-        year.setYearDate(Long.valueOf(yearStr));
-        return year;
-    }
-
-    private static YearStudent createYearStudent(Year year, Student student) {
-        YearStudent ys = new YearStudent();
-        ys.setYear(year);
-        ys.setStudent(student);
-        return ys;
     }
 
     private static Commissioner createCommissioner(Map<String, String> request, String commissionerNumber) {

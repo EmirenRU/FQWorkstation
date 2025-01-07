@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.*;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
@@ -26,9 +27,11 @@ import java.io.InputStream;
 public class HubRestController {
 
     private final WebSiteHolder webSiteHolder;
+    private final ResourceLoader resourceLoader;
 
     @Autowired
-    HubRestController(WebSiteHolder webSiteHolder) {
+    HubRestController(WebSiteHolder webSiteHolder, ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
         this.webSiteHolder = webSiteHolder;
     }
 
@@ -49,8 +52,11 @@ public class HubRestController {
     public ResponseEntity<?> receiveImg(@PathVariable String id) {
         log.info("In receive Img method");
         try {
-            File file = ResourceUtils.getFile(String.format("classpath:static/img/%s", id));
-            byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
+            Resource resource = resourceLoader.getResource("classpath:static/img/" + id);
+            InputStream inputStream = resource.getInputStream();
+            byte[] bytes = StreamUtils.copyToByteArray(inputStream);
+//            File file = ResourceUtils.getFile(String.format("classpath:static/img/%s", id));
+//            byte[] bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.parseMediaType(id.endsWith(".png") ? "image/png" : "image/jpeg"));

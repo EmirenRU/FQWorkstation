@@ -47,9 +47,9 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (List<String> orientationCodes,
              List<Long> departmentCode,
-             java.time.Year dateFrom,
-             java.time.Year dateTo,
-             String theme,
+             Integer dateFrom,
+             Integer dateTo,
+             List<String> theme,
              List<Long> lecturerId
             ) {
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",

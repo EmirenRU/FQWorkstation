@@ -18,9 +18,9 @@ public interface StudentLecturersService {
     List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
             (List<String> orientationCode,
              List<Long> departmentCode,
-             java.time.Year dateFrom,
-             java.time.Year dateTo,
-             String theme,
+             Integer dateFrom,
+             Integer dateTo,
+             List<String> theme,
              List<Long> lecturerId);
 
     List<StudentLecturersDTO> findAllAndSortedByDate(String date);

@@ -268,7 +268,6 @@ public class ApiServiceImpl implements ApiService {
     private final ProtectionService protectionService;
     private final StudentLecturersService studentLecturersService;
     private final FQWService fqwService;
-    private final YearStudentService yearStudentService;
     private final FileService fileService;
     private final DeserializationService deserializationService;
     private final DownloadService downloadService;
@@ -295,7 +294,6 @@ public class ApiServiceImpl implements ApiService {
                    StudentLecturersService studentLecturersService,
                    LecturerRepository lecturerRepository,
                    FQWService fqwService,
-                   YearStudentService yearStudentService,
                    FileService fileService,
                    DeserializationService deserializationService,
                    DownloadService downloadService,
@@ -316,7 +314,6 @@ public class ApiServiceImpl implements ApiService {
         this.deserializationService = deserializationService;
         this.downloadService = downloadService;
         this.wordService = wordService;
-        this.yearStudentService = yearStudentService;
 
         this.functionsController = functionsController;
         this.dateFormat = dateFormat;

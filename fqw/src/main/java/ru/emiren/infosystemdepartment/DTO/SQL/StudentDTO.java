@@ -26,6 +26,5 @@ public class StudentDTO {
 
     private List<StudentLecturersDTO> lecturers;
 
-    private List<YearStudentDTO> yearStudents = new ArrayList<>();
 
 }

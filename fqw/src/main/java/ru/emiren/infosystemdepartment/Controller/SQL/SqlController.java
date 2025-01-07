@@ -2,32 +2,13 @@ package ru.emiren.infosystemdepartment.Controller.SQL;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.emiren.infosystemdepartment.DTO.SQL.*;
-import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
-import ru.emiren.infosystemdepartment.Model.SQL.Year;
-import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
-import ru.emiren.infosystemdepartment.Repository.SQL.YearRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
-import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.Buffer;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/sql")

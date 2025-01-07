@@ -1,37 +1,55 @@
-version: '3.8'
+version: '3'
 
 services:
-  postgres-info:
-    image: postgres:16
+  db:
+    build:
+      context:  ../db
     environment:
-      POSTGRES_DB: info-system-department,data-support
-      POSTGRES_USER: temp
-      POSTGRES_PASSWORD: temp
+      - POSTGRES_DB=info-system-department,data-support
+      - POSTGRES_USER=temp
+      - POSTGRES_PASSWORD=temp
     ports:
       - "5432:5432"
     volumes:
-      - postgres-info-data:/var/lib/postgresql/data
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-  spring-app:
-    build: ../
+      - db-data:/var/lib/postgresql/data
+      - ../db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+  fqw:
+    build: ../fqw
     ports:
-      - "80:8013"
+      - "8080:8080"
     depends_on:
-      - postgres-info
+      - db
     volumes:
-      - ../src/main/resources:/app/resources/
+      - ../fqw/src/main/resources:/app/resources/
+
     environment:
-      SPRING_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres-info:5432/info-system-department
-      SPRING_DATASOURCE_USERNAME: temp
-      SPRING_DATASOURCE_PASSWORD: temp
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_SECOND_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres-info:5432/data-support
-      SPRING_SECOND_DATASOURCE_USERNAME: temp
-      SPRING_SECOND_DATASOURCE_PASSWORD: temp
-      SPRING_SECOND_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      TEMPLATE_FILE_PATH: /app/template.docx
+      - SPRING_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/info-system-department
+      - SPRING_SECOND_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/data-support
+      - SPRING_DATASOURCE_USERNAME=temp
+      - SPRING_DATASOURCE_PASSWORD=temp
+      - SPRING_SECOND_DATASOURCE_USERNAME=temp
+      - SPRING_SECOND_DATASOURCE_PASSWORD=temp
+#      TEMPLATE_FILE_PATH: /app/template.docx
+      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
+      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
+      - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
+      - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
+      - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
 
-      server.port: 8013
-
+  hub:
+    build: ../hub
+    ports:
+      - "8081:8081"
+    depends_on:
+      - fqw
+  nginx:
+    build:
+      context:
+        ../config
+    ports:
+      - 80:80
+    depends_on:
+      - hub
+      - fqw
 volumes:
-  postgres-info-data:
+  db-data:
