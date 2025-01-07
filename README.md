@@ -9,23 +9,22 @@
 
 ## Installation
 
-1. PostgreSQL settings
-
-```psql
-$ CREATE USER "temp" WITH PASSWORD "temp" CREATEDB LOGIN;
-$ CREATE DATABASE "info-system-department" "data-support" ;
-```
+1. Install requirements from https://github.com/EmirenRU/FQWorkstation/releases/tag/installer-windows
 
 2. To create a jar you need to
 
 ```bash
 $ mvn install && mvn package
 ```
-
-3. To execute instead
-
+or 
 ```bash
-$ mvn spring-boot:run
+$ mvn clean install && mvn package
+```
+
+3. Either double click on jars or
+
+``` bash
+$ java file.jar
 ```
 
 ## Docker
@@ -72,4 +71,4 @@ $ make compose
 ## Contributing 
 
 - Emil Yusupov - Backend (Java, Spring Boot, PostgreSQL, JS, Ajax, Thymeleaf) 
-- Ivan Podlesniy - Frontend (HTML, CSS, JS)
+- Ivan Podlesniy - Frontend (HTML, CSS, JS, Ajax, select2, jquery, xtermjs)
