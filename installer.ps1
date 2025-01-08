@@ -4,9 +4,20 @@ if (-Not (New-Object Security.Principal.WindowsPrincipal([Security.Principal.Win
     exit
 }
 
-
 $currentDirectory = Get-Location
 $postgresInstallerPath = "$currentDirectory\postgresql.exe"
+$psqlLocation = "C:\Program Files\PostgreSQL\bin"
+
+$fqwDatabaseName = "fqworkstation"
+$supportDatabaseName = "support"
+$user = "temp"
+$password = "temp"
+
+[System.Environment]::SetEnvironmentVariable("POSTGRES_LOGIN", "temp", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("POSTGRES_PASSWORD", "temp", [System.EnvironmentVariableTarget]::User)
+
+[System.Environment]::SetEnvironmentVariable("SECURITY_LOGIN", "user", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("SECURITY_PASSWORD", "ihateitalready", [System.EnvironmentVariableTarget]::User)
 
 if (Test-Path "$currentDirectory\Java") {
     # Copy the Java directory to the local app data
@@ -38,8 +49,8 @@ $arguments = @(
     "--unattendedmodeui", "none",
     "--prefix", '"C:\Program Files\PostgreSQL"',
     "--datadir", '"C:\Program Files\PostgreSQL\data"',
-    "--superpassword", "2d948479128cc52587634853dca66dbc022d88a1b928993eeba723e687298b5c",
-    "--servicepassword", "2d948479128cc52587634853dca66dbc022d88a1b928993eeba723e687298b5c",
+    "--superpassword", "${password}",
+    "--servicepassword", "${password}",
     "--servicename", "postgresql",
     "--serverport", "5432"
 )
@@ -50,17 +61,10 @@ if (Test-Path $postgresInstallerPath) {
     Write-Host "PostgreSQL installer not found."
 }
 
-$fqwDatabaseName = "info-system-department"
-$supportDatabaseName = "support-data"
-$user = 1032211216
-$password = 2d948479128cc52587634853dca66dbc022d88a1b928993eeba723e687298b5c
-
 try {
-    & psql -U postgres -d postgres -c "CREATE DATABASE $fqwDatabaseName;"
-    & psql -U postgres -d postgres -c "CREATE DATABASE $supportDatabaseName;"
-    & psql -U postgres -d postgres -c "CREATE ROLE $user WITH PASSWORD '$password';"
-    & psql -U postgres -d $fqwDatabaseName -c "GRANT ALL PRIVILEGES ON DATABASE $fqwDatabaseName TO $user;"
-    & psql -U postgres -d $supportDatabaseName -c "GRANT ALL PRIVILEGES ON DATABASE $supportDatabaseName TO $user;"
+    & "$psqlLocation\psql" "postgresql://postgres:temp@localhost:5432" -c "CREATE USER ${user} WITH PASSWORD '${password}' LOGIN CREATEDB ;"
+    & "$psqlLocation\psql"  "postgresql://${user}:${password}@localhost:5432/postgres" -c "CREATE DATABASE $fqwDatabaseName;"
+    & "$psqlLocation\psql"  "postgresql://${user}:${password}@localhost:5432/postgres" -c "CREATE DATABASE $supportDatabaseName ;"
 } catch {
     Write-Host "Error creating databases and role: $($Error[0].Message)"
     exit
