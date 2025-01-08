@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Press Start 2P';
+    src: local('Press Start 2P'),
+    url('../fonts/PressStart2P-Regular.ttf');
+    font-weight: 400;
+}
 
 
 html {

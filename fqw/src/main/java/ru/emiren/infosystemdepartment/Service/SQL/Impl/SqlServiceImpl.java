@@ -76,28 +76,15 @@ public class SqlServiceImpl implements SqlService {
         dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     }
 
-
     @Override
     public String viewLecturer(Model model) {
-
-        model.addAttribute(params.getFirst(), lecturerDTOS);
-        model.addAttribute(params.get(1), departmentDTOS);
-        model.addAttribute(params.get(2), orientationDTOS);
-        model.addAttribute(params.get(3), fqwdtos);
-
-        return "lecturers";
-    }
-
-    @Override
-    @Async
-    public CompletableFuture<String> viewLecturerAsync(Model model) {
         model.addAttribute(params.getFirst(), lecturerDTOS);
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
         model.addAttribute(params.get(3), fqwdtos);
 
         log.info("View Lecturer model prepared asynchronously.");
-        return CompletableFuture.completedFuture("lecturers");
+        return "lecturers";
     }
 
     @Override
@@ -240,15 +227,9 @@ public class SqlServiceImpl implements SqlService {
             model.addAttribute(params.get(5), lecturerService.createDummyLecturer());
             return "lecturers";
         }
-
         // TODO make one or ALL
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
-
-        List<LecturerDTO> lecturerDTO = lecturerService.findDtoByLecturerId(lecturerIds);
-
-
-        model.addAttribute(params.get(5), lecturerDTO);
 
         return "lecturers";
     }

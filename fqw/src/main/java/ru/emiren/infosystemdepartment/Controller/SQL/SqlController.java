@@ -3,6 +3,7 @@ package ru.emiren.infosystemdepartment.Controller.SQL;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,21 +26,9 @@ public class SqlController {
         return "forward:lecturers/view";
     }
 
-
-//    @GetMapping("lecturers/view")
-//    public String viewLecturer(Model model){
-//        return sqlService.viewLecturer(model);
-//    }
-
     @GetMapping("lecturers/view")
-    public CompletableFuture<String> viewLecturer(Model model){
-        return sqlService.viewLecturerAsync(model)
-                .thenApply(
-                result-> {
-                    log.info("Async viewLecturer is complete");
-                    return result;
-                }
-        );
+    public String viewLecturer(Model model){
+        return sqlService.viewLecturer(model);
     }
 
     @GetMapping("/upload-data-form")
@@ -53,11 +42,9 @@ public class SqlController {
     }
 
     @PostMapping("lecturers")
-    public CompletableFuture<String> getLecturers(HttpServletRequest request, Model model){
-        return sqlService.getLecturersAsync(request, model).thenApply( result -> {
-            log.info("Async getLecturers is complete");
-            return result;
-        }); }
+    public String getLecturers(HttpServletRequest request, Model model){
+        return sqlService.getLecturers(request, model);
+    }
 
 //    @PostMapping("lecturers")
 //    public String getLecturers(HttpServletRequest request, Model model) {
