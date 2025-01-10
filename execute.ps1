@@ -9,18 +9,20 @@ $psqlLocation = "C:\Program Files\PostgreSQL\bin"
 
 $user="temp";$password="temp";
 $fqwDatabaseName = "fqworkstation" ;
-if (Test-Path $hubJar -and Test-Path $fqwJar) {
-    $hubProcess = Start-Process -FilePath $javExe -ArgumentList "-jar `"$hubJar`"" -PassThru
-    $fqwProcess = Start-Process -FilePath $javExe -ArgumentList "-jar `"$fqwJar`"" -PassThru
+if (Test-Path $hubJar ) {
+    if (Test-Path $fqwJar){
+        $hubProcess = Start-Process -FilePath $javExe -ArgumentList "-jar `"$hubJar`"" -PassThru
+        $fqwProcess = Start-Process -FilePath $javExe -ArgumentList "-jar `"$fqwJar`"" -PassThru
 
-    Write-Host "Hub and FQWorkstation JARs have been started."
+        Write-Host "Hub and FQWorkstation JARs have been started."
 
-    Start-Sleep -Seconds 180
+        Start-Sleep -Seconds 180
 
-    & "$psqlLocation\psql" "postgresql://${user}:${password}@localhost:5432/${fqwDatabaseName}" -f "$templateDataFile"
+        & "$psqlLocation\psql" "postgresql://${user}:${password}@localhost:5432/${fqwDatabaseName}" -f "$templateDataFile"
 
-    $hubProcess.WaitForExit()
-    $fqwProcess.WaitForExit()
+        $hubProcess.WaitForExit()
+        $fqwProcess.WaitForExit()
+    }
 } else {
     Write-Host "One or both JAR files are not found. Hub: $hubJar, FQWorkstation: $fqwJar"
     Pause
