@@ -191,10 +191,11 @@ public class SqlServiceImpl implements SqlService {
 
         Integer dateFrom = null;
         Integer dateTo = null;
-
-        if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
-            dateFrom = Integer.valueOf(strDateFrom);
-            dateTo   = Integer.valueOf(strDateTo);
+        if (strDateFrom != null && strDateTo != null) {
+            if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()) {
+                dateFrom = Integer.valueOf(strDateFrom);
+                dateTo = Integer.valueOf(strDateTo);
+            }
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
@@ -243,5 +244,13 @@ public class SqlServiceImpl implements SqlService {
         orientationDTOS = orientationService.getAllOrientations();
         fqwdtos = fqwService.getAllFQW();
         log.info("Data refreshed successfully.");
+    }
+
+    @Override
+    public String getDetailPage(HttpServletRequest request, Model model, String id) {
+        StudentLecturersDTO res = studentLecturersService.findStudentLecturersDTOById(Long.valueOf(id));
+
+        model.addAttribute("detail", res);
+        return "detail";
     }
 }

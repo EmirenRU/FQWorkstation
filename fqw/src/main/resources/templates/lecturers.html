@@ -98,7 +98,7 @@
                     </thead>
                     <tbody>
                     <tr class="tr-table" th:each="stlec : ${studentLecturers_container}" th:if="${not #lists.isEmpty(stlec)}">
-                        <td class="td-table lecturer_name" th:text="${stlec.lecturer.name}"></td>
+                        <td class="td-table lecturer_name" th:text="${stlec.lecturer.name}" ></td>
                         <td class="td-table academic_degree" th:text="${stlec.lecturer.academicDegree}"></td>
                         <td class="td-table lecturer_position" th:text="${stlec.lecturer.position}"></td>
                         <td class="td-table department_name" th:text="${stlec.lecturer.department.name}"></td>
@@ -106,6 +106,7 @@
                         <td class="td-table stud_num" th:text="${stlec.student.stud_num}"></td>
                         <td class="td-table student_citizenship" th:text="${stlec.student.citizenship}"></td>
                         <td class="td-table fqw_name" th:text="${stlec.student.fqw.name}"></td>
+                        <a th:action="@{/view/detail/${stlec.id}}" id="hidden-button" class></a>
                     </tr>
                     </tbody>
                 </table>

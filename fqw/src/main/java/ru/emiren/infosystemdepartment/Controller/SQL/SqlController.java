@@ -46,6 +46,11 @@ public class SqlController {
         return sqlService.getLecturers(request, model);
     }
 
+    @GetMapping("/view/detail/{id}")
+    public String getStudentDetails(HttpServletRequest request, Model model, @PathVariable String id){
+        return sqlService.getDetailPage(request, model, id);
+    }
+
 //    @PostMapping("lecturers")
 //    public String getLecturers(HttpServletRequest request, Model model) {
 //        return sqlService.getLecturers(request, model);

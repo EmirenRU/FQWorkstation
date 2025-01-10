@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th='http://thymeleaf.org'
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title th:text="${'Detail №' + detail.id}"></title>
+
+</head>
+
+<body layout:fragment="body">
+<main layout:fragment="main">
+    <form>
+
+        <input class="lecturer_name" th:value="${detail.lecturer.name}">
+        <input class="academic_degree" th:value="${detail.lecturer.academicDegree}">
+        <input class="lecturer_position" th:value="${detail.lecturer.position}">
+        <input class="department_name" th:value="${detail.lecturer.department.name}">
+        <input class="student_name" th:value="${detail.student.name}">
+        <input class="stud_num" th:value="${detail.student.stud_num}">
+        <input class="student_citizenship" th:value="${detail.student.citizenship}">
+        <input class="fqw_name" th:value="${detail.student.fqw.name}">
+
+
+    </form>
+</main>
+</body>
+
+</html>

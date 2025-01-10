@@ -53,6 +53,7 @@ public class InfoSystemDepartmentApplicationTests {
 			"/sql/lecturers/view",
 			"/sql/upload-data-form"
 	})
+	// TODO fix this
 	public void testGetEndpoints(String url) {
 		performAndValidateGetRequest(url);
 	}
@@ -69,7 +70,7 @@ public class InfoSystemDepartmentApplicationTests {
 			MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sql/lecturers")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 			String content = result.getResponse().getContentAsString();
 			Assertions.assertNotNull(content, "Response content should not be null");
-			log.info("Response Content: {}", content);
+//			log.info("Response Content: {}", content);
 
 		} catch (Exception e) {
 			log.error("Error during GET request to {}", url, e);

@@ -14,4 +14,6 @@ public interface SqlService {
     public String getLecturers(HttpServletRequest request,
                                Model model);
     public void refreshData();
+
+    String getDetailPage(HttpServletRequest request, Model model, String id);
 }
