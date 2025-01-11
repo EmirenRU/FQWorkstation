@@ -21,7 +21,4 @@ public class Data {
     private String phone;
     @NotNull
     private String description;
-
-
-
 }

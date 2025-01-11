@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.api;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,4 +19,6 @@ public interface ApiService {
     public ResponseEntity<String> downloadFile(String id, HttpServletResponse response);
     public String generateAndSendFile(HttpServletResponse response) throws IOException;
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request);
+
+    CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request);
 }

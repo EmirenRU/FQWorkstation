@@ -25,6 +25,13 @@ public class ApplicationProgrammingInterfaceController {
     @Autowired
     public ApplicationProgrammingInterfaceController(ApiService apiService) {this.apiService = apiService;}
 
+    @GetMapping("/v1/receive_lecturers")
+    public CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request) {
+        return apiService.receiveLecturers(request).thenApply( reply -> {
+            log.info("receive lecturers response");
+            return reply;
+        });
+    }
 
     @PostMapping("v2/upload_file")
     public ResponseEntity<?> handleFileUpload(

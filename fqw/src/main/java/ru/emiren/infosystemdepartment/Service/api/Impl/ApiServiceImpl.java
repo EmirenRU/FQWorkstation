@@ -2,9 +2,11 @@ package ru.emiren.infosystemdepartment.Service.api.Impl;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
+import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
+import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.Temporal.FileHolder;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Service.Deserialization.DeserializationService;
@@ -174,6 +177,14 @@ public class ApiServiceImpl implements ApiService {
         MultipartFile file = request.getFile("data");
 
         return ResponseEntity.status(HttpStatus.OK).body("Proceed");
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request) {
+        List<StudentLecturersDTO> res = studentLecturersService.getAllStudentLecturers();
+        Map<String, String> headers = new HashMap<>();
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(res));
     }
 
     public enum FileData {
