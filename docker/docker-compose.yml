@@ -16,7 +16,7 @@ services:
   fqw:
     build: ../fqw
     ports:
-      - "8080:8080"
+      - "13130:13130"
     depends_on:
       - db
     volumes:
@@ -35,11 +35,12 @@ services:
       - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
       - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
       - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
+      - SERVER_PORT=13130
 
   hub:
     build: ../hub
     ports:
-      - "8081:8081"
+      - "13132:13132"
     depends_on:
       - fqw
   nginx:
@@ -48,6 +49,8 @@ services:
         ../config
     ports:
       - 80:80
+    environment:
+      - SERVER_PORT=13132
     depends_on:
       - hub
       - fqw

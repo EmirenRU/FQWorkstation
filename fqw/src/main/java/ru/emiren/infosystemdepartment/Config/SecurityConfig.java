@@ -26,9 +26,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.DELETE).hasRole(ADMIN_ACCESS)
 //                        .requestMatchers("/admin/**").hasRole(ADMIN_ACCESS)
+                        .requestMatchers("/sql/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole(ADMIN_ACCESS)
-                        .requestMatchers("/login/**").hasAnyAuthority(JS_ACCESS)
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/thirdParty/", "favicon.ico",
                                 "/resources/css/**", "/resources/js/**", "/resources/img/**", "/resources/thirdParty/**").permitAll()
                         .requestMatchers("/sql/**").permitAll()

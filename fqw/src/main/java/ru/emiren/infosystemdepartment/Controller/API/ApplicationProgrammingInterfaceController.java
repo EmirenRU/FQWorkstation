@@ -70,6 +70,5 @@ public class ApplicationProgrammingInterfaceController {
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request){
         return apiService.uploadDataAndProceedToModels(request);
     }
-
 }
 
