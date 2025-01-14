@@ -49,6 +49,7 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId) {
+        log.info("{}", file.getName());
         Map<String, String> headers = new HashMap<>();
         log.info("Received file upload with ID: {}", fileId);
 

@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
 import java.io.*;
@@ -22,15 +24,16 @@ public class WordServiceImpl implements WordService {
 
 //    @Value("${template.file.path}")
 //    private final String TEMPLATE_PATH;
-    @Value("classpath:template.docx")
+//    @Value("classpath:template.docx")
     private Resource resource;
     private InputStream inputStream;
     private ResourceLoader resourceLoader;
+    private ClassPathResource classPathResource;
 
     @Autowired
-    public WordServiceImpl(@Value("${template.file.path}") String TEMPLATE_PATH, ResourceLoader resourceLoader) {
+    public WordServiceImpl(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
-        this.resource       = resourceLoader.getResource(TEMPLATE_PATH);
+        this.resource       = resourceLoader.getResource("classpath:template.docx");
     }
 
     @Override
@@ -43,7 +46,7 @@ public class WordServiceImpl implements WordService {
         XWPFTableRow row = table.getRow(indexRow);
         return row.getTableCells().stream()
                 .map(XWPFTableCell::getText)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -79,9 +82,7 @@ public class WordServiceImpl implements WordService {
                         XWPFTableRow r2 = t2.getRow(i);
                         XWPFTableRow r3 = t3.getRow(i);
 
-
-                        List<String> innerArray = new ArrayList<>() {
-                        };
+                        List<String> innerArray = new ArrayList<>() {};
 
                         innerArray.addAll(processTable(t1, i, r1.getTableCells().size()));
                         innerArray.addAll(processTable(t2, i, r2.getTableCells().size()));
@@ -97,14 +98,25 @@ public class WordServiceImpl implements WordService {
         return data;
     }
 
-    private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data)
-    {
+    private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data) {
         NiceXWPFDocument document = null;
+        this.classPathResource = new ClassPathResource("template.docx");
+        File temp_file = null;
         try {
-            inputStream = resource.getInputStream();
+            log.info("Trying to get input stream from template.docx");
+            inputStream = classPathResource.getInputStream();
+//            byte[] binaryData = FileCopyUtils.copyToByteArray(inputStream);
+            temp_file = File.createTempFile("template", ".docx");
 
-            document = new NiceXWPFDocument(inputStream);
+            try (FileOutputStream outputStream = new FileOutputStream(temp_file)) {
+                FileCopyUtils.copy(inputStream, outputStream);
+            }
+            log.info("Ended trying to get input stream from template.docx");
+
+            log.info("Trying to get input stream to NiceXWPFDocument");
+            document = new NiceXWPFDocument(new FileInputStream(temp_file));
             List<NiceXWPFDocument> documents = new ArrayList<>();
+            log.info("Ended trying to get input stream to NiceXWPFDocument");
 
 
             for (int i = 0; i < data.size(); i++) {
@@ -112,7 +124,9 @@ public class WordServiceImpl implements WordService {
 
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
-                NiceXWPFDocument tempDoc = XWPFTemplate.compile(resource.getFile(), Configure.createDefault()).render(dataMap).getXWPFDocument();
+                log.info("The dataMap contains: {}", dataMap);
+
+                NiceXWPFDocument tempDoc = XWPFTemplate.compile(temp_file, Configure.createDefault()).render(dataMap).getXWPFDocument();
     
 
                 if (i < data.size() - 1) {
@@ -128,6 +142,10 @@ public class WordServiceImpl implements WordService {
             return document;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());
+        } finally {
+            if (temp_file != null) {
+                temp_file.delete();
+            }
         }
         return document;
     }

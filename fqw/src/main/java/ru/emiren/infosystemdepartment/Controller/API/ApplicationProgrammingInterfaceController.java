@@ -37,6 +37,7 @@ public class ApplicationProgrammingInterfaceController {
     public ResponseEntity<?> handleFileUpload(
             @RequestParam("file") MultipartFile file,
             @RequestParam("id") String fileId) {
+        log.info("The file size is: {}", file.getSize());
         return apiService.handleFileUpload(file, fileId);
     }
 
