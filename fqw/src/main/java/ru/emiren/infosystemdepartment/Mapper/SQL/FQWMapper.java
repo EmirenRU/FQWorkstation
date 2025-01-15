@@ -6,6 +6,7 @@ import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 public class FQWMapper {
     public static FQW mapToFQW(FQWDTO fqwdto){
         return FQW.builder()
+                .id(fqwdto.getId())
                 .name(fqwdto.getName())
                 .classifier(fqwdto.getClassifier())
                 .uniqueness(fqwdto.getUniqueness())
@@ -17,6 +18,7 @@ public class FQWMapper {
 
     public static FQWDTO mapToFQWDTO(FQW fqw){
         return FQWDTO.builder()
+                .id(fqw.getId())
                 .name(fqw.getName())
                 .classifier(fqw.getClassifier())
                 .uniqueness(fqw.getUniqueness())

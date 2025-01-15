@@ -26,7 +26,7 @@ public class Student {
     private String classifier;              // Классификатор
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "theme", referencedColumnName = "name")
+    @JoinColumn(name = "theme", referencedColumnName = "id")
     private FQW fqw;
 
     @ManyToOne(fetch = FetchType.EAGER)

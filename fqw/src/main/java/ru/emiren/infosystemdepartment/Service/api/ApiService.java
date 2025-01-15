@@ -21,4 +21,6 @@ public interface ApiService {
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request);
 
     CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request);
+
+    CompletableFuture<ResponseEntity<?>> receiveThemes(HttpServletRequest request);
 }

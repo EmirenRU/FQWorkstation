@@ -81,6 +81,7 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.getFirst(), lecturerDTOS);
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
+        log.info(fqwdtos.toString());
         model.addAttribute(params.get(3), fqwdtos);
 
         log.info("View Lecturer model prepared asynchronously.");
@@ -97,7 +98,7 @@ public class SqlServiceImpl implements SqlService {
         String[] departmentParams = request.getParameterValues("department"); // Long
         List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(Long::parseLong).toList() : List.of((long) -1);
         String[] themeParams = request.getParameterValues("themes");
-        List<String> theme = (themeParams != null) ? Arrays.asList(themeParams) : List.of("-1");
+        List<Long> theme = (themeParams != null) ? Arrays.stream(themeParams).map(Long::parseLong).toList() : List.of((long) -1);
         String strDateFrom = request.getParameter("from");
         String strDateTo = request.getParameter("to");
 
@@ -177,7 +178,7 @@ public class SqlServiceImpl implements SqlService {
         String[] departmentParams = request.getParameterValues("department"); // Long
         List<Long> departmentCode = (departmentParams != null) ? Arrays.stream(departmentParams).map(Long::parseLong).toList() : List.of((long) -1);
         String[] themeParams = request.getParameterValues("themes");
-        List<String> theme = (themeParams != null) ? Arrays.asList(themeParams) : List.of("-1");
+        List<Long> theme = (themeParams != null) ? Arrays.stream(themeParams).map(Long::parseLong).toList() : List.of((long) -1);
         String strDateFrom =request.getParameter("from");
         String strDateTo =request.getParameter("to");
 

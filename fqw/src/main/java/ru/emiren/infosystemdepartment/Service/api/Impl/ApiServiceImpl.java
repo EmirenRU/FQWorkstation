@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
+import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.Temporal.FileHolder;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
@@ -186,6 +187,13 @@ public class ApiServiceImpl implements ApiService {
         List<StudentLecturersDTO> res = studentLecturersService.getAllStudentLecturers();
         Map<String, String> headers = new HashMap<>();
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(res));
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<ResponseEntity<?>> receiveThemes(HttpServletRequest request) {
+        List<FQWDTO> res = fqwService.getAllFQW();
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res));
     }
 
     public enum FileData {

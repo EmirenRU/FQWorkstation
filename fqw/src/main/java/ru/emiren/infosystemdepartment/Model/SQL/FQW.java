@@ -12,7 +12,12 @@ import lombok.*;
 @Setter
 public class FQW {
 
+
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
     private String classifier; // классификатор

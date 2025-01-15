@@ -37,11 +37,6 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public NiceXWPFDocument generateWordDocument(List<List<String>> data){
-        return createWordDocumentByTemplatesPath(data);
-    }
-
-    @Override
     public List<String> processTable(XWPFTable table, int indexRow, int numCells) {
         XWPFTableRow row = table.getRow(indexRow);
         return row.getTableCells().stream()
@@ -96,7 +91,8 @@ public class WordServiceImpl implements WordService {
         return data;
     }
 
-    private NiceXWPFDocument createWordDocumentByTemplatesPath(List<List<String>> data) {
+    @Override
+    public NiceXWPFDocument generateWordDocument(List<List<String>> data) {
         NiceXWPFDocument document = null;
         this.classPathResource = new ClassPathResource("template.docx");
         File temp_file = null;
@@ -111,7 +107,6 @@ public class WordServiceImpl implements WordService {
             log.info("Ended trying to get input stream from template.docx");
 
             log.info("Trying to get input stream to NiceXWPFDocument");
-            document = new NiceXWPFDocument(new FileInputStream(temp_file));
             List<NiceXWPFDocument> documents = new ArrayList<>();
             log.info("Ended trying to get input stream to NiceXWPFDocument");
 
@@ -136,16 +131,20 @@ public class WordServiceImpl implements WordService {
                 documents.add(tempDoc);
             }
 
-            NiceXWPFDocument tempDoc = documents.getLast();
+            document = documents.getLast();
             documents.removeLast();
-            tempDoc = tempDoc.merge(documents, tempDoc.getParagraphArray(0).getRuns().getFirst());
+            document = document.merge(documents, document.getParagraphArray(0).getRuns().getFirst());
 
-            return tempDoc;
+            log.info("closing the documents list");
+            for (NiceXWPFDocument doc : documents) { doc.close(); } // Stream.map does not provide without try_catch
+            log.info("Done closing the documents list");
+
+            return document;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());
         } finally {
             if (temp_file != null) {
-                temp_file.delete();
+                log.info("Have deleted the temp_file? {}",temp_file.delete());
             }
         }
         return null;

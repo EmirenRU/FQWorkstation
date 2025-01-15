@@ -21,7 +21,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             " ( (sl.lecturer.id IN :lecturerId) OR (-1 IN :lecturerId ) ) AND " +
             " ( (sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes) ) AND " +
             " ( (sl.student.department.code IN :departmentCode ) OR (-1 IN :departmentCode ) ) AND " +
-            " ( (sl.student.fqw.name IN :theme) OR ( '-1' IN :theme ) ) AND " +
+            " ( (sl.student.fqw.id IN :theme) OR ( -1 IN :theme ) ) AND " +
             " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
             " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
             " ORDER BY sl.lecturer.name")
@@ -30,7 +30,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             @Param("departmentCode") List<Long> departmentCode,
             @Param("dateFrom") Integer dateFrom,
             @Param("dateTo") Integer dateTo,
-            @Param("theme") List<String> theme,
+            @Param("theme") List<Long> theme,
             @Param("lecturerId") List<Long> lecturerId);
 
     @Query("SELECT sl from StudentLecturers sl " +

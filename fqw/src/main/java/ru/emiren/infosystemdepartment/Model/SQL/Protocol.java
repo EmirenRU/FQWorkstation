@@ -21,7 +21,7 @@ public class Protocol {
     private Student student; // Фио Студента
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "theme", referencedColumnName = "name")
+    @JoinColumn(name = "theme", referencedColumnName = "id")
     private FQW fqw; // Final Qualifying Work Name
     private String headOfTheFQW; // head of the Final qualification work
     private String review; // Рецензия

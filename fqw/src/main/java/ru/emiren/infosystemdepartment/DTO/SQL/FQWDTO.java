@@ -11,6 +11,7 @@ import ru.emiren.infosystemdepartment.Model.SQL.Reviewer;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FQWDTO {
+    private Long id;
     private String name;
 
     private String classifier; // классификатор

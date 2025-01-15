@@ -57,7 +57,7 @@
                                 <option th:value="-1" disabled>Выберите тему: </option>
                                 <option th:each="theme : ${themes_selector}"
                                         th:text="${theme.name}"
-                                        th:value="${theme.name}">
+                                        th:value="${theme.id}">
                                 </option>
                             </select>
                         </label>

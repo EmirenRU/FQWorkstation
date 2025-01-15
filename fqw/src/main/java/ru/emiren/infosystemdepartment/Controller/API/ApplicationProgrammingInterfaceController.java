@@ -33,6 +33,14 @@ public class ApplicationProgrammingInterfaceController {
         });
     }
 
+    @GetMapping("/sql/receive_fqw")
+    public CompletableFuture<ResponseEntity<?>> receiveFqw(HttpServletRequest request) {
+        return apiService.receiveThemes(request).thenApply(res -> {
+            log.info("receive fqw response");
+            return res;
+        });
+    };
+
     @PostMapping("v2/upload_file")
     public ResponseEntity<?> handleFileUpload(
             @RequestParam("file") MultipartFile file,

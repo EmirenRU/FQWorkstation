@@ -49,7 +49,7 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
              List<Long> departmentCode,
              Integer dateFrom,
              Integer dateTo,
-             List<String> theme,
+             List<Long> theme,
              List<Long> lecturerId
             ) {
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",

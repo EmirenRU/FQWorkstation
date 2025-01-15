@@ -20,7 +20,7 @@ public interface StudentLecturersService {
              List<Long> departmentCode,
              Integer dateFrom,
              Integer dateTo,
-             List<String> theme,
+             List<Long> theme,
              List<Long> lecturerId);
 
     List<StudentLecturersDTO> findAllAndSortedByDate(String date);
