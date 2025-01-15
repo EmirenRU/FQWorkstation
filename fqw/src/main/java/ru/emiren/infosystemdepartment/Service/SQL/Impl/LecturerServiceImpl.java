@@ -83,4 +83,9 @@ public class LecturerServiceImpl implements LecturerService {
 
         return lecturerRepository.save(oldLecturer);
     }
+
+    @Override
+    public List<LecturerDTO> getConnectedLecturers() {
+        return lecturerRepository.getAllConnectedLecturers().stream().map(LecturerMapper::mapToLecturerDTO).toList();
+    }
 }

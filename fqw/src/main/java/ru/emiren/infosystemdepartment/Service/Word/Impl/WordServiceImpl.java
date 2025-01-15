@@ -74,8 +74,6 @@ public class WordServiceImpl implements WordService {
                 XWPFTable t2 = tables.get(1);
                 XWPFTable t3 = tables.get(2);
 
-//                log.info(t1.getNumberOfRows() + " " + t2.getNumberOfRows() + " " + t3.getNumberOfRows());
-
                 if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()) {
                     for (int i = 1; i < t1.getNumberOfRows(); i++) {
                         XWPFTableRow r1 = t1.getRow(i);
@@ -105,7 +103,6 @@ public class WordServiceImpl implements WordService {
         try {
             log.info("Trying to get input stream from template.docx");
             inputStream = classPathResource.getInputStream();
-//            byte[] binaryData = FileCopyUtils.copyToByteArray(inputStream);
             temp_file = File.createTempFile("template", ".docx");
 
             try (FileOutputStream outputStream = new FileOutputStream(temp_file)) {
@@ -119,7 +116,7 @@ public class WordServiceImpl implements WordService {
             log.info("Ended trying to get input stream to NiceXWPFDocument");
 
 
-            for (int i = 0; i < data.size(); i++) {
+            for (int i = 0; i < data.size()-1; i++) {
                 List<String> arr = data.get(i);
 
                 Map<String, Object> dataMap = getStringObjectMap(arr);
@@ -127,19 +124,23 @@ public class WordServiceImpl implements WordService {
                 log.info("The dataMap contains: {}", dataMap);
 
                 NiceXWPFDocument tempDoc = XWPFTemplate.compile(temp_file, Configure.createDefault()).render(dataMap).getXWPFDocument();
-    
 
-                if (i < data.size() - 1) {
+
+                if (i < data.size()) {
                     XWPFParagraph paragraph = tempDoc.createParagraph();
                     XWPFRun run = paragraph.createRun();
-                    run.addBreak(BreakType.PAGE);
+                    if (i != data.size() - 2) {
+                        run.addBreak(BreakType.PAGE);
+                    }
                 }
                 documents.add(tempDoc);
             }
-            document = document.merge(documents, document.getParagraphArray(0).getRuns().get(0));
 
+            NiceXWPFDocument tempDoc = documents.getLast();
+            documents.removeLast();
+            tempDoc = tempDoc.merge(documents, tempDoc.getParagraphArray(0).getRuns().getFirst());
 
-            return document;
+            return tempDoc;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());
         } finally {
@@ -147,10 +148,10 @@ public class WordServiceImpl implements WordService {
                 temp_file.delete();
             }
         }
-        return document;
+        return null;
     }
 
-    private static Map<String, Object> getStringObjectMap(List<String> arr) {
+    private Map<String, Object> getStringObjectMap(List<String> arr) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("id1", arr.getFirst());
         dataMap.put("id2", arr.get(1));
@@ -168,7 +169,15 @@ public class WordServiceImpl implements WordService {
         dataMap.put("id18", arr.get(19));
         dataMap.put("id19", arr.get(20));
         dataMap.put("id23", arr.get(24));
+
+        saveDataFromProtocol(dataMap);
         return dataMap;
+    }
+
+    @Override
+    public void saveDataFromProtocol(Map<String, Object> data){
+
+
     }
 
 

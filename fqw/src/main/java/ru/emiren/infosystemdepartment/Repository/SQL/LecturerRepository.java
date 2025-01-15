@@ -17,4 +17,7 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
 
     @Query("SELECT l FROM Lecturer l WHERE l.id IN :lId")
     List<Lecturer> findById(@Param("lId") List<Long> id);
+
+    @Query("Select l FROM Lecturer l JOIN StudentLecturers sl ON sl.lecturer.id = l.id")
+    List<Lecturer> getAllConnectedLecturers();
 }

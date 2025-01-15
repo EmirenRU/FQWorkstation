@@ -22,4 +22,7 @@ public interface LecturerService {
     void deleteLecturer(Lecturer lecturer);
 
     Lecturer updateLecturer(Long id, Lecturer lecturer);
+
+
+    List<LecturerDTO> getConnectedLecturers();
 }

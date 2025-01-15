@@ -69,7 +69,7 @@ public class SqlServiceImpl implements SqlService {
         this.fqwService                 = fqwService;
         this.wordService                = wordService;
 
-        lecturerDTOS       = lecturerService.getAllLecturer();
+        lecturerDTOS       = lecturerService.getConnectedLecturers();
         departmentDTOS     = departmentService.getAllDepartments();
         orientationDTOS    = orientationService.getAllOrientations();
         fqwdtos            = fqwService.getAllFQW();
@@ -239,7 +239,7 @@ public class SqlServiceImpl implements SqlService {
     @Scheduled(fixedRate = 60000)
     public void refreshData(){
         log.info("Refreshing data...");
-        lecturerDTOS = lecturerService.getAllLecturer();
+        lecturerDTOS = lecturerService.getConnectedLecturers();
         departmentDTOS = departmentService.getAllDepartments();
         orientationDTOS = orientationService.getAllOrientations();
         fqwdtos = fqwService.getAllFQW();
