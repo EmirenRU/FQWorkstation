@@ -3,6 +3,9 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Table
@@ -10,6 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+
 public class Protocol {
 
     @Id
@@ -27,5 +31,9 @@ public class Protocol {
     private String review; // Рецензия
     private Integer volume; // объем
     private Integer grade; // оценка
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "question_id")
+    List<ProtocolQuestion> questions = new ArrayList<>();
 
 }

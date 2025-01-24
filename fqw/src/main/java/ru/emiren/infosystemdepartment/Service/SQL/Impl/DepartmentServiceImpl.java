@@ -65,4 +65,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         return departmentRepository.save(upd);
     }
+
+    @Override
+    public String findDeparmentByStudentNumber(Long studNumber) {
+        return departmentRepository.findDepartmentNameByStudNumber(studNumber);
+    }
 }

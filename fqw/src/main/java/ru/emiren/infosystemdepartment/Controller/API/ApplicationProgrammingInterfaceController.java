@@ -25,6 +25,12 @@ public class ApplicationProgrammingInterfaceController {
     @Autowired
     public ApplicationProgrammingInterfaceController(ApiService apiService) {this.apiService = apiService;}
 
+    /**
+     * Receive the SqlPayload for React by request
+     *
+     * @param request
+     * @return a ResponseEntity with a status and FQW in Body
+     */
     @GetMapping("/v1/receive_lecturers")
     public CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request) {
         return apiService.receiveLecturers(request).thenApply( reply -> {
@@ -33,14 +39,27 @@ public class ApplicationProgrammingInterfaceController {
         });
     }
 
+    /**
+     * Receive the FQW by a request from JS
+     *
+     * @param request
+     * @return a ResponseEntity with a status and FQW in Body
+     */
     @GetMapping("/sql/receive_fqw")
     public CompletableFuture<ResponseEntity<?>> receiveFqw(HttpServletRequest request) {
         return apiService.receiveThemes(request).thenApply(res -> {
             log.info("receive fqw response");
             return res;
         });
-    };
+    }
 
+    /**
+     * Uploads a file to process to generate a protocol
+     *
+     * @param file
+     * @param fileId
+     * @return a ResponseEntity with a status
+     */
     @PostMapping("v2/upload_file")
     public ResponseEntity<?> handleFileUpload(
             @RequestParam("file") MultipartFile file,
@@ -49,6 +68,14 @@ public class ApplicationProgrammingInterfaceController {
         return apiService.handleFileUpload(file, fileId);
     }
 
+    /**
+     * handle a message from console
+     *
+     * @param request
+     * @param response
+     * @param message
+     * @return a ResponseEntity with a status
+     */
     @PostMapping("/v1/upload_data_to_sql")
     public CompletableFuture<ResponseEntity<?>> handleDataUpload(HttpServletRequest request, HttpServletResponse response, @RequestBody String message) {
         log.info("{}, {}", request.getAttribute("message"), message);
@@ -59,22 +86,49 @@ public class ApplicationProgrammingInterfaceController {
                 });
     }
 
-
-    @PostMapping("/v2/check_file_availability/{id}")
+    /**
+     * returns a download status of file with ID
+     *
+     * @param id
+     * @return a ResponseEntity with a status
+     */
+    @GetMapping("/v2/check_file_availability/{id}")
     public ResponseEntity<?> checkFileAvailability(@PathVariable("id") String id ) {
         return apiService.checkFileAvailability(id);
     }
 
+    /**
+     * Download the file from the server
+     *
+     * @param id // HashID
+     * @param response Client's data
+     * @return a ResponseEntity with a status
+     */
     @GetMapping("/v2/download_file/{id}")
     public ResponseEntity<String> downloadFile(@PathVariable("id") String id, HttpServletResponse response) {
         return apiService.downloadFile(id, response);
     }
 
+    /**
+     * Download the file from the server
+     *
+     * @param response
+     * @return a status
+     * @throws IOException
+     * @deprecated use {@link #downloadFile(String, HttpServletResponse)} instead
+     */
+    @Deprecated
     @GetMapping("/v1/download_protocols")
     public String downloadProtocols(HttpServletResponse response) throws IOException {
         return apiService.downloadProtocols(response);
     }
 
+    /**
+     * Transfer from client to sevice to handle all CRUD operations in message
+     *
+     * @param request a Client's Data
+     * @return a RequestEntity with Status of operation
+     */
     @PostMapping("/v1/upload-data")
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request){
         return apiService.uploadDataAndProceedToModels(request);

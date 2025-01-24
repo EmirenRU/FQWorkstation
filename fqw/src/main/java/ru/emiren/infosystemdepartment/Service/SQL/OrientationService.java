@@ -13,4 +13,6 @@ public interface OrientationService {
     Orientation getOrientation(String code);
     OrientationDTO getOrientationDTO(String code);
     Orientation updateOrientation(String code, Orientation orientation);
+
+    String OrientationCodeWithNameByStudentNumber(Long studNumber);
 }

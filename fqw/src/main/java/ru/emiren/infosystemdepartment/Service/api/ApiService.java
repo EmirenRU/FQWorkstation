@@ -17,7 +17,6 @@ public interface ApiService {
     public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message);
     public ResponseEntity<?> checkFileAvailability(String id);
     public ResponseEntity<String> downloadFile(String id, HttpServletResponse response);
-    public String generateAndSendFile(HttpServletResponse response) throws IOException;
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request);
 
     CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request);

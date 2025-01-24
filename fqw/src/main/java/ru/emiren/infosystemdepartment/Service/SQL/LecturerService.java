@@ -17,7 +17,7 @@ public interface LecturerService {
 
     List<LecturerDTO> findAllLecturersById(Long lecturerId);
 
-    Lecturer saveLecturer(Lecturer lecturerDTO);
+    Lecturer saveLecturer(Lecturer lecturer);
 
     void deleteLecturer(Lecturer lecturer);
 

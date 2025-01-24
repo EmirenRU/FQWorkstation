@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,10 +19,12 @@ public class StudentLecturers {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @JsonBackReference
     private Student student;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lecturer_id", referencedColumnName = "id")
+    @JsonBackReference
     private Lecturer lecturer;
 
     private Boolean isScientificSupervisor;

@@ -9,14 +9,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
+import ru.emiren.infosystemdepartment.Model.SQL.FQW;
+import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
+import ru.emiren.infosystemdepartment.Model.SQL.Student;
+import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
-import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -30,8 +34,6 @@ public class SqlServiceImpl implements SqlService {
     ProtectionService protectionService;
     StudentLecturersService studentLecturersService;
     FQWService fqwService;
-    WordService wordService;
-
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
     List<DepartmentDTO> departmentDTOS;
@@ -57,8 +59,7 @@ public class SqlServiceImpl implements SqlService {
                           OrientationService orientationService,
                           ProtectionService protectionService,
                           StudentLecturersService studentLecturersService,
-                          FQWService fqwService,
-                          WordService wordService
+                          FQWService fqwService
     ){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
@@ -67,7 +68,6 @@ public class SqlServiceImpl implements SqlService {
         this.protectionService          = protectionService;
         this.studentLecturersService    = studentLecturersService;
         this.fqwService                 = fqwService;
-        this.wordService                = wordService;
 
         lecturerDTOS       = lecturerService.getConnectedLecturers();
         departmentDTOS     = departmentService.getAllDepartments();
@@ -81,7 +81,6 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.getFirst(), lecturerDTOS);
         model.addAttribute(params.get(1), departmentDTOS);
         model.addAttribute(params.get(2), orientationDTOS);
-        log.info(fqwdtos.toString());
         model.addAttribute(params.get(3), fqwdtos);
 
         log.info("View Lecturer model prepared asynchronously.");
@@ -253,5 +252,56 @@ public class SqlServiceImpl implements SqlService {
 
         model.addAttribute("detail", res);
         return "detail";
+    }
+
+    @Override
+    public String getDepartmentNameByStudentNumber(Long studNumber) {
+        return departmentService.findDeparmentByStudentNumber(studNumber);
+    }
+
+    @Override
+    public String getOrientationCodeWithNameByStudentNumber(Long studNumber) {
+        return orientationService.OrientationCodeWithNameByStudentNumber(studNumber);
+    }
+
+    // Студент (FullName, studNum, language) // FQW (theme), Lecturer (SuData=position+academicPos, SuName),
+
+    @Override
+    public boolean saveDataFromProtocol(Map<String, Object> data) {
+        FQW fqw = new FQW();
+        fqw.setName((String) data.get("theme"));
+
+        Student student = new Student();
+        student.setStud_num((Long) data.get("Studnum"));
+        student.setName((String) data.get("FullName"));
+
+        student.setFqw(fqw);
+
+        Lecturer lecturer = new Lecturer();
+        lecturer.setName((String) data.get("SuName"));
+
+        List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
+        if (dat.size() == 2){
+            String adPdep = dat.getFirst();
+            String pos = dat.getLast();
+        } else if (dat.size() == 3){
+
+        }
+
+        lecturer.setPosition((String) data.get(dat.getLast()));
+
+        StudentLecturers studentLecturers = new StudentLecturers();
+        studentLecturers.setLecturer(lecturer);
+        studentLecturers.setStudent(student);
+
+        student.getLecturers().add(studentLecturers);
+        lecturer.getStudents().add(studentLecturers);
+
+
+        fqwService.saveFqw(fqw);
+        lecturerService.saveLecturer(lecturer);
+        studentService.saveStudent(student);
+        studentLecturersService.saveStudentLecturers(studentLecturers);
+        return true;
     }
 }

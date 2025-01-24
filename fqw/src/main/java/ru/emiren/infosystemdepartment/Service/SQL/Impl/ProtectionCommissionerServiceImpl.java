@@ -59,7 +59,6 @@ public class ProtectionCommissionerServiceImpl implements ProtectionCommissioner
 
         if (pc.getId() != null) { upd.setId(pc.getId()); }
         if (pc.getCommissioner() != null) { upd.setCommissioner(CommissionerMapper.mapToCommisionerDTO(pc.getCommissioner()));}
-        if (pc.getQuestion() != null) { upd.setQuestion(pc.getQuestion());}
         if (pc.getProtection() != null) {upd.setProtection(ProtectionMapper.mapToProtectionDTO(pc.getProtection()));}
 
         return protectionCommissionerRepository.save(ProtectionCommissionerMapper.mapToProtectionCommissioner(upd));

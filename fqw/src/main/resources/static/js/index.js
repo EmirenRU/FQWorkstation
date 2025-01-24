@@ -75,7 +75,7 @@ async function uploadFileAndDownload() {
 async function checkFileAvailability(id) {
     let isAvailable = false;
     let settings = {
-        method: "POST",
+        method: "GET",
     };
 
     while (!isAvailable) {

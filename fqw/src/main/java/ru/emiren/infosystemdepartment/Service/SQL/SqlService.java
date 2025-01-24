@@ -3,6 +3,7 @@ package ru.emiren.infosystemdepartment.Service.SQL;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface SqlService {
@@ -16,4 +17,10 @@ public interface SqlService {
     public void refreshData();
 
     String getDetailPage(HttpServletRequest request, Model model, String id);
+
+    String getDepartmentNameByStudentNumber(Long studNumber);
+
+    String getOrientationCodeWithNameByStudentNumber(Long studNumber);
+
+    boolean saveDataFromProtocol(Map<String, Object> dataMap);
 }

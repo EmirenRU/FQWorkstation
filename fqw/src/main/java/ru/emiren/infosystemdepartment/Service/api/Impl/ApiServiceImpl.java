@@ -2,6 +2,8 @@ package ru.emiren.infosystemdepartment.Service.api.Impl;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
+import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
+import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
 import ru.emiren.infosystemdepartment.Model.Temporal.FileHolder;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Service.Deserialization.DeserializationService;
@@ -42,12 +46,26 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ApiServiceImpl implements ApiService {
 
+    /**
+     * Generates and send a protocol file to the client
+     *
+     * @param response
+     * @return a redirect to the function page
+     * @throws IOException
+     */
     @Override
     public String downloadProtocols(HttpServletResponse response) throws IOException {
         downloadService.generateAndSendFile(data, response);
         return "redirect:/functions";
     }
 
+    /**
+     * Handles the upload of a file and processes it.
+     *
+     * @param file
+     * @param fileId
+     * @return a ResponseEntity containing the status of the upload.
+     */
     @Override
     public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId) {
         log.info("{}", file.getName());
@@ -85,6 +103,13 @@ public class ApiServiceImpl implements ApiService {
         }
     }
 
+
+    /**
+     * Handles a message from console for CRUD operation
+     *
+     * @param message
+     * @return a ResponseEntity with status of query
+     */
     @Override
     @Async
     public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message) {
@@ -124,6 +149,13 @@ public class ApiServiceImpl implements ApiService {
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(headers));
     }
 
+
+    /**
+     * Check if file is ready by id
+     *
+     * @param id
+     * @return a ResponseEntity with a status of readiness
+     */
     @Override
     public ResponseEntity<?> checkFileAvailability(String id) {
         log.info(id);
@@ -134,6 +166,14 @@ public class ApiServiceImpl implements ApiService {
         }
     }
 
+
+    /**
+     * On call returns a download process of file
+     *
+     * @param id
+     * @param response
+     * @return a ResponseEntity with status
+     */
     @Override
     public ResponseEntity<String> downloadFile(String id, HttpServletResponse response) {
         log.info("DownloadWordFile is activated with id: {}", id );
@@ -169,11 +209,12 @@ public class ApiServiceImpl implements ApiService {
         return ResponseEntity.badRequest().build();
     }
 
-    @Override
-    public String generateAndSendFile(HttpServletResponse response) throws IOException {
-        return "";
-    }
-
+    /**
+     * no implementation
+     *
+     * @param request to MultipartFile
+     * @return a ResponseEntity status
+     */
     @Override
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request) {
         MultipartFile file = request.getFile("data");
@@ -181,14 +222,29 @@ public class ApiServiceImpl implements ApiService {
         return ResponseEntity.status(HttpStatus.OK).body("Proceed");
     }
 
+
+    /**
+     * transporting all data from SL to SqlPayload for React transaction
+     *
+     * @param request
+     * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     */
     @Override
     @Async
     public CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request) {
-        List<StudentLecturersDTO> res = studentLecturersService.getAllStudentLecturers();
+        List<SqlPayload> res = studentLecturersService.getAllStudentLecturers();
         Map<String, String> headers = new HashMap<>();
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(res));
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(gson.toJson(res)));
     }
 
+    /**
+     * receive all FQW data
+     *
+     * @param request
+     * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     */
     @Override
     @Async
     public CompletableFuture<ResponseEntity<?>> receiveThemes(HttpServletRequest request) {
@@ -289,7 +345,6 @@ public class ApiServiceImpl implements ApiService {
     private final StudentLecturersService studentLecturersService;
     private final FQWService fqwService;
     private final FileService fileService;
-    private final DeserializationService deserializationService;
     private final DownloadService downloadService;
     private final WordService wordService;
 
@@ -315,7 +370,6 @@ public class ApiServiceImpl implements ApiService {
                    LecturerRepository lecturerRepository,
                    FQWService fqwService,
                    FileService fileService,
-                   DeserializationService deserializationService,
                    DownloadService downloadService,
                    WordService wordService, FunctionsController functionsController,
                    @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -331,7 +385,6 @@ public class ApiServiceImpl implements ApiService {
         this.lecturerRepository = lecturerRepository;
         this.fqwService = fqwService;
         this.fileService = fileService;
-        this.deserializationService = deserializationService;
         this.downloadService = downloadService;
         this.wordService = wordService;
 

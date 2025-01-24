@@ -8,6 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class ProtocolApplication {
     public static void main( String[] args ) {
-        SpringApplication.run(ProtocolApplication.class, args);
+        SpringApplication.run(ru.emiren.protocol.ProtocolApplication.class, args);
     }
 }

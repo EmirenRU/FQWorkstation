@@ -12,5 +12,4 @@ public class ProtectionCommissionerDTO {
     private ProtectionDTO protection;
     private CommissionerDTO commissioner;
 
-    private String question;
 }

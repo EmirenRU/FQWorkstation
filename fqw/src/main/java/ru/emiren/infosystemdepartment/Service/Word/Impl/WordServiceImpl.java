@@ -12,28 +12,31 @@ import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import ru.emiren.infosystemdepartment.Model.SQL.FQW;
+import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
+import ru.emiren.infosystemdepartment.Model.SQL.Student;
+import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
+import ru.emiren.infosystemdepartment.Service.SQL.SqlService;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class WordServiceImpl implements WordService {
 
-//    @Value("${template.file.path}")
-//    private final String TEMPLATE_PATH;
-//    @Value("classpath:template.docx")
-    private Resource resource;
+    private final SqlService sqlService;
     private InputStream inputStream;
-    private ResourceLoader resourceLoader;
     private ClassPathResource classPathResource;
+    private Pattern pattern = Pattern.compile("[\\d]{2}[.][\\d]{2}[.][\\d]{2}");
 
     @Autowired
-    public WordServiceImpl(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-        this.resource       = resourceLoader.getResource("classpath:template.docx");
+    public WordServiceImpl(ResourceLoader resourceLoader, SqlService sqlService) {
+        this.sqlService = sqlService;
     }
 
     @Override
@@ -64,31 +67,105 @@ public class WordServiceImpl implements WordService {
             document = new NiceXWPFDocument(file);
             List<XWPFTable> tables = document.getTables();
 
+            log.info("The number of tables in file {} is {}", document.getProperties().getThumbnailFilename(), document.getTables().size());
             if (tables.size() == 3) {
-                XWPFTable t1 = tables.get(0);
-                XWPFTable t2 = tables.get(1);
-                XWPFTable t3 = tables.get(2);
-
-                if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()) {
-                    for (int i = 1; i < t1.getNumberOfRows(); i++) {
-                        XWPFTableRow r1 = t1.getRow(i);
-                        XWPFTableRow r2 = t2.getRow(i);
-                        XWPFTableRow r3 = t3.getRow(i);
-
-                        List<String> innerArray = new ArrayList<>() {};
-
-                        innerArray.addAll(processTable(t1, i, r1.getTableCells().size()));
-                        innerArray.addAll(processTable(t2, i, r2.getTableCells().size()));
-                        innerArray.addAll(processTable(t3, i, r3.getTableCells().size()));
-
-                        data.add(innerArray);
-                    }
-                }
+                processThreeTables(tables, data);
+            } else if (tables.size() == 2){ // check file_name
+                processTwoTables(tables, data);
             }
         } catch (IOException e) {
             log.info("Handle later deserialization");
         }
         return data;
+    }
+
+    private void processTwoTables(List<XWPFTable> tables, List<List<String>> data) {
+        XWPFTable t = tables.getFirst();
+        XWPFTableRow headers = t.getRow(0);
+
+
+        Map<String, Map<String, List<Map<String, String>>>> map = new HashMap<>();
+        String orientation = "";
+        String program = "";
+        for (int i = 2; i < t.getNumberOfRows(); i++) {
+
+            XWPFTableRow row = t.getRow(i);
+            if (row.getTableCells().size() == 1 ) {
+                String text = row.getTableCells().get(0).getText();
+
+                log.info("Was called with getTableCells.size == 1: {}", text);
+                if (text.contains("«")){
+                    program = text.substring(1, text.length() - 1);
+                    log.info("The program is {}", program);
+
+                    if (!orientation.isEmpty()) {
+                        map.putIfAbsent(orientation, new HashMap<>());
+                        map.get(orientation).putIfAbsent(program, new ArrayList<>());
+                    }
+                } if (pattern.matcher(text).find()) {
+                    orientation = text;
+                    log.info("The orientation is {}", orientation);
+                    map.putIfAbsent(orientation, new HashMap<>());
+                }
+                if (!orientation.isEmpty() && !program.isEmpty()) {
+                    log.info("The orientation and program are {}, {}", orientation, program);
+                }
+//                log.info("Map is {}", map);
+            } else {
+
+                Map<String, String> keys = new HashMap<>();
+                headers.getTableCells().stream().forEach(cells -> keys.putIfAbsent(cells.getText(), ""));
+                log.info("Keys are {}", keys);
+                int k = 0;
+                for (String key : keys.keySet()) {
+                    keys.put(key,row.getTableCells().get(k).getText());
+                    k++;
+                }
+
+                if (map.containsKey(orientation)) {
+                    map.get(orientation).get(program).add(keys);
+                }
+            }
+        }
+        log.info("The data map contains: {}", map);
+//        processData(map);
+    }
+
+    private void processData(Map<String, Map<String, Map<String, String>>> dataMap){
+
+        for (Map.Entry<String, Map<String, Map<String, String>>> orientations : dataMap.entrySet()) {
+            for (Map.Entry<String, Map<String, String>> programs : orientations.getValue().entrySet()) {
+                for (Map.Entry<String, String> entry : programs.getValue().entrySet()) {
+
+                }
+            }
+        }
+    }
+
+    private void processThreeTables(List<XWPFTable> tables, List<List<String>> data) {
+        XWPFTable t1 = tables.getFirst();
+        XWPFTable t2 = tables.get(1);
+        XWPFTable t3 = tables.getLast();
+
+        if (t1.getNumberOfRows() == t2.getNumberOfRows() && t2.getNumberOfRows() == t3.getNumberOfRows()) {
+            for (int i = 1; i < t1.getNumberOfRows(); i++) {
+                XWPFTableRow r1 = t1.getRow(i);
+                XWPFTableRow r2 = t2.getRow(i);
+                XWPFTableRow r3 = t3.getRow(i);
+
+                log.info("The part of table 1: {}", t1.getPart());
+                log.info("The part of table 2: {}", t2.getPart());
+                log.info("The part of table 3: {}", t3.getPart());
+
+                List<String> innerArray = new ArrayList<>() {};
+
+                innerArray.addAll(processTable(t1, i, r1.getTableCells().size()));
+                innerArray.addAll(processTable(t2, i, r2.getTableCells().size()));
+                innerArray.addAll(processTable(t3, i, r3.getTableCells().size()));
+
+                data.add(innerArray);
+            }
+        }
     }
 
     @Override
@@ -152,32 +229,48 @@ public class WordServiceImpl implements WordService {
 
     private Map<String, Object> getStringObjectMap(List<String> arr) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("id1", arr.getFirst());
-        dataMap.put("id2", arr.get(1));
-        dataMap.put("id3", arr.get(2));
-        dataMap.put("id4", arr.get(3));
-        dataMap.put("id5", arr.get(4));
-        dataMap.put("id6", arr.get(5));
-        dataMap.put("id11", arr.get(11));
-        dataMap.put("id12", arr.get(12));
-        dataMap.put("id13", arr.get(13));
-        dataMap.put("id14", arr.get(14));
-        dataMap.put("id15", arr.get(15));
-        dataMap.put("id16", arr.get(16));
-        dataMap.put("id17", arr.get(21));
-        dataMap.put("id18", arr.get(19));
-        dataMap.put("id19", arr.get(20));
-        dataMap.put("id23", arr.get(24));
+        Long studNumber = Long.valueOf(arr.get(2));
+        dataMap.put("ID", arr.getFirst());
 
-        saveDataFromProtocol(dataMap);
+        dataMap.put("FullName", arr.get(1));
+        dataMap.put("StudNum", studNumber);
+
+        dataMap.put("Theme", arr.get(3));
+
+        dataMap.put("SuData", arr.get(4)); // Scientific Supervisor
+        dataMap.put("SuName", arr.get(5));
+
+        dataMap.put("Questioner1", arr.get(11));
+        dataMap.put("Question1", arr.get(12));
+        dataMap.put("Questioner2", arr.get(13));
+        dataMap.put("Question2", arr.get(14));
+        dataMap.put("Questioner3", arr.get(15));
+        dataMap.put("Question3", arr.get(16));
+
+        dataMap.put("Score", arr.get(21));
+
+        dataMap.put("IndividualOpinion", arr.get(20));
+
+        dataMap.put("Language", arr.get(24));
+
+        String department = sqlService.getDepartmentNameByStudentNumber(studNumber);
+        String orientationCodeWithName = sqlService.getOrientationCodeWithNameByStudentNumber(studNumber);
+
+        // Program, AnswerI I in {1-3}, Estimation
+        dataMap.put("Department",  department);
+        dataMap.put("Orientation", orientationCodeWithName);
+//        dataMap.put("Program", ); // пока самая непонятная
+//        dataMap.put("Answer1", );
+//        dataMap.put("Answer2", );
+//        dataMap.put("Answer3", );
+//        dataMap.put("Estimation", );
+
+        sqlService.saveDataFromProtocol(dataMap);
         return dataMap;
     }
 
-    @Override
-    public void saveDataFromProtocol(Map<String, Object> data){
 
 
-    }
 
 
 }

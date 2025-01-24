@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,8 +31,9 @@ public class Lecturer {
     @JoinColumn(name="department", referencedColumnName = "code")
     private Department department;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
+    @JsonManagedReference
     private List<StudentLecturers> students = new ArrayList<>();
 
 }

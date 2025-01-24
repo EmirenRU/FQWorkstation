@@ -3,6 +3,8 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @Entity
@@ -23,7 +25,5 @@ public class ProtectionCommissioner {
     @ManyToOne
     @JoinColumn(name = "commissioner_id", referencedColumnName = "id")
     private Commissioner commissioner;
-
-    private String question;
 
 }

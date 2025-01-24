@@ -12,4 +12,7 @@ public interface OrientationRepository extends JpaRepository<Orientation, String
     OrientationDTO findByCode(String code);
 
     Orientation findOrientationByCode(String code);
+
+    @Query("SELECT o FROM Student st JOIN Orientation o ON st.orientation.code = o.code")
+    Orientation findOrientationByStudNumber(Long studNumber);
 }

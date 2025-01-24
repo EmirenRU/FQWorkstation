@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,10 @@ public class Student {
     private Long id;
 
     private Long   stud_num;                // Студ.номер
-    private String name;                     // ФИО
+    private String name;                    // ФИО
     private String citizenship;             // Гражданство
     private String loe;                     // Уровень образования == Level of Education
-    private String classifier;              // Классификатор
+    private String classifier;              // Классификатор. Может ли быть Программа обучения?
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "theme", referencedColumnName = "id")
@@ -37,8 +38,9 @@ public class Student {
     @JoinColumn(name = "department_code", referencedColumnName = "code")
     private Department department;             // Кафедра
 
-    @OneToMany(cascade = CascadeType.ALL )
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "lecturer_id")
+    @JsonManagedReference
     private List<StudentLecturers> lecturers = new ArrayList<>();
 
 

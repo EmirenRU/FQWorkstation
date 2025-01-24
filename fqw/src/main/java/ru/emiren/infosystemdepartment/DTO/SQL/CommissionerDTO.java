@@ -18,6 +18,6 @@ public class CommissionerDTO {
     private String university;
     private String department;
 
-    private List<ProtectionCommissioner> protectionCommissioners = new ArrayList<>();
+//    private List<ProtectionCommissionerDTO> protectionCommissioners = new ArrayList<>();
 
 }

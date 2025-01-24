@@ -268,7 +268,6 @@ public class UploadDataController {
         ProtectionCommissioner pc = new ProtectionCommissioner();
         pc.setProtection(protection);
         pc.setCommissioner(commissioner);
-        pc.setQuestion(question);
 
         return pc;
     }

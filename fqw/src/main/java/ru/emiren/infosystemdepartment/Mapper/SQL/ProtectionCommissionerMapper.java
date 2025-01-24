@@ -12,7 +12,6 @@ public class ProtectionCommissionerMapper {
                 .id(pc.getId())
                 .commissioner(CommissionerMapper.mapToCommisioner(pc.getCommissioner()))
                 .protection(ProtectionMapper.mapToProtection(pc.getProtection()))
-                .question(pc.getQuestion())
                 .build();
     }
 
@@ -21,7 +20,6 @@ public class ProtectionCommissionerMapper {
                 .id(pc.getId())
                 .commissioner(CommissionerMapper.mapToCommisionerDTO(pc.getCommissioner()))
                 .protection(ProtectionMapper.mapToProtectionDTO(pc.getProtection()))
-                .question(pc.getQuestion())
                 .build();
     }
 }

@@ -12,9 +12,9 @@ import ru.emiren.infosystemdepartment.Model.SQL.Student;
 public class StudentLecturersDTO {
     private Long id;
 
-    private Student student;
+    private StudentDTO student;
 
-    private Lecturer lecturer;
+    private LecturerDTO lecturer;
 
     private Boolean isScientificSupervisor;
     private Boolean isConsultant;

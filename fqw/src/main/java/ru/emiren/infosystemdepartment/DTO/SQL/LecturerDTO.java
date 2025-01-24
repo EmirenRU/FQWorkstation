@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -18,5 +15,5 @@ public class LecturerDTO {
     private String academicDegree; // Ученая степень
     private String position; // должность
     private DepartmentDTO department;
-    private List<StudentLecturersDTO> students;
+//    private List<StudentLecturersDTO> students;
 }

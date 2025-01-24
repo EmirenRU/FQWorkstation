@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Mapper.SQL.LecturerMapper;
 import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
@@ -29,10 +30,10 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     }
 
     @Override
-    public List<StudentLecturersDTO> getAllStudentLecturers() {
+    public List<SqlPayload> getAllStudentLecturers() {
         return studentLecturerRepository.findAll()
                 .stream()
-                .map(StudentLecturersMapper::mapToStudentLecturersDTO)
+                .map(StudentLecturersMapper::mapToSqlPayload)
                 .collect(Collectors.toList());
     }
 

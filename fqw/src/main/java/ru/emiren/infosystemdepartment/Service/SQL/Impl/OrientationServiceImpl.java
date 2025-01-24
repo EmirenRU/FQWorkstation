@@ -61,5 +61,11 @@ public class OrientationServiceImpl implements OrientationService {
         return orientationRepository.save(upd);
     }
 
+    @Override
+    public String OrientationCodeWithNameByStudentNumber(Long studNumber) {
+        OrientationDTO temp = OrientationMapper.mapToOrientationDTO(orientationRepository.findOrientationByStudNumber(studNumber));
+        return temp.getCode() + " " + temp.getName();
+    }
+
 
 }

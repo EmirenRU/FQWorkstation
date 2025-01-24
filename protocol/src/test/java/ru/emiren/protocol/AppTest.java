@@ -1,4 +1,4 @@
-package ru.emiren;
+package ru.emiren.protocol;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Mapper.SQL;
 
+import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
@@ -17,7 +18,7 @@ public class StudentMapper {
                 .orientation(OrientationMapper.mapToOrientation(studentDTO.getOrientation()))
                 .department(DepartmentMapper.mapToDepartment(studentDTO.getDepartment()))
                 .fqw(FQWMapper.mapToFQW(studentDTO.getFqw()))
-                .lecturers(studentDTO.getLecturers().stream().map(StudentLecturersMapper::mapToStudentLecturers).collect(Collectors.toList()))
+//                .lecturers(studentDTO.getLecturers().stream().map(StudentLecturersMapper::mapToStudentLecturers).collect(Collectors.toList()))
                 .build();
     }
 
@@ -30,8 +31,9 @@ public class StudentMapper {
                 .citizenship(student.getCitizenship())
                 .orientation(OrientationMapper.mapToOrientationDTO(student.getOrientation()))
                 .department(DepartmentMapper.mapToDepartmentDTO(student.getDepartment()))
-                .lecturers(student.getLecturers().stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).collect(Collectors.toList()))
+//                .lecturers(student.getLecturers().stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).collect(Collectors.toList()))
                 .fqw(FQWMapper.mapToFQWDTO(student.getFqw()))
                 .build();
     }
+
 }

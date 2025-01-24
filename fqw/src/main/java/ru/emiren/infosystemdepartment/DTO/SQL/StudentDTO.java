@@ -24,7 +24,7 @@ public class StudentDTO {
 
     private DepartmentDTO department;             // Кафедра
 
-    private List<StudentLecturersDTO> lecturers;
+//    private List<StudentLecturersDTO> lecturers;
 
 
 }
