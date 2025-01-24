@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Service.Excel.ExcelService;
 
+/**
+ * A simple try to handle the scary Excel file
+ */
 @Controller
 @RequestMapping("api/v2")
-public class    ExcelController {
+public class ExcelController {
     private final ExcelService excelService;
 
     @Autowired

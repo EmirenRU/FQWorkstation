@@ -54,6 +54,12 @@ public class UploadDataController {
         this.protectionCommissionerService = protectionCommissionerService;
     }
 
+    /**
+     * Handle for upload data form.
+     * I recommend to not touch.
+     * @param request
+     * @return a redirection to the same page
+     */
     @PostMapping("/api/add-data")
     public String addData(@RequestBody Map<String, String> request){
         log.info(request.toString());

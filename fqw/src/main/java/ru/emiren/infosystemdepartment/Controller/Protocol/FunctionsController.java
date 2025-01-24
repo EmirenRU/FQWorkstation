@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Slf4j
 public class FunctionsController {
+    /**
+     * @return a protocol page
+     */
     @GetMapping("")
     public String protocol() {
             return "functions";

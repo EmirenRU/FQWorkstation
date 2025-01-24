@@ -13,6 +13,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Objects;
 
+/**
+ * A Websocket handler for Terminal
+ * Do not touch. Even I don't know what it does.
+ */
 @Component
 public class TerminalWebSocketHandler extends TextWebSocketHandler {
     private static final Logger log = LoggerFactory.getLogger(TerminalWebSocketHandler.class);
