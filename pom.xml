@@ -29,10 +29,6 @@
 	<modules>
 		<module>fqw</module>
 		<module>hub</module>
-        <module>auth</module>
-        <module>protocol</module>
-		<module>support</module>
-		<module>email</module>
 	</modules>
 
 	<dependencyManagement>

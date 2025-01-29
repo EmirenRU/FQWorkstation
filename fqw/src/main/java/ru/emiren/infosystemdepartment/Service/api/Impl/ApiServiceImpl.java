@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
 import org.apache.groovy.util.Maps;
@@ -45,6 +47,102 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @Slf4j
 public class ApiServiceImpl implements ApiService {
+
+    private final LecturerRepository lecturerRepository;
+    private final StudentService studentService;
+    private final DepartmentService departmentService;
+    private final LecturerService lecturerService;
+    private final OrientationService orientationService;
+    private final ProtectionService protectionService;
+    private final StudentLecturersService studentLecturersService;
+    private final FQWService fqwService;
+    private final FileService fileService;
+    private final DownloadService downloadService;
+    private final WordService wordService;
+
+    @Getter
+    @AllArgsConstructor
+    public enum FileData {
+        FQW("fqw"),
+        GOV("gos"),
+        REV("rev"),
+        COM("com"),
+        PRO("pro");
+        private final String data;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum FileTypes {
+        Excel(".xlsx"),
+        Word(".doc"),
+        PDF(".pdf"),
+        DOCX(".docx");
+        private final String extension;
+    }
+
+    private final FunctionsController functionsController;
+
+    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
+
+    private DateFormat dateFormat;
+
+    List<List<String>> data;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    FileHolder fileHolder = new FileHolder();
+
+    @Autowired
+    ApiServiceImpl(StudentService studentService,
+                   DepartmentService departmentService,
+                   LecturerService lecturerService,
+                   OrientationService orientationService,
+                   ProtectionService protectionService,
+                   StudentLecturersService studentLecturersService,
+                   LecturerRepository lecturerRepository,
+                   FQWService fqwService,
+                   FileService fileService,
+                   DownloadService downloadService,
+                   WordService wordService, FunctionsController functionsController,
+                   @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
+                   DateFormat dateFormat
+    ){
+        this.jdbcTemplate = jdbcTemplate;
+        this.studentService = studentService;
+        this.departmentService = departmentService;
+        this.lecturerService = lecturerService;
+        this.orientationService = orientationService;
+        this.protectionService = protectionService;
+        this.studentLecturersService = studentLecturersService;
+        this.lecturerRepository = lecturerRepository;
+        this.fqwService = fqwService;
+        this.fileService = fileService;
+        this.downloadService = downloadService;
+        this.wordService = wordService;
+
+        this.functionsController = functionsController;
+        this.dateFormat = dateFormat;
+    }
+
+    /**
+     * Don't mind it
+     * @return a dictionary with file extensions
+     */
+    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
+        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
+        Arrays.stream(FileData.values()).forEach(fileData -> {
+            Map<String, List<FileHeader>> typeMap = new HashMap<>();
+            if (fileData == FileData.PRO) {
+                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
+            } else {
+                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
+                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
+            }
+            map.put(fileData.getData(), typeMap);
+        });
+        return map;
+    }
 
     /**
      * Generates and send a protocol file to the client
@@ -252,39 +350,7 @@ public class ApiServiceImpl implements ApiService {
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res));
     }
 
-    public enum FileData {
-        FQW("fqw"),
-        GOV("gos"),
-        REV("rev"),
-        COM("com"),
-        PRO("pro");
 
-        private final String data;
-
-        FileData(String data) {
-            this.data = data;
-        }
-        public String getData() {
-            return data;
-        }
-    }
-
-    public enum FileTypes {
-        Excel(".xlsx"),
-        Word(".doc"),
-        PDF(".pdf"),
-        DOCX(".docx");
-
-        private final String extension;
-
-        FileTypes(String extension) {
-            this.extension = extension;
-        }
-
-        public String getExtension() {
-            return extension;
-        }
-    }
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
         // I am not sure about liquidity of data
@@ -321,74 +387,7 @@ public class ApiServiceImpl implements ApiService {
         }
     }
 
-    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
-        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
-        Arrays.stream(FileData.values()).forEach(fileData -> {
-            Map<String, List<FileHeader>> typeMap = new HashMap<>();
-            if (fileData == FileData.PRO) {
-                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
-            } else {
-                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
-                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
-            }
-            map.put(fileData.getData(), typeMap);
-        });
-        return map;
-    }
 
-    private final LecturerRepository lecturerRepository;
-    private final StudentService studentService;
-    private final DepartmentService departmentService;
-    private final LecturerService lecturerService;
-    private final OrientationService orientationService;
-    private final ProtectionService protectionService;
-    private final StudentLecturersService studentLecturersService;
-    private final FQWService fqwService;
-    private final FileService fileService;
-    private final DownloadService downloadService;
-    private final WordService wordService;
 
-    private final FunctionsController functionsController;
 
-    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
-
-    private DateFormat dateFormat;
-
-    List<List<String>> data;
-
-    private final JdbcTemplate jdbcTemplate;
-
-    FileHolder fileHolder = new FileHolder();
-
-    @Autowired
-    ApiServiceImpl(StudentService studentService,
-                   DepartmentService departmentService,
-                   LecturerService lecturerService,
-                   OrientationService orientationService,
-                   ProtectionService protectionService,
-                   StudentLecturersService studentLecturersService,
-                   LecturerRepository lecturerRepository,
-                   FQWService fqwService,
-                   FileService fileService,
-                   DownloadService downloadService,
-                   WordService wordService, FunctionsController functionsController,
-                   @Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate,
-                   DateFormat dateFormat
-    ){
-        this.jdbcTemplate = jdbcTemplate;
-        this.studentService = studentService;
-        this.departmentService = departmentService;
-        this.lecturerService = lecturerService;
-        this.orientationService = orientationService;
-        this.protectionService = protectionService;
-        this.studentLecturersService = studentLecturersService;
-        this.lecturerRepository = lecturerRepository;
-        this.fqwService = fqwService;
-        this.fileService = fileService;
-        this.downloadService = downloadService;
-        this.wordService = wordService;
-
-        this.functionsController = functionsController;
-        this.dateFormat = dateFormat;
-    }
 }

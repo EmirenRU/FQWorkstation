@@ -79,6 +79,12 @@ public class WordServiceImpl implements WordService {
         return data;
     }
 
+
+    /**
+     *
+     * @param tables
+     * @param data
+     */
     private void processTwoTables(List<XWPFTable> tables, List<List<String>> data) {
         XWPFTable t = tables.getFirst();
         XWPFTableRow headers = t.getRow(0);
@@ -114,7 +120,7 @@ public class WordServiceImpl implements WordService {
             } else {
 
                 Map<String, String> keys = new HashMap<>();
-                headers.getTableCells().stream().forEach(cells -> keys.putIfAbsent(cells.getText(), ""));
+                headers.getTableCells().forEach(cells -> keys.putIfAbsent(cells.getText(), ""));
                 log.info("Keys are {}", keys);
                 int k = 0;
                 for (String key : keys.keySet()) {
