@@ -85,7 +85,7 @@ public class ApiServiceImpl implements ApiService {
 
     private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
 
-    private DateFormat dateFormat;
+    private final DateFormat dateFormat;
 
     List<List<String>> data;
 
@@ -175,8 +175,7 @@ public class ApiServiceImpl implements ApiService {
                  ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 log.info("Processing file: {}", file.getOriginalFilename());
 
-                List<List<String>> temp_data = wordService.getListOfDataFromFile(is);
-                NiceXWPFDocument processedDocument = wordService.generateWordDocument(temp_data);
+                NiceXWPFDocument processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is));
 
                 log.info("Document generated successfully for file ID: {}", fileId);
                 processedDocument.write(baos);
@@ -190,7 +189,7 @@ public class ApiServiceImpl implements ApiService {
 
                 return ResponseEntity.ok(headers);
             } catch (IOException ex) {
-                log.error("Error processing file upload: {}", ex.getMessage());
+                log.error("Error processing file upload: {}", "Something went wrong");
                 headers.put("status", "500");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers);
             }
@@ -200,53 +199,6 @@ public class ApiServiceImpl implements ApiService {
             return ResponseEntity.status(HttpStatus.OK).body(headers);
         }
     }
-
-
-    /**
-     * Handles a message from console for CRUD operation
-     *
-     * @param message
-     * @return a ResponseEntity with status of query
-     */
-    @Override
-    @Async
-    public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("message", message);
-        log.info("Message received: {}", message);
-
-        // TODO Write more safe query
-
-        try {
-            if (message.toUpperCase().contains("SELECT")){
-                headers.put("result", String.valueOf(jdbcTemplate.queryForList(message)));
-            } else if (message.toUpperCase().contains("INSERT")){
-                headers.put("result", "INSERT");
-            } else if (message.toUpperCase().contains("UPDATE")){
-                headers.put("result", "UPDATE");
-            } else if (message.toUpperCase().contains("DELETE")){
-                headers.put("result", "DELETE");
-            } else {
-                headers.put("result", "ERROR");
-            }
-        }  catch (BadSqlGrammarException e) {
-            log.error("SQL Syntax Error: " + e.getMessage());
-            headers.put("error", e.getMessage());
-        } catch (DataAccessException e) {
-            log.error("Database Access Error: " + e.getMessage());
-            headers.put("error", e.getMessage());
-        } catch (Exception e) {
-            log.error("Unexpected Error: " + e.getMessage());
-            headers.put("error", e.getMessage());
-        }
-        if (headers.containsKey("error")) {
-            headers.put("status", "500");
-            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(headers));
-        }
-        headers.put("status", "200");
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(headers));
-    }
-
 
     /**
      * Check if file is ready by id
@@ -263,7 +215,6 @@ public class ApiServiceImpl implements ApiService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not Found");
         }
     }
-
 
     /**
      * On call returns a download process of file
@@ -286,7 +237,7 @@ public class ApiServiceImpl implements ApiService {
                             .filename("protocols-" + dateFormat.format(date) + ".docx")
                             .build().toString());
             try (OutputStream os = response.getOutputStream();
-                 BufferedOutputStream bos = new BufferedOutputStream(os);
+                 BufferedOutputStream bos = new BufferedOutputStream(os)
             ) {
                 log.info("In OutputStream for {}", id);
 //                document.write(bos);
@@ -348,6 +299,51 @@ public class ApiServiceImpl implements ApiService {
     public CompletableFuture<ResponseEntity<?>> receiveThemes(HttpServletRequest request) {
         List<FQWDTO> res = fqwService.getAllFQW();
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res));
+    }
+
+    /**
+     * Handles a message from console for CRUD operation
+     *
+     * @param message
+     * @return a ResponseEntity with status of query
+     */
+    @Override
+    @Async
+    public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("message", message);
+        log.info("Message received: {}", message);
+
+        // TODO Write more safe query
+
+        try {
+            if (message.toUpperCase().contains("SELECT")){
+                headers.put("result", String.valueOf(jdbcTemplate.queryForList(message)));
+            } else if (message.toUpperCase().contains("INSERT")){
+                headers.put("result", "INSERT");
+            } else if (message.toUpperCase().contains("UPDATE")){
+                headers.put("result", "UPDATE");
+            } else if (message.toUpperCase().contains("DELETE")){
+                headers.put("result", "DELETE");
+            } else {
+                headers.put("result", "ERROR");
+            }
+        }  catch (BadSqlGrammarException e) {
+            log.error("SQL Syntax Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
+        } catch (DataAccessException e) {
+            log.error("Database Access Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected Error: " + e.getMessage());
+            headers.put("error", e.getMessage());
+        }
+        if (headers.containsKey("error")) {
+            headers.put("status", "500");
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(headers));
+        }
+        headers.put("status", "200");
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(headers));
     }
 
 

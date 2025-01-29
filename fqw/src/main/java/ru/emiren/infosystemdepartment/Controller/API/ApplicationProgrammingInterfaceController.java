@@ -53,20 +53,7 @@ public class ApplicationProgrammingInterfaceController {
         });
     }
 
-    /**
-     * Uploads a file to process to generate a protocol
-     *
-     * @param file
-     * @param fileId
-     * @return a ResponseEntity with a status
-     */
-    @PostMapping("v2/upload_file")
-    public ResponseEntity<?> handleFileUpload(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("id") String fileId) {
-        log.info("The file size is: {}", file.getSize());
-        return apiService.handleFileUpload(file, fileId);
-    }
+
 
     /**
      * handle a message from console
@@ -87,12 +74,27 @@ public class ApplicationProgrammingInterfaceController {
     }
 
     /**
+     * Uploads a file to process to generate a protocol
+     *
+     * @param file
+     * @param fileId
+     * @return a ResponseEntity with a status
+     */
+    @PostMapping("/v2/upload_file")
+    public ResponseEntity<?> handleFileUpload(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("id") String fileId) {
+        log.info("The file size is: {}", file.getSize());
+        return apiService.handleFileUpload(file, fileId);
+    }
+
+    /**
      * returns a download status of file with ID
      *
      * @param id
      * @return a ResponseEntity with a status
      */
-    @GetMapping("/v2/check_file_availability/{id}")
+    @PostMapping("/v2/check_file_availability/{id}")
     public ResponseEntity<?> checkFileAvailability(@PathVariable("id") String id ) {
         return apiService.checkFileAvailability(id);
     }
