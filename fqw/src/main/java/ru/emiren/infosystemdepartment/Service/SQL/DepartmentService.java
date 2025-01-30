@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.data.jpa.repository.Query;
 import ru.emiren.infosystemdepartment.DTO.SQL.DepartmentDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Department;
 
@@ -13,5 +14,5 @@ public interface DepartmentService {
     DepartmentDTO getDepartmentDTOById(Long id);
     Department updateDepartment(Long id, Department department);
 
-    String findDeparmentByStudentNumber(Long studNumber);
+    String findDepartmentByStudentNumber(Long studNumber);
 }

@@ -9,12 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
-import ru.emiren.infosystemdepartment.Model.SQL.FQW;
-import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
-import ru.emiren.infosystemdepartment.Model.SQL.Student;
-import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
+import ru.emiren.infosystemdepartment.Model.SQL.*;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,6 +25,9 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class SqlServiceImpl implements SqlService {
+    private final ProtocolQuestionService protocolQuestionService;
+    private final QuestionService questionService;
+    private final ProtocolService protocolService;
     StudentService studentService;
     DepartmentService departmentService;
     LecturerService lecturerService;
@@ -59,8 +60,8 @@ public class SqlServiceImpl implements SqlService {
                           OrientationService orientationService,
                           ProtectionService protectionService,
                           StudentLecturersService studentLecturersService,
-                          FQWService fqwService
-    ){
+                          FQWService fqwService,
+                          ProtocolQuestionService protocolQuestionService, QuestionService questionService, ProtocolService protocolService){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
         this.lecturerService            = lecturerService;
@@ -74,6 +75,9 @@ public class SqlServiceImpl implements SqlService {
         orientationDTOS    = orientationService.getAllOrientations();
         fqwdtos            = fqwService.getAllFQW();
         dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.protocolQuestionService = protocolQuestionService;
+        this.questionService = questionService;
+        this.protocolService = protocolService;
     }
 
     @Override
@@ -256,7 +260,7 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public String getDepartmentNameByStudentNumber(Long studNumber) {
-        return departmentService.findDeparmentByStudentNumber(studNumber);
+        return departmentService.findDepartmentByStudentNumber(studNumber);
     }
 
     @Override
@@ -268,40 +272,120 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public boolean saveDataFromProtocol(Map<String, Object> data) {
+        /*
+            + 1	FullName Student.fullName
+            + 2	StudNum Student.studNum
+            + 3	Theme FQW.name
+            + 4	SuData Lecturer.?
+            + 5	SuName Lecturer.name
+            +- 11	Questioner1 Question.questioner
+            +- 12	Question1 Question.question
+            +- 13	Questioner2 Question.questioner
+            +- 14	Question2 Question.question
+            +- 15	Questioner3 Question.questioner
+            +- 16	Question3 Question.question
+            + 21	Score Protocol.grade
+            + 20	IndividualOpinion FQW.feedback
+            + 24	Language Protocol.language
+            + 29  Department Department.name
+            + 30 Orientation Orientation (code(2,1,2,1,2 = 8) + " " +
+            + 31 Citizenship Student.citizenship
+            ? 32 Program
+         */
+        String code = "?";
+        String name = "?";
+        String orientationParse = data.get("Orientation").toString();
+        if (!orientationParse.contains("?") && orientationParse.length() > 8) {
+            code = orientationParse.substring(0, 8);
+            name = orientationParse.substring(9).trim();
+        }
+        Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
+
         FQW fqw = new FQW();
-        fqw.setName((String) data.get("theme"));
+        fqw.setName((String) data.get("Theme"));
+        fqw.setFeedback((String) data.get("IndividualOpinion"));
 
         Student student = new Student();
-        student.setStud_num((Long) data.get("Studnum"));
+        student.setStud_num((Long) data.get("StudNum"));
         student.setName((String) data.get("FullName"));
+        student.setCitizenship((String) data.get("Citizenship"));
 
         student.setFqw(fqw);
 
         Lecturer lecturer = new Lecturer();
         lecturer.setName((String) data.get("SuName"));
-
         List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
-        if (dat.size() == 2){
-            String adPdep = dat.getFirst();
-            String pos = dat.getLast();
-        } else if (dat.size() == 3){
 
+        String adPdep = "";
+        String pos = "";
+        if (dat.size() == 2) {
+            adPdep = dat.getFirst();
+            pos = dat.getLast();
+        } else if (dat.size() == 3) {
+            adPdep = dat.getFirst();
+            pos = dat.get(1) + dat.getLast();
         }
 
-        lecturer.setPosition((String) data.get(dat.getLast()));
+        lecturer.setPosition(pos);
+        lecturer.setAcademicDegree(adPdep);
 
         StudentLecturers studentLecturers = new StudentLecturers();
         studentLecturers.setLecturer(lecturer);
         studentLecturers.setStudent(student);
+        studentLecturers.setIsScientificSupervisor(true);
 
         student.getLecturers().add(studentLecturers);
         lecturer.getStudents().add(studentLecturers);
 
+        Protocol protocol = new Protocol();
+        protocol.setStudent(student);
+        protocol.setFqw(fqw);
+        protocol.setHeadOfTheFQW(lecturer.getName());
+        protocol.setGrade(Integer.valueOf(data.get("Score").toString().substring(0, 3)));
+        protocol.setLanguage((String) data.get("Language"));
+
+        Question question1 = new Question();
+        question1.setQuestioner((String) data.get("Questioner1"));
+        question1.setQuestion((String) data.get("Question1"));
+
+        Question question2 = new Question();
+        question2.setQuestioner((String) data.get("Questioner2"));
+        question2.setQuestion((String) data.get("Question1"));
+
+        Question question3 = new Question();
+        question3.setQuestioner((String) data.get("Questioner3"));
+        question3.setQuestion((String) data.get("Question3"));
+
+        ProtocolQuestion pq1 = new ProtocolQuestion();
+        pq1.setProtocol(protocol);
+        pq1.setQuestion(question1);
+        question1.getProtocolQuestion().add(pq1);
+        protocol.getQuestions().add(pq1);
+
+        ProtocolQuestion pq2 = new ProtocolQuestion();
+        pq2.setProtocol(protocol);
+        pq2.setQuestion(question2);
+        question2.getProtocolQuestion().add(pq2);
+        protocol.getQuestions().add(pq2);
+
+        ProtocolQuestion pq3 = new ProtocolQuestion();
+        pq3.setProtocol(protocol);
+        pq3.setQuestion(question3);
+        question3.getProtocolQuestion().add(pq3);
+        protocol.getQuestions().add(pq3);
 
         fqwService.saveFqw(fqw);
         lecturerService.saveLecturer(lecturer);
         studentService.saveStudent(student);
         studentLecturersService.saveStudentLecturers(studentLecturers);
+        questionService.saveQuestion(question1);
+        questionService.saveQuestion(question2);
+        questionService.saveQuestion(question3);
+        protocolService.saveProtocol(protocol);
+        protocolQuestionService.saveProtocolQuestion(pq1);
+        protocolQuestionService.saveProtocolQuestion(pq2);
+        protocolQuestionService.saveProtocolQuestion(pq3);
+
         return true;
     }
 }

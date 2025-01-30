@@ -20,6 +20,8 @@ import ru.emiren.infosystemdepartment.Service.SQL.SqlService;
 import ru.emiren.infosystemdepartment.Service.Word.WordService;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -174,13 +176,7 @@ public class WordServiceImpl implements WordService {
             for (Map.Entry<String, List<Map<String, String>>> programs : orientations.getValue().entrySet()) {
                 insertAtIndex(dat,32, programs.getKey());
                 for (Map<String, String> keys : programs.getValue()) {
-//                    log.info("keys {}, {}, {}, {}, {}, {}"
-//                            , keys.get("Ф.И.О. выпускника")
-//                            , keys.get("№ студ. билета")
-//                            , keys.get("Тема ВКР")
-//                            , keys.get("Ученая степень, должность руководителя ВКР")
-//                            , keys.get("Руководитель ВКР")
-//                            , keys.get("Гражданство"));
+//                    log.info("keys {}, {}, {}, {}, {}, {}", keys.get("Ф.И.О. выпускника"), keys.get("№ студ. билета"), keys.get("Тема ВКР"), keys.get("Ученая степень, должность руководителя ВКР"), keys.get("Руководитель ВКР"), keys.get("Гражданство"));
                     if (keys.get("Ф.И.О. выпускника").isEmpty()){ continue; }
                     insertAtIndex(dat,31, keys.get("Гражданство"));
                     insertAtIndex(dat,1, keys.get("Ф.И.О. выпускника"));
@@ -284,13 +280,10 @@ public class WordServiceImpl implements WordService {
             for (NiceXWPFDocument doc : documents) { doc.close(); } // Stream.map does not provide without try_catch
             log.info("Done closing the documents list");
 
+            log.info("Have deleted the temp_file? {}", Files.deleteIfExists(Path.of(temp_file.getPath())));
             return document;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());
-        } finally {
-            if (temp_file != null) {
-                log.info("Have deleted the temp_file? {}", temp_file.delete());
-            }
         }
         return null;
     }
@@ -318,26 +311,36 @@ public class WordServiceImpl implements WordService {
         dataMap.putIfAbsent("Department", "?");
         dataMap.putIfAbsent("Orientation", "?");
 
-    /*
-        String department = sqlService.getDepartmentNameByStudentNumber(studNumber);
+        String departmentName = sqlService.getDepartmentNameByStudentNumber(studNumber);
         String orientationCodeWithName = sqlService.getOrientationCodeWithNameByStudentNumber(studNumber);
 
-        if (department != null) {
-            dataMap.put("Department", department);
+        if (departmentName != null) {
+            dataMap.put("Department", departmentName);
         }
         if (orientationCodeWithName != null) {
             dataMap.put("Orientation", orientationCodeWithName);
         }
-    */
 
+        dataMap.put("Answer1", "?");
+        dataMap.put("Answer2", "?");
+        dataMap.put("Answer3", "?");
+        String score = checkArrayBeforeInserting(arr, 21);
+        if (score != null) {
+            Long scoreNumber = Long.valueOf(score.substring(0,3)); // First 3 numbers, if it will not happen, fix it
+            if (scoreNumber < 51L){
+                dataMap.put("Estimation", "Плохо");
+            } else if (scoreNumber < 69L){
+                dataMap.put("Estimation", "Удовлетворительно");
+            } else {
+                dataMap.put("Estimation", "Отлично");
+            }
+        } else {
+            dataMap.put("Estimation", "?");
+        }
 
-    /*
-        dataMap.put("Answer1", checkArrayBeforeInserting(arr, <index_for_answer1>));
-        dataMap.put("Answer2", checkArrayBeforeInserting(arr, <index_for_answer2>));
-        dataMap.put("Answer3", checkArrayBeforeInserting(arr, <index_for_answer3>));
-        dataMap.put("Estimation", checkArrayBeforeInserting(arr, <index_for_estimation>));
-    */
+        dataMap.put("IndividualOpinion", "?");
 
+        log.info("Saving the dataMap with student number {} is {}", dataMap.get("StudNum") ,sqlService.saveDataFromProtocol(dataMap));
         return dataMap;
     }
 
@@ -350,9 +353,4 @@ public class WordServiceImpl implements WordService {
             return "?";
         }
     }
-
-
-
-
-
 }

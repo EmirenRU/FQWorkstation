@@ -31,6 +31,7 @@ public class Protocol {
     private String review; // Рецензия
     private Integer volume; // объем
     private Integer grade; // оценка
+    private String language;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")

@@ -17,6 +17,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String questioner;
     private String question;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

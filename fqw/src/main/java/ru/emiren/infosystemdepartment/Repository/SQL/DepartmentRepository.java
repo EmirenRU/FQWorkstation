@@ -7,6 +7,6 @@ import ru.emiren.infosystemdepartment.Model.SQL.Department;
 
 public interface DepartmentRepository extends JpaRepository<Department, String> {
 
-    @Query("SELECT d.name FROM Department d JOIN Student st ON st.stud_num = :studNumber")
+    @Query("SELECT s.department.name FROM Student s JOIN Department d ON d.code = s.department.code WHERE s.stud_num = :studNumber")
     String findDepartmentNameByStudNumber(Long studNumber);
 }
