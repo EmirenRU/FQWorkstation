@@ -68,6 +68,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public String findDepartmentByStudentNumber(Long studNumber) {
-        return departmentRepository.findDepartmentNameByStudNumber(studNumber);
+        return departmentRepository.findDepartmentNameByStudNumber(studNumber).orElse(null);
     }
 }

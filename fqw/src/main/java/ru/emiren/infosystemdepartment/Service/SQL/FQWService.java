@@ -12,4 +12,6 @@ public interface FQWService {
     FQW    getFQW(String name);
     FQWDTO getFQWDTO(String name);
     FQW updateFQW(String name, FQW fqw);
+
+    FQW getFqwByName(String theme);
 }

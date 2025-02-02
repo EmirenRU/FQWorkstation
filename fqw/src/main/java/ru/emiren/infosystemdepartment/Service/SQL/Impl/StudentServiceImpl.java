@@ -93,4 +93,9 @@ public class StudentServiceImpl implements StudentService {
     public Student findStudentByName(String studName) {
         return studentRepository.findByName(studName);
     }
+
+    @Override
+    public Student findStudentByStudNum(Long studNum) {
+        return studentRepository.findByStudNum(studNum).orElse(null);
+    }
 }

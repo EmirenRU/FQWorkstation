@@ -301,33 +301,43 @@ public class SqlServiceImpl implements SqlService {
         }
         Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
 
-        FQW fqw = new FQW();
+        FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
         fqw.setName((String) data.get("Theme"));
         fqw.setFeedback((String) data.get("IndividualOpinion"));
 
-        Student student = new Student();
-        student.setStud_num((Long) data.get("StudNum"));
-        student.setName((String) data.get("FullName"));
-        student.setCitizenship((String) data.get("Citizenship"));
-
+        Student student = studentService.findStudentByStudNum((Long) data.get("StudNum"));
+        if (student == null) {
+            student = new Student();
+            student.setStud_num((Long) data.get("StudNum"));
+            student.setName((String) data.get("FullName"));
+            student.setCitizenship((String) data.get("Citizenship"));
+        }
         student.setFqw(fqw);
 
-        Lecturer lecturer = new Lecturer();
-        lecturer.setName((String) data.get("SuName"));
-        List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
+        String[] names = (String[]) data.get("Names").toString().split(";");
+        if (names.length > 1) {
+            for (String s : names) {
 
-        String adPdep = "";
-        String pos = "";
-        if (dat.size() == 2) {
-            adPdep = dat.getFirst();
-            pos = dat.getLast();
-        } else if (dat.size() == 3) {
-            adPdep = dat.getFirst();
-            pos = dat.get(1) + dat.getLast();
+            }
+        }
+        Lecturer lecturer = lecturerService.findByLecturerName((String) data.get("SuName"));
+        if (lecturer == null) {
+            lecturer = new Lecturer();
+            lecturer.setName((String) data.get("SuName"));
+            List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
+            String adPdep = "";
+            String pos = "";
+            if (dat.size() == 2) {
+                adPdep = dat.getFirst();
+                pos = dat.getLast();
+            } else if (dat.size() == 3) {
+                adPdep = dat.getFirst();
+                pos = dat.get(1) + dat.getLast();
+            }
+            lecturer.setPosition(pos);
+            lecturer.setAcademicDegree(adPdep);
         }
 
-        lecturer.setPosition(pos);
-        lecturer.setAcademicDegree(adPdep);
 
         StudentLecturers studentLecturers = new StudentLecturers();
         studentLecturers.setLecturer(lecturer);
@@ -341,7 +351,7 @@ public class SqlServiceImpl implements SqlService {
         protocol.setStudent(student);
         protocol.setFqw(fqw);
         protocol.setHeadOfTheFQW(lecturer.getName());
-        protocol.setGrade(Integer.valueOf(data.get("Score").toString().substring(0, 3)));
+        protocol.setGrade(data.get("Score").equals("?") ? -1 :Integer.parseInt(data.get("Score").toString().substring(0, 3).trim()));
         protocol.setLanguage((String) data.get("Language"));
 
         Question question1 = new Question();
@@ -374,18 +384,21 @@ public class SqlServiceImpl implements SqlService {
         question3.getProtocolQuestion().add(pq3);
         protocol.getQuestions().add(pq3);
 
-        fqwService.saveFqw(fqw);
-        lecturerService.saveLecturer(lecturer);
-        studentService.saveStudent(student);
-        studentLecturersService.saveStudentLecturers(studentLecturers);
-        questionService.saveQuestion(question1);
-        questionService.saveQuestion(question2);
-        questionService.saveQuestion(question3);
-        protocolService.saveProtocol(protocol);
-        protocolQuestionService.saveProtocolQuestion(pq1);
-        protocolQuestionService.saveProtocolQuestion(pq2);
-        protocolQuestionService.saveProtocolQuestion(pq3);
-
+        Lecturer finalLecturer = lecturer;
+        Student finalStudent = student;
+        CompletableFuture.runAsync(() -> {
+            fqwService.saveFqw(fqw);
+            lecturerService.saveLecturer(finalLecturer);
+            studentService.saveStudent(finalStudent);
+            studentLecturersService.saveStudentLecturers(studentLecturers);
+            questionService.saveQuestion(question1);
+            questionService.saveQuestion(question2);
+            questionService.saveQuestion(question3);
+            protocolService.saveProtocol(protocol);
+            protocolQuestionService.saveProtocolQuestion(pq1);
+            protocolQuestionService.saveProtocolQuestion(pq2);
+            protocolQuestionService.saveProtocolQuestion(pq3);
+        });
         return true;
     }
 }

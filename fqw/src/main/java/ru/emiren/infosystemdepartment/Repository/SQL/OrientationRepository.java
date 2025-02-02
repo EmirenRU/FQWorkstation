@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 
+import java.util.Optional;
+
 
 public interface OrientationRepository extends JpaRepository<Orientation, String> {
 
@@ -14,5 +16,5 @@ public interface OrientationRepository extends JpaRepository<Orientation, String
     Orientation findOrientationByCode(String code);
 
     @Query("SELECT o FROM Student st JOIN Orientation o ON st.orientation.code = o.code WHERE st.stud_num = :studNumber")
-    Orientation findOrientationByStudNumber(Long studNumber);
+    Optional<Orientation> findOrientationByStudNumber(Long studNumber);
 }

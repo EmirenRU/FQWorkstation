@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
@@ -18,5 +19,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 
     Student findByName(String name);
+
+    @Query("SELECT s FROM Student s WHERE s.stud_num = :studNum")
+    Optional<Student> findByStudNum(Long studNum);
 }
 

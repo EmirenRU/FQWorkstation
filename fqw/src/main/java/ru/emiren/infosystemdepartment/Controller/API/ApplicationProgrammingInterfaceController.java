@@ -130,7 +130,9 @@ public class ApplicationProgrammingInterfaceController {
      *
      * @param request a Client's Data
      * @return a RequestEntity with Status of operation
+     * @deprecated
      */
+    @Deprecated
     @PostMapping("/v1/upload-data")
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request){
         return apiService.uploadDataAndProceedToModels(request);

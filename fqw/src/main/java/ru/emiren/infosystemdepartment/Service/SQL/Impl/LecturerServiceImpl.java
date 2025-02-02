@@ -37,7 +37,7 @@ public class LecturerServiceImpl implements LecturerService {
 
     @Override
     public Lecturer findByLecturerName(String name) {
-        return lecturerRepository.findLecturerByName(name);
+        return lecturerRepository.findLecturerByName(name).orElse(null);
     }
 
     @Override

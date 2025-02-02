@@ -24,4 +24,6 @@ public interface StudentService {
     Student updateStudent(Student studentDTO);
 
     Student findStudentByName(String studName);
+
+    Student findStudentByStudNum(Long studNum);
 } // CD

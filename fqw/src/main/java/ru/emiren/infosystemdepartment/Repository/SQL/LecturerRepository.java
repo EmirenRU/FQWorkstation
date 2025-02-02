@@ -13,7 +13,7 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
 
     LecturerDTO findLecturerById(Long id);
 
-    Lecturer findLecturerByName(String name);
+    Optional<Lecturer> findLecturerByName(String name);
 
     @Query("SELECT l FROM Lecturer l WHERE l.id IN :lId")
     List<Lecturer> findById(@Param("lId") List<Long> id);

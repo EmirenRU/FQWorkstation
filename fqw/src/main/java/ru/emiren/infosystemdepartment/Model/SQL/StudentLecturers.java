@@ -17,12 +17,12 @@ public class StudentLecturers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @JsonBackReference
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "lecturer_id", referencedColumnName = "id")
     @JsonBackReference
     private Lecturer lecturer;

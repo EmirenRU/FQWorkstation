@@ -10,6 +10,7 @@ import ru.emiren.infosystemdepartment.Service.SQL.OrientationService;
 import ru.emiren.infosystemdepartment.Mapper.SQL.OrientationMapper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,8 +64,9 @@ public class OrientationServiceImpl implements OrientationService {
 
     @Override
     public String OrientationCodeWithNameByStudentNumber(Long studNumber) {
-        OrientationDTO temp = OrientationMapper.mapToOrientationDTO(orientationRepository.findOrientationByStudNumber(studNumber));
-        return temp.getCode() + " " + temp.getName();
+        Orientation tmp = orientationRepository.findOrientationByStudNumber(studNumber).orElse(null);
+        OrientationDTO temp = (tmp != null) ? OrientationMapper.mapToOrientationDTO(tmp) : null;
+        return (temp != null) ? temp.getCode() + " " + temp.getName() : null;
     }
 
 

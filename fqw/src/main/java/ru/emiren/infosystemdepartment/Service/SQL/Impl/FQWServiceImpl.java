@@ -40,7 +40,7 @@ public class FQWServiceImpl implements FQWService {
 
     @Override
     public FQW getFQW(String name) {
-        return fqwRepository.findByName(name);
+        return fqwRepository.findByName(name).orElse(null);
     }
 
     @Override
@@ -68,5 +68,10 @@ public class FQWServiceImpl implements FQWService {
             upd.setReviewer(fqw.getReviewer());
         }
         return fqwRepository.save(upd);
+    }
+
+    @Override
+    public FQW getFqwByName(String theme) {
+        return fqwRepository.findByName(theme).orElse(null);
     }
 }

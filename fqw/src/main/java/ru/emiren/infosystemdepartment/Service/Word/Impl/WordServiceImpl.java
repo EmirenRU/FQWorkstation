@@ -91,7 +91,6 @@ public class WordServiceImpl implements WordService {
 
         headers.getTableCells().stream().forEach(cell -> {log.info("Header: {}", cell.getText());});
 
-
         Map<String, Map<String, List<Map<String, String>>>> map = new HashMap<>();
         String orientation = "";
         String program = "";
@@ -247,17 +246,12 @@ public class WordServiceImpl implements WordService {
             log.info(temp_file.toString());
             log.info("Ended trying to get input stream from template.docx");
 
-            log.info("Trying to get input stream to NiceXWPFDocument");
             List<NiceXWPFDocument> documents = new ArrayList<>();
-            log.info("Ended trying to get input stream to NiceXWPFDocument");
-
 
             for (int i = 0; i < data.size()-1; i++) {
                 List<String> arr = data.get(i);
                 log.info("Array's elements: {}", arr.toString());
-
                 Map<String, Object> dataMap = getStringObjectMap(arr);
-
                 log.info("The dataMap contains: {}", dataMap);
 
                 NiceXWPFDocument tempDoc = XWPFTemplate.compile(temp_file, Configure.createDefault()).render(dataMap).getXWPFDocument();
@@ -289,6 +283,7 @@ public class WordServiceImpl implements WordService {
     }
 
     private Map<String, Object> getStringObjectMap(List<String> arr) {
+        log.info("started processing data for id {}", arr.get(0));
         Map<String, Object> dataMap = new HashMap<>();
 
         Long studNumber = Long.valueOf(arr.get(2));
@@ -314,10 +309,10 @@ public class WordServiceImpl implements WordService {
         String departmentName = sqlService.getDepartmentNameByStudentNumber(studNumber);
         String orientationCodeWithName = sqlService.getOrientationCodeWithNameByStudentNumber(studNumber);
 
-        if (departmentName != null) {
+        if (departmentName != null && !departmentName.equals("?")) {
             dataMap.put("Department", departmentName);
         }
-        if (orientationCodeWithName != null) {
+        if (orientationCodeWithName != null && !orientationCodeWithName.equals("?")) {
             dataMap.put("Orientation", orientationCodeWithName);
         }
 
@@ -325,8 +320,10 @@ public class WordServiceImpl implements WordService {
         dataMap.put("Answer2", "?");
         dataMap.put("Answer3", "?");
         String score = checkArrayBeforeInserting(arr, 21);
-        if (score != null) {
-            Long scoreNumber = Long.valueOf(score.substring(0,3)); // First 3 numbers, if it will not happen, fix it
+        log.info("score: {}", score );
+        if (score != null && !score.contains("?")) {
+            long scoreNumber = Long.parseLong(score.substring(0, 3).trim()); // First 3 numbers, if it will not happen, fix it
+            log.info("scoreNumber: {}", scoreNumber);
             if (scoreNumber < 51L){
                 dataMap.put("Estimation", "Плохо");
             } else if (scoreNumber < 69L){
@@ -337,7 +334,7 @@ public class WordServiceImpl implements WordService {
         } else {
             dataMap.put("Estimation", "?");
         }
-
+        log.info("Ended processing score: {}", score);
         dataMap.put("IndividualOpinion", "?");
 
         log.info("Saving the dataMap with student number {} is {}", dataMap.get("StudNum") ,sqlService.saveDataFromProtocol(dataMap));
@@ -345,7 +342,6 @@ public class WordServiceImpl implements WordService {
     }
 
     private String checkArrayBeforeInserting(List<String> arr, int index) {
-
         if (index < arr.size()) {
             return arr.get(index).isEmpty() ? "?" : arr.get(index);
         } else {

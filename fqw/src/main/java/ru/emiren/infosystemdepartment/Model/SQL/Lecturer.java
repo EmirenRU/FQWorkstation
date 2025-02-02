@@ -31,7 +31,7 @@ public class Lecturer {
     @JoinColumn(name="department", referencedColumnName = "code")
     private Department department;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
     @JsonManagedReference
     private List<StudentLecturers> students = new ArrayList<>();
