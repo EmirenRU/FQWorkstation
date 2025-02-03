@@ -31,4 +31,6 @@ public interface StudentLecturersService {
     StudentLecturers findStudentLecturerById(Long id);
     StudentLecturersDTO findStudentLecturersDTOById(Long id);
     StudentLecturers updateStudentLecturers(StudentLecturers sl);
+
+    StudentLecturers findStudentLecturersByStudentStudNum(Long studNum);
 }

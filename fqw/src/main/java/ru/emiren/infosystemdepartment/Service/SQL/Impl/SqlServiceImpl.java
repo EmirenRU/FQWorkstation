@@ -157,7 +157,6 @@ public class SqlServiceImpl implements SqlService {
         return CompletableFuture.completedFuture("lecturers");
     }
 
-
     @Override
     public String createLectureForm(Model model, String year, HttpServletRequest request) {
         List<StudentLecturersDTO> list =  studentLecturersService.findAllAndSortedByDate(year);
@@ -240,7 +239,7 @@ public class SqlServiceImpl implements SqlService {
     }
 
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 60000) // 60 * 1000 = 1 min
     public void refreshData(){
         log.info("Refreshing data...");
         lecturerDTOS = lecturerService.getConnectedLecturers();
@@ -273,24 +272,24 @@ public class SqlServiceImpl implements SqlService {
     @Override
     public boolean saveDataFromProtocol(Map<String, Object> data) {
         /*
-            + 1	FullName Student.fullName
-            + 2	StudNum Student.studNum
-            + 3	Theme FQW.name
-            + 4	SuData Lecturer.?
-            + 5	SuName Lecturer.name
+            + 1	    FullName Student.fullName
+            + 2	    StudNum Student.studNum
+            + 3	    Theme       FQW.name
+            + 4	    SuData      Lecturer.?
+            + 5     SuName      Lecturer.name
             +- 11	Questioner1 Question.questioner
-            +- 12	Question1 Question.question
+            +- 12	Question1   Question.question
             +- 13	Questioner2 Question.questioner
-            +- 14	Question2 Question.question
+            +- 14	Question2   Question.question
             +- 15	Questioner3 Question.questioner
-            +- 16	Question3 Question.question
-            + 21	Score Protocol.grade
+            +- 16	Question3   Question.question
+            + 21	Score       Protocol.grade
             + 20	IndividualOpinion FQW.feedback
-            + 24	Language Protocol.language
-            + 29  Department Department.name
-            + 30 Orientation Orientation (code(2,1,2,1,2 = 8) + " " +
-            + 31 Citizenship Student.citizenship
-            ? 32 Program
+            + 24	Language    Protocol.language
+            + 29    Department  Department.name
+            + 30    Orientation Orientation (code(2,1,2,1,2 = 8) + " " + name
+            + 31    Citizenship Student.citizenship
+            ? 32    Program
          */
         String code = "?";
         String name = "?";
@@ -300,6 +299,12 @@ public class SqlServiceImpl implements SqlService {
             name = orientationParse.substring(9).trim();
         }
         Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
+        if (orientation == null) {
+            orientation = new Orientation();
+            orientation.setCode(code);
+            orientation.setName(name);
+        }
+
 
         FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
         fqw.setName((String) data.get("Theme"));
@@ -338,11 +343,13 @@ public class SqlServiceImpl implements SqlService {
             lecturer.setAcademicDegree(adPdep);
         }
 
-
-        StudentLecturers studentLecturers = new StudentLecturers();
-        studentLecturers.setLecturer(lecturer);
-        studentLecturers.setStudent(student);
-        studentLecturers.setIsScientificSupervisor(true);
+        StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num());
+        if (studentLecturers == null) {
+            studentLecturers = new StudentLecturers();
+            studentLecturers.setLecturer(lecturer);
+            studentLecturers.setStudent(student);
+            studentLecturers.setIsScientificSupervisor(true);
+        }
 
         student.getLecturers().add(studentLecturers);
         lecturer.getStudents().add(studentLecturers);
@@ -386,11 +393,12 @@ public class SqlServiceImpl implements SqlService {
 
         Lecturer finalLecturer = lecturer;
         Student finalStudent = student;
+        StudentLecturers finalStudentLecturers = studentLecturers;
         CompletableFuture.runAsync(() -> {
             fqwService.saveFqw(fqw);
             lecturerService.saveLecturer(finalLecturer);
             studentService.saveStudent(finalStudent);
-            studentLecturersService.saveStudentLecturers(studentLecturers);
+            studentLecturersService.saveStudentLecturers(finalStudentLecturers);
             questionService.saveQuestion(question1);
             questionService.saveQuestion(question2);
             questionService.saveQuestion(question3);

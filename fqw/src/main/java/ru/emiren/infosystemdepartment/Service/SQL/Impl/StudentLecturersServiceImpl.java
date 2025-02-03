@@ -109,5 +109,10 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
         return studentLecturerRepository.save(studentLecturers);
     }
 
+    @Override
+    public StudentLecturers findStudentLecturersByStudentStudNum(Long studNum) {
+        return studentLecturerRepository.findByStudentNumber(studNum).orElse(null);
+    }
+
 
 } // C D

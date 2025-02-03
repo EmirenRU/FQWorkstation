@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentLecturerRepository extends JpaRepository<StudentLecturers, Long> {
 
@@ -38,4 +39,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             "WHERE CAST(pr.dateOfProtection as INTEGER) = CAST(:date AS integer) AND :date IS NOT NULL " +
             "ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllSortedByDate(String date);
+
+    @Query("SELECT sl FROM StudentLecturers sl JOIN Student st ON st.stud_num = sl.student.stud_num WHERE st.stud_num = :studNum")
+    Optional<StudentLecturers> findByStudentNumber(Long studNum);
 }

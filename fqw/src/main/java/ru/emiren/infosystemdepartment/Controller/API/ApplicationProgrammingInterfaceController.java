@@ -114,12 +114,11 @@ public class ApplicationProgrammingInterfaceController {
     /**
      * Download the file from the server
      *
-     * @param response
+     * @param response a
      * @return a status
-     * @throws IOException
      * @deprecated use {@link #downloadFile(String, HttpServletResponse)} instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     @GetMapping("/v1/download_protocols")
     public String downloadProtocols(HttpServletResponse response) throws IOException {
         return apiService.downloadProtocols(response);
@@ -130,9 +129,9 @@ public class ApplicationProgrammingInterfaceController {
      *
      * @param request a Client's Data
      * @return a RequestEntity with Status of operation
-     * @deprecated
+     * @deprecated use {@link #handleDataUpload(HttpServletRequest, HttpServletResponse, String)} instead
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     @PostMapping("/v1/upload-data")
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request){
         return apiService.uploadDataAndProceedToModels(request);
