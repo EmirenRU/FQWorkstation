@@ -307,7 +307,7 @@ public class SqlServiceImpl implements SqlService {
 
 
         FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
-        fqw.setName((String) data.get("Theme"));
+        fqw.setName((String) data.get("Theme"));    
         fqw.setFeedback((String) data.get("IndividualOpinion"));
 
         Student student = studentService.findStudentByStudNum((Long) data.get("StudNum"));

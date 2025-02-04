@@ -63,6 +63,12 @@ public class UploadDataController {
     @PostMapping("/api/add-data")
     public String addData(@RequestBody Map<String, String> request){
         log.info(request.toString());
+        /*
+        {name=a, studnum=13, citizenship=a, education=a,
+        clasifyer=a, code=02.03.01, naming=a,
+        studdate=2025-02-04T13:36:18.888Z,
+        teachers_name=a, degree=a, postion=a, department_name=a, is_supervisor=true, is_consultant=false, subject=a, originality=1, review=a, volume=a, FQWSupervisor=a, critique=a, assessment=a, protocolVolume=a, ReviewerName=a, ReviewerDegree=a, ReviewerDuty=a, comissionerName1=a, comissionerName2=b, comissionerName3=c, comissionerUniversity1=a, comissionerUniversity2=b, comissionerUniversity3=c, comissionerDepartment1=a, comissionerDepartment2=b, comissionerDepartment3=c, comissionerQuestion1=a, comissionerQuestion2=b, comissionerQuestion3=c}
+         */
         log.info(request.get("isScientificSupervisor")+ " " + request.get("dateOfProtection"));
 
         Date dateOfProtection = DateUtil.stringToDate(request.get("dateOfProtection"));

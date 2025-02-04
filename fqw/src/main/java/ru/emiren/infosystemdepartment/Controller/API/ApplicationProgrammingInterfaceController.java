@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Controller.API;
 
+import jakarta.mail.Message;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +53,6 @@ public class ApplicationProgrammingInterfaceController {
             return res;
         });
     }
-
-
 
     /**
      * handle a message from console
@@ -136,5 +135,16 @@ public class ApplicationProgrammingInterfaceController {
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request){
         return apiService.uploadDataAndProceedToModels(request);
     }
+
+    @PostMapping("/support/message")
+    public ResponseEntity<String> sendMessage(HttpServletRequest request) {
+        String username = request.getParameter("name");
+        String message = request.getParameter("message");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
+    }
+
 }
 
