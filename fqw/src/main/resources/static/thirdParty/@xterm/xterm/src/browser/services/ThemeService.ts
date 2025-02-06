@@ -3,14 +3,14 @@
  * @license MIT
  */
 
-import { ColorContrastCache } from 'browser/ColorContrastCache';
-import { IThemeService } from 'browser/services/Services';
-import { IColorContrastCache, IColorSet, ReadonlyColorSet } from 'browser/Types';
-import { channels, color, css, NULL_COLOR } from 'common/Color';
-import { EventEmitter } from 'common/EventEmitter';
-import { Disposable } from 'common/Lifecycle';
-import { IOptionsService, ITheme } from 'common/services/Services';
-import { AllColorIndex, IColor, SpecialColorIndex } from 'common/Types';
+import {ColorContrastCache} from 'browser/ColorContrastCache';
+import {IThemeService} from 'browser/services/Services';
+import {IColorContrastCache, IColorSet, ReadonlyColorSet} from 'browser/Types';
+import {channels, color, css, NULL_COLOR} from 'common/Color';
+import {EventEmitter} from 'common/EventEmitter';
+import {Disposable} from 'common/Lifecycle';
+import {IOptionsService, ITheme} from 'common/services/Services';
+import {AllColorIndex, IColor, SpecialColorIndex} from 'common/Types';
 
 interface IRestoreColorSet {
   foreground: IColor;

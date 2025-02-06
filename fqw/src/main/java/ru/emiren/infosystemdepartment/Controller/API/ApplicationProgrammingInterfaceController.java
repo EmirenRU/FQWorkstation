@@ -9,6 +9,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import ru.emiren.infosystemdepartment.Service.Support.DataService;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
 import java.io.*;
@@ -22,9 +23,12 @@ import java.util.concurrent.CompletableFuture;
 public class ApplicationProgrammingInterfaceController {
 
     private final ApiService apiService;
+    private final DataService dataService;
 
     @Autowired
-    public ApplicationProgrammingInterfaceController(ApiService apiService) {this.apiService = apiService;}
+    public ApplicationProgrammingInterfaceController(ApiService apiService, DataService dataService) {this.apiService = apiService;
+        this.dataService = dataService;
+    }
 
     /**
      * Receive the SqlPayload for React by request
@@ -136,15 +140,7 @@ public class ApplicationProgrammingInterfaceController {
         return apiService.uploadDataAndProceedToModels(request);
     }
 
-    @PostMapping("/support/message")
-    public ResponseEntity<String> sendMessage(HttpServletRequest request) {
-        String username = request.getParameter("name");
-        String message = request.getParameter("message");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
 
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
-    }
 
 }
 

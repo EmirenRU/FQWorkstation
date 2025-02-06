@@ -18,4 +18,9 @@ public class ProtocolQuestionServiceImpl implements ProtocolQuestionService {
     public void saveProtocolQuestion(ProtocolQuestion pq) {
         protocolQuestionRepository.save(pq);
     }
+
+    @Override
+    public ProtocolQuestion findByQuestionAndProtocolStudent(String question, Long studNum) {
+        return protocolQuestionRepository.findByQuestionAndStudNum(question, studNum).orElse(null);
+    }
 }

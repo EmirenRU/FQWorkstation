@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { isFirefox, isLegacyEdge } from 'common/Platform';
+import {isFirefox, isLegacyEdge} from 'common/Platform';
 
 export const INVERTED_DEFAULT_COLOR = 257;
 

@@ -33,4 +33,6 @@ public interface StudentLecturersService {
     StudentLecturers updateStudentLecturers(StudentLecturers sl);
 
     StudentLecturers findStudentLecturersByStudentStudNum(Long studNum);
+
+    StudentLecturers findStudentLecturersByStudentStudNumAndLecturerName(Long studNum, String name);
 }

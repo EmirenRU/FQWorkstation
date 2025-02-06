@@ -3,13 +3,13 @@
  * @license MIT
  */
 
-import { IDeleteEvent, IInsertEvent } from 'common/CircularList';
-import { IEvent, IEventEmitter } from 'common/EventEmitter';
-import { Attributes, UnderlineStyle } from 'common/buffer/Constants'; // eslint-disable-line no-unused-vars
-import { IBufferSet } from 'common/buffer/Types';
-import { IParams } from 'common/parser/Types';
-import { ICoreMouseService, ICoreService, IOptionsService, IUnicodeService } from 'common/services/Services';
-import { IFunctionIdentifier, ITerminalOptions as IPublicTerminalOptions } from '@xterm/xterm';
+import {IDeleteEvent, IInsertEvent} from 'common/CircularList';
+import {IEvent, IEventEmitter} from 'common/EventEmitter';
+import {Attributes, UnderlineStyle} from 'common/buffer/Constants'; // eslint-disable-line no-unused-vars
+import {IBufferSet} from 'common/buffer/Types';
+import {IParams} from 'common/parser/Types';
+import {ICoreMouseService, ICoreService, IOptionsService, IUnicodeService} from 'common/services/Services';
+import {IFunctionIdentifier, ITerminalOptions as IPublicTerminalOptions} from '@xterm/xterm';
 
 export interface ICoreTerminal {
   coreMouseService: ICoreMouseService;

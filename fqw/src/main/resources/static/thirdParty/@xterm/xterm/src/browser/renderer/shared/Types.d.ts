@@ -3,10 +3,10 @@
  * @license MIT
  */
 
-import { FontWeight, Terminal } from '@xterm/xterm';
-import { IColorSet, ITerminal } from 'browser/Types';
-import { IDisposable } from 'common/Types';
-import { IEvent } from 'common/EventEmitter';
+import {FontWeight, Terminal} from '@xterm/xterm';
+import {IColorSet, ITerminal} from 'browser/Types';
+import {IDisposable} from 'common/Types';
+import {IEvent} from 'common/EventEmitter';
 
 export interface ICharAtlasConfig {
   customGlyphs: boolean;

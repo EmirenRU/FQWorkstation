@@ -13,4 +13,6 @@ public interface ReviewerService {
     Reviewer    getReviewer(Long id);
     ReviewerDTO getReviewerDTO(Long id);
     Reviewer    updateReviewer(Reviewer reviewer);
+
+    Reviewer findReviewerByName(String reviewerName);
 }

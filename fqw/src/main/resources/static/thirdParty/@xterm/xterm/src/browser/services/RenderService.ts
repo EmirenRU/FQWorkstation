@@ -3,14 +3,14 @@
  * @license MIT
  */
 
-import { RenderDebouncer } from 'browser/RenderDebouncer';
-import { IRenderDebouncerWithCallback } from 'browser/Types';
-import { IRenderDimensions, IRenderer } from 'browser/renderer/shared/Types';
-import { ICharSizeService, ICoreBrowserService, IRenderService, IThemeService } from 'browser/services/Services';
-import { EventEmitter } from 'common/EventEmitter';
-import { Disposable, MutableDisposable, toDisposable } from 'common/Lifecycle';
-import { DebouncedIdleTask } from 'common/TaskQueue';
-import { IBufferService, IDecorationService, IOptionsService } from 'common/services/Services';
+import {RenderDebouncer} from 'browser/RenderDebouncer';
+import {IRenderDebouncerWithCallback} from 'browser/Types';
+import {IRenderDimensions, IRenderer} from 'browser/renderer/shared/Types';
+import {ICharSizeService, ICoreBrowserService, IRenderService, IThemeService} from 'browser/services/Services';
+import {EventEmitter} from 'common/EventEmitter';
+import {Disposable, MutableDisposable, toDisposable} from 'common/Lifecycle';
+import {DebouncedIdleTask} from 'common/TaskQueue';
+import {IBufferService, IDecorationService, IOptionsService} from 'common/services/Services';
 
 interface ISelectionState {
   start: [number, number] | undefined;

@@ -16,4 +16,9 @@ public class QuestionServiceImpl implements QuestionService {
     public void saveQuestion(Question question) {
         questionRepository.save(question);
     }
+
+    @Override
+    public Question findQuestion(String s) {
+        return questionRepository.findByQuestion(s).orElse(null);
+    }
 }

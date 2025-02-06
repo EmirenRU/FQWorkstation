@@ -3,13 +3,20 @@
  * @license MIT
  */
 
-import { addDisposableDomListener } from 'browser/Lifecycle';
-import { IBufferCellPosition, ILink, ILinkDecorations, ILinkWithState, ILinkifier2, ILinkifierEvent } from 'browser/Types';
-import { EventEmitter } from 'common/EventEmitter';
-import { Disposable, disposeArray, getDisposeArrayDisposable, toDisposable } from 'common/Lifecycle';
-import { IDisposable } from 'common/Types';
-import { IBufferService } from 'common/services/Services';
-import { ILinkProviderService, IMouseService, IRenderService } from './services/Services';
+import {addDisposableDomListener} from 'browser/Lifecycle';
+import {
+    IBufferCellPosition,
+    ILink,
+    ILinkDecorations,
+    ILinkifier2,
+    ILinkifierEvent,
+    ILinkWithState
+} from 'browser/Types';
+import {EventEmitter} from 'common/EventEmitter';
+import {Disposable, disposeArray, getDisposeArrayDisposable, toDisposable} from 'common/Lifecycle';
+import {IDisposable} from 'common/Types';
+import {IBufferService} from 'common/services/Services';
+import {ILinkProviderService, IMouseService, IRenderService} from './services/Services';
 
 export class Linkifier extends Disposable implements ILinkifier2 {
   public get currentLink(): ILinkWithState | undefined { return this._currentLink; }

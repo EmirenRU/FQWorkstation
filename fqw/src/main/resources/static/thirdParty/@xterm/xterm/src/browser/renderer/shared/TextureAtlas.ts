@@ -3,19 +3,25 @@
  * @license MIT
  */
 
-import { IColorContrastCache } from 'browser/Types';
-import { DIM_OPACITY, TEXT_BASELINE } from 'browser/renderer/shared/Constants';
-import { tryDrawCustomChar } from 'browser/renderer/shared/CustomGlyphs';
-import { computeNextVariantOffset, treatGlyphAsBackgroundColor, isPowerlineGlyph, isRestrictedPowerlineGlyph, throwIfFalsy } from 'browser/renderer/shared/RendererUtils';
-import { IBoundingBox, ICharAtlasConfig, IRasterizedGlyph, ITextureAtlas } from 'browser/renderer/shared/Types';
-import { NULL_COLOR, channels, color, rgba } from 'common/Color';
-import { EventEmitter } from 'common/EventEmitter';
-import { FourKeyMap } from 'common/MultiKeyMap';
-import { IdleTaskQueue } from 'common/TaskQueue';
-import { IColor } from 'common/Types';
-import { AttributeData } from 'common/buffer/AttributeData';
-import { Attributes, DEFAULT_COLOR, DEFAULT_EXT, UnderlineStyle } from 'common/buffer/Constants';
-import { IUnicodeService } from 'common/services/Services';
+import {IColorContrastCache} from 'browser/Types';
+import {DIM_OPACITY, TEXT_BASELINE} from 'browser/renderer/shared/Constants';
+import {tryDrawCustomChar} from 'browser/renderer/shared/CustomGlyphs';
+import {
+    computeNextVariantOffset,
+    isPowerlineGlyph,
+    isRestrictedPowerlineGlyph,
+    throwIfFalsy,
+    treatGlyphAsBackgroundColor
+} from 'browser/renderer/shared/RendererUtils';
+import {IBoundingBox, ICharAtlasConfig, IRasterizedGlyph, ITextureAtlas} from 'browser/renderer/shared/Types';
+import {channels, color, NULL_COLOR, rgba} from 'common/Color';
+import {EventEmitter} from 'common/EventEmitter';
+import {FourKeyMap} from 'common/MultiKeyMap';
+import {IdleTaskQueue} from 'common/TaskQueue';
+import {IColor} from 'common/Types';
+import {AttributeData} from 'common/buffer/AttributeData';
+import {Attributes, DEFAULT_COLOR, DEFAULT_EXT, UnderlineStyle} from 'common/buffer/Constants';
+import {IUnicodeService} from 'common/services/Services';
 
 /**
  * A shared object which is used to draw nothing for a particular cell.

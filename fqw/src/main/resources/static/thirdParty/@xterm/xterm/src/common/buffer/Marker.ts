@@ -3,9 +3,9 @@
  * @license MIT
  */
 
-import { EventEmitter } from 'common/EventEmitter';
-import { disposeArray } from 'common/Lifecycle';
-import { IDisposable, IMarker } from 'common/Types';
+import {EventEmitter} from 'common/EventEmitter';
+import {disposeArray} from 'common/Lifecycle';
+import {IDisposable, IMarker} from 'common/Types';
 
 export class Marker implements IMarker {
   private static _nextId = 1;

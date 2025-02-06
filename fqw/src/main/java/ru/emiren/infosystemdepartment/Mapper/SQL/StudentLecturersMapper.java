@@ -28,6 +28,7 @@ public class StudentLecturersMapper {
 
     public static SqlPayload mapToSqlPayload(StudentLecturers sl) {
         return SqlPayload.builder()
+                .id(sl.getId())
                 .academicDegree(sl.getLecturer().getAcademicDegree())
                 .theme(sl.getStudent().getFqw().getName())
                 .fullLecturerName(sl.getLecturer().getName())

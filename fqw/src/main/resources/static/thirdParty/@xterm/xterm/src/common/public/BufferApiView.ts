@@ -3,10 +3,10 @@
  * @license MIT
  */
 
-import { IBuffer as IBufferApi, IBufferLine as IBufferLineApi, IBufferCell as IBufferCellApi } from '@xterm/xterm';
-import { IBuffer } from 'common/buffer/Types';
-import { BufferLineApiView } from 'common/public/BufferLineApiView';
-import { CellData } from 'common/buffer/CellData';
+import {IBuffer as IBufferApi, IBufferCell as IBufferCellApi, IBufferLine as IBufferLineApi} from '@xterm/xterm';
+import {IBuffer} from 'common/buffer/Types';
+import {BufferLineApiView} from 'common/public/BufferLineApiView';
+import {CellData} from 'common/buffer/CellData';
 
 export class BufferApiView implements IBufferApi {
   constructor(

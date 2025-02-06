@@ -74,4 +74,9 @@ public class FQWServiceImpl implements FQWService {
     public FQW getFqwByName(String theme) {
         return fqwRepository.findByName(theme).orElse(null);
     }
+
+    @Override
+    public FQW findByName(String themeName) {
+        return fqwRepository.findByName(themeName).orElse(null);
+    }
 }

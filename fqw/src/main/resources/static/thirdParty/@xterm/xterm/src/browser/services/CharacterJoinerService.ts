@@ -3,13 +3,13 @@
  * @license MIT
  */
 
-import { IBufferLine, ICellData, CharData } from 'common/Types';
-import { ICharacterJoiner } from 'browser/Types';
-import { AttributeData } from 'common/buffer/AttributeData';
-import { WHITESPACE_CELL_CHAR, Content } from 'common/buffer/Constants';
-import { CellData } from 'common/buffer/CellData';
-import { IBufferService } from 'common/services/Services';
-import { ICharacterJoinerService } from 'browser/services/Services';
+import {CharData, IBufferLine, ICellData} from 'common/Types';
+import {ICharacterJoiner} from 'browser/Types';
+import {AttributeData} from 'common/buffer/AttributeData';
+import {Content, WHITESPACE_CELL_CHAR} from 'common/buffer/Constants';
+import {CellData} from 'common/buffer/CellData';
+import {IBufferService} from 'common/services/Services';
+import {ICharacterJoinerService} from 'browser/services/Services';
 
 export class JoinedCellData extends AttributeData implements ICellData {
   private _width: number;

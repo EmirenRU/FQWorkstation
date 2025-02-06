@@ -27,7 +27,8 @@ public class UploadDataController {
     private final FQWService fqwService;
     private final ProtocolService protocolService;
     private final ProtectionCommissionerService protectionCommissionerService;
-
+    private final ProtocolQuestionService protocolQuestionService;
+    private final QuestionService questionService;
 
     @Autowired
     public UploadDataController(StudentService studentService,
@@ -40,7 +41,7 @@ public class UploadDataController {
                                 ProtectionService protectionService,
                                 FQWService fqwService,
                                 ProtocolService protocolService,
-                                ProtectionCommissionerService protectionCommissionerService) {
+                                ProtectionCommissionerService protectionCommissionerService, ProtocolQuestionService protocolQuestionService, QuestionService questionService) {
         this.studentService = studentService;
         this.lecturerService = lecturerService;
         this.orientationService = orientationService;
@@ -52,6 +53,8 @@ public class UploadDataController {
         this.fqwService = fqwService;
         this.protocolService = protocolService;
         this.protectionCommissionerService = protectionCommissionerService;
+        this.protocolQuestionService = protocolQuestionService;
+        this.questionService = questionService;
     }
 
     /**
@@ -64,7 +67,7 @@ public class UploadDataController {
     public String addData(@RequestBody Map<String, String> request){
         log.info(request.toString());
         /*
-        {name=a, studnum=13, citizenship=a, education=a,
+        name=a, studnum=13, citizenship=a, education=a,
         clasifyer=a, code=02.03.01, naming=a,
         studdate=2025-02-04T13:36:18.888Z,
         teachers_name=a, degree=a, postion=a, department_name=a, is_supervisor=true, is_consultant=false, subject=a, originality=1, review=a, volume=a, FQWSupervisor=a, critique=a, assessment=a, protocolVolume=a, ReviewerName=a, ReviewerDegree=a, ReviewerDuty=a, comissionerName1=a, comissionerName2=b, comissionerName3=c, comissionerUniversity1=a, comissionerUniversity2=b, comissionerUniversity3=c, comissionerDepartment1=a, comissionerDepartment2=b, comissionerDepartment3=c, comissionerQuestion1=a, comissionerQuestion2=b, comissionerQuestion3=c}
@@ -85,20 +88,32 @@ public class UploadDataController {
         Commissioner commissioner1 = createCommissioner(request, "1");
         Commissioner commissioner2 = createCommissioner(request, "2");
         Commissioner commissioner3 = createCommissioner(request, "3");
-        ProtectionCommissioner pc1 = createProtectionCommissioner(request, protection, commissioner1, "1");
-        ProtectionCommissioner pc2 = createProtectionCommissioner(request, protection, commissioner2, "2");
-        ProtectionCommissioner pc3 = createProtectionCommissioner(request, protection, commissioner3, "3");
+        ProtectionCommissioner pc1 = createProtectionCommissioner(protection, commissioner1);
+        ProtectionCommissioner pc2 = createProtectionCommissioner(protection, commissioner2);
+        ProtectionCommissioner pc3 = createProtectionCommissioner(protection, commissioner3);
+        Question q1 = createQuestion(request, "1", commissioner1);
+        Question q2 = createQuestion(request, "2", commissioner3);
+        Question q3 = createQuestion(request, "3", commissioner2);
+        ProtocolQuestion pq1 = createProtocolQuestion(request, protocol, q1);
+        ProtocolQuestion pq2 = createProtocolQuestion(request, protocol, q2);
+        ProtocolQuestion pq3 = createProtocolQuestion(request, protocol, q3);
 
-        protection.setCommissioners(List.of(pc1, pc2, pc3));
+        protection.getCommissioners().addAll(List.of(pc1, pc2, pc3));
+        protocol.getQuestions().addAll(List.of(pq1, pq2, pq3));
+        protocol.setStudent(student);
 
         student.setDepartment(department);
         student.setOrientation(orientation);
         student.setFqw(fqw);
-        student.setLecturers(List.of(sl));
+        student.getLecturers().add(sl);
         lecturer.setDepartment(department);
-        lecturer.setStudents(List.of(sl));
+        lecturer.getStudents().add(sl);
+        lecturer.setDepartment(department);
         orientation.setProtection(List.of(protection));
+        orientation.getProtection().add(protection);
 
+        protection.setOrientation(orientation);
+        fqw.setReviewer(reviewer);
 
         // TODO rewrite the mappers
         studentService.saveStudent(student);
@@ -121,166 +136,158 @@ public class UploadDataController {
     }
 
 
-    private static String studNameStr = "studName";
 
-    private static Student createStudent(Map<String, String> request) {
-        String studName = request.get(studNameStr);
-        Long studNum = Long.parseLong(request.get("studNum"));
-        String citizenship = request.get("citizenship");
-        String loe = request.get("loe");
-        String classifier = request.get("classifier");
-
-        Student student = new Student();
-        student.setName(studName);
-        student.setStud_num(studNum);
-        student.setCitizenship(citizenship);
-        student.setLoe(loe);
-        student.setClassifier(classifier);
-
+    private Student createStudent(Map<String, String> request) {
+        Student student = studentService.findStudentByStudNum(Long.parseLong(request.get("studNum")));
+        if (student == null) {
+            student = new Student();
+            student.setName(request.get("name"));
+            student.setStud_num(Long.parseLong(request.get("studNum")));
+            student.setCitizenship(request.get("citizenship"));
+            student.setLoe(request.get("loe"));
+            student.setClassifier(request.get("classifier"));
+        }
         return student;
     }
 
-    private static Lecturer createLecturer(Map<String, String> request) {
-        String lecturersName = request.get("lecturersName");
-        String academicPosition = request.get("academicPosition");
-        String position = request.get("position");
-        String departmentName = request.get("departmentName");
-
-        Lecturer lecturer = new Lecturer();
-        lecturer.setName(lecturersName);
-        lecturer.setAcademicDegree(academicPosition);
-        lecturer.setPosition(position);
-
-        Department department = new Department();
-        department.setName(departmentName);
-        lecturer.setDepartment(department);
-
+    private Lecturer createLecturer(Map<String, String> request) {
+        Lecturer lecturer = lecturerService.findByLecturerName(request.get("lecturerName"));
+        if (lecturer == null) {
+            lecturer = new Lecturer();
+            lecturer.setName(request.get("lecturersName"));
+            lecturer.setAcademicDegree(request.get("academicPosition"));
+            lecturer.setPosition(request.get("position"));
+        }
         return lecturer;
     }
 
-    private static StudentLecturers createStudentLecturers(Map<String, String> request, Student student, Lecturer lecturer) {
-        boolean isScientificSupervisor = Boolean.parseBoolean(request.get("isScientificSupervisor"));
-        boolean isConsultant = Boolean.parseBoolean(request.get("isConsultant"));
+    private StudentLecturers createStudentLecturers(Map<String, String> request, Student student, Lecturer lecturer) {
+        StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNumAndLecturerName(student.getStud_num(), lecturer.getName());
+        if (studentLecturers == null) {
+            studentLecturers = new StudentLecturers();
+            studentLecturers.setStudent(student);
+            studentLecturers.setLecturer(lecturer);
+            studentLecturers.setIsScientificSupervisor(Boolean.parseBoolean(request.get("isScientificSupervisor")));
+            studentLecturers.setIsConsultant(Boolean.parseBoolean(request.get("isConsultant")));
+        }
 
-        StudentLecturers sl = new StudentLecturers();
-        sl.setStudent(student);
-        sl.setLecturer(lecturer);
-        sl.setIsScientificSupervisor(isScientificSupervisor);
-        sl.setIsConsultant(isConsultant);
 
-        lecturer.setStudents(List.of(sl));
+        student.getLecturers().add(studentLecturers);
+        lecturer.getStudents().add(studentLecturers);
 
-        return sl;
+        studentLecturers.setLecturer(lecturer);
+        studentLecturers.setStudent(student);
+        return studentLecturers;
     }
 
-    private static Reviewer createReviewer(Map<String, String> request) {
-        String reviewerName = request.get("reviewerName");
-        String reviewerAD = request.get("reviewerAD");
-        String reviewerPos = request.get("reviewerPos");
-
-        Reviewer reviewer = new Reviewer();
-        reviewer.setName(reviewerName);
-        reviewer.setPosition(reviewerPos);
-        reviewer.setAcademicDegree(reviewerAD);
-
+    private Reviewer createReviewer(Map<String, String> request) {
+        Reviewer reviewer = reviewerService.findReviewerByName(request.get("reviewerName"));
+        if (reviewer == null) {
+            reviewer = new Reviewer();
+            reviewer.setName(request.get("reviewerName"));
+            reviewer.setPosition(request.get("reviewerPos"));
+            reviewer.setAcademicDegree(request.get("reviewerAD"));
+        }
         return reviewer;
     }
 
-    private static Department createDepartment(Map<String, String> request) {
-        String departmentName = request.get("departmentName");
-
-        Department department = new Department();
-        department.setName(departmentName);
-
+    private Department createDepartment(Map<String, String> request) {
+        Department department = departmentService.findDepartmentByName(request.get("departmentName"));
+        if (department == null) {
+            department = new Department();
+            department.setName(request.get("departmentName"));
+        }
         return department;
     }
 
-    private static Orientation createOrientation(Map<String, String> request) {
-        String orientationCode = request.get("orientationCode");
-        String orientationName = request.get("orientationName");
-
-        Orientation orientation = new Orientation();
-        orientation.setCode(orientationCode);
-        orientation.setName(orientationName);
-
+    private Orientation createOrientation(Map<String, String> request) {
+        Orientation orientation = orientationService.findByCode(request.get("orientationCode"));
+        if (orientation == null) {
+            orientation = new Orientation();
+            orientation.setCode(request.get("orientationCode"));
+            orientation.setName(request.get("orientationName"));
+        }
         return orientation;
     }
 
-    private static FQW createFQW(Map<String, String> request, Reviewer reviewer) {
-        String themeName = request.get("themeName");
-        float uniqueness = Float.parseFloat(request.get("uniqueness"));
-        String feedback = request.get("feedback");
-        String volume = request.get("volume");
-
-        FQW fqw = new FQW();
-        fqw.setName(themeName);
-        fqw.setUniqueness(uniqueness);
-        fqw.setFeedback(feedback);
-        fqw.setVolume(volume);
-        fqw.setReviewer(reviewer);
-
+    private FQW createFQW(Map<String, String> request, Reviewer reviewer) {
+        FQW fqw = fqwService.findByName(request.get("themeName"));
+        if (fqw == null) {
+            fqw = new FQW();
+            fqw.setName(request.get("themeName"));
+            fqw.setUniqueness(Float.parseFloat(request.get("uniqueness")));
+            fqw.setFeedback(request.get("feedback"));
+            fqw.setVolume(request.get("volume"));
+            fqw.setReviewer(reviewer);
+        }
         return fqw;
     }
 
     private Protocol createProtocol(Map<String, String> request) {
-        Protocol protocol = new Protocol();
-
-        Student student = studentService.findStudentByName(request.get(studNameStr));
-        if (student == null) {
-            student = new Student();
-            student.setName(request.get(studNameStr));
-            studentService.saveStudent(student);
+        Protocol protocol = protocolService.findByStudentNum(Long.parseLong(request.get("studNum")));
+        if (protocol == null) {
+            protocol = new Protocol();
+            protocol.setVolume(Integer.parseInt(request.get("volume")));
+            protocol.setHeadOfTheFQW(request.get("headOfTheFQW"));
+            protocol.setReview(request.get("review"));
+            protocol.setGrade(Integer.parseInt(request.get("grade")));
+            protocol.setHeadOfTheFQW(request.get("headOfTheFQW"));
         }
-
-        FQW fqw = fqwService.getFQW(request.get("themeName"));
-        if (fqw == null) {
-            fqw = new FQW();
-            fqw.setName(request.get("fqwName"));
-            fqwService.saveFqw(fqw);
-        }
-
-        protocol.setStudent(student);
-        protocol.setVolume(Integer.parseInt(request.get("volume")));
-        protocol.setHeadOfTheFQW(request.get("headOfTheFQW"));
-        protocol.setReview(request.get("review"));
-        protocol.setGrade(Integer.parseInt(request.get("grade")));
-        protocol.setFqw(fqw);
         return protocol;
     }
 
-    private static Protection createProtection(Orientation orientation, Date dateOfProtection) {
+    private Protection createProtection(Orientation orientation, Date dateOfProtection) {
         Protection protection = new Protection();
-
         String yearStr = DateUtil.getYear(dateOfProtection);
-
         protection.setOrientation(orientation);
-        protection.setDateOfProtection(
-                Integer.parseInt(yearStr)
-        );
-
+        protection.setDateOfProtection(Integer.parseInt(yearStr));
         return protection;
     }
 
-    private static Commissioner createCommissioner(Map<String, String> request, String commissionerNumber) {
+    private Commissioner createCommissioner(Map<String, String> request, String commissionerNumber) {
         String commissionerName = request.get("commissionerName" + commissionerNumber);
-        String commissionerUniv = request.get("commissionerUniv" + commissionerNumber);
-        String commissionerDep = request.get("commissionerDep" + commissionerNumber);
+        String commissionerUniv = request.get("commissionerUniversity" + commissionerNumber);
+        String commissionerDep = request.get("commissionerDepartment" + commissionerNumber);
 
-        Commissioner commissioner = new Commissioner();
-        commissioner.setName(commissionerName);
-        commissioner.setUniversity(commissionerUniv);
-        commissioner.setDepartment(commissionerDep);
 
+        Commissioner commissioner = commissionerService.findByName(commissionerName);
+        if (commissioner == null){
+            commissioner = new Commissioner();
+            commissioner.setName(commissionerName);
+            commissioner.setUniversity(commissionerUniv);
+            commissioner.setDepartment(commissionerDep);
+        }
         return commissioner;
     }
 
-    private static ProtectionCommissioner createProtectionCommissioner(Map<String, String> request, Protection protection, Commissioner commissioner, String questionNumber) {
-        String question = request.get("question" + questionNumber);
-
+    private ProtectionCommissioner createProtectionCommissioner(Protection protection, Commissioner commissioner) {
         ProtectionCommissioner pc = new ProtectionCommissioner();
         pc.setProtection(protection);
         pc.setCommissioner(commissioner);
-
         return pc;
+    }
+
+    private Question createQuestion(Map<String, String> request, String questionNumber, Commissioner commissioner ) {
+        Question questionObject = questionService.findQuestion(request.get("question" + questionNumber));
+        if (questionObject == null) {
+            questionObject = new Question();
+            questionObject.setQuestion(request.get("question" + questionNumber));
+            questionObject.setQuestioner(commissioner.getName());
+        }
+
+        return questionObject;
+    }
+
+    private ProtocolQuestion createProtocolQuestion(Map<String, String> request, Protocol protocol, Question question) {
+        ProtocolQuestion protocolQuestion = protocolQuestionService.findByQuestionAndProtocolStudent(question.getQuestion(), protocol.getStudent().getStud_num());
+        if (protocolQuestion == null) {
+            protocolQuestion = new ProtocolQuestion();
+            protocolQuestion.setQuestion(question);
+            protocolQuestion.setProtocol(protocol);
+            protocol.getQuestions().add(protocolQuestion);
+            question.getProtocolQuestion().add(protocolQuestion);
+
+        }
+        return protocolQuestion;
     }
 }

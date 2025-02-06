@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { ICoreBrowserService } from 'browser/services/Services';
+import {ICoreBrowserService} from 'browser/services/Services';
 
 /**
  * The time between cursor blinks.

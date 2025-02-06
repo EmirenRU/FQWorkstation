@@ -4,4 +4,6 @@ import ru.emiren.infosystemdepartment.Model.SQL.ProtocolQuestion;
 
 public interface ProtocolQuestionService {
     void saveProtocolQuestion(ProtocolQuestion pq);
+
+    ProtocolQuestion findByQuestionAndProtocolStudent(String question, Long studNum);
 }

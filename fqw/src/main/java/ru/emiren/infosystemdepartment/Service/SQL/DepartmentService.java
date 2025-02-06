@@ -15,4 +15,6 @@ public interface DepartmentService {
     Department updateDepartment(Long id, Department department);
 
     String findDepartmentByStudentNumber(Long studNumber);
+
+    Department findDepartmentByName(String departmentName);
 }

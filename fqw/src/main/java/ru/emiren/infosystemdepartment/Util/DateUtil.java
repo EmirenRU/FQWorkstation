@@ -25,7 +25,6 @@ public class DateUtil {
 
     public static String getYear(Date date) {
         if (date == null) {
-            // Fallback to the current year if date is null
             Calendar cal = Calendar.getInstance();
             return String.valueOf(cal.get(Calendar.YEAR));
         }
@@ -37,7 +36,6 @@ public class DateUtil {
 
     public static String getMonth(Date date) {
         if (date == null) {
-            // Fallback to the current year if date is null
             Calendar cal = Calendar.getInstance();
             return String.valueOf(cal.get(Calendar.MONTH));
         }
@@ -49,7 +47,6 @@ public class DateUtil {
 
     public static String getDay(Date date) {
         if (date == null) {
-            // Fallback to the current year if date is null
             Calendar cal = Calendar.getInstance();
             return String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
         }

@@ -13,4 +13,6 @@ public interface CommissionerService {
     Commissioner updateCommissioner(Long id, Commissioner commissioner);
     Commissioner    getCommissioner(Long id);
     CommissionerDTO getCommissionerDTO(Long id);
+
+    Commissioner findByName(String commissionerName);
 }

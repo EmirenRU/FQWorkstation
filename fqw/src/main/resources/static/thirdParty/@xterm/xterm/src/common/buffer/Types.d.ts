@@ -3,8 +3,8 @@
  * @license MIT
  */
 
-import { IAttributeData, ICircularList, IBufferLine, ICellData, IMarker, ICharset, IDisposable } from 'common/Types';
-import { IEvent } from 'common/EventEmitter';
+import {IAttributeData, IBufferLine, ICellData, ICharset, ICircularList, IDisposable, IMarker} from 'common/Types';
+import {IEvent} from 'common/EventEmitter';
 
 // BufferIndex denotes a position in the buffer: [rowIndex, colIndex]
 export type BufferIndex = [number, number];

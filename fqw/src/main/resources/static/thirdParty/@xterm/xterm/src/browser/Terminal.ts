@@ -21,43 +21,72 @@
  *   http://linux.die.net/man/7/urxvt
  */
 
-import { copyHandler, handlePasteEvent, moveTextAreaUnderMouseCursor, paste, rightClickHandler } from 'browser/Clipboard';
-import { addDisposableDomListener } from 'browser/Lifecycle';
-import { Linkifier } from './Linkifier';
+import {copyHandler, handlePasteEvent, moveTextAreaUnderMouseCursor, paste, rightClickHandler} from 'browser/Clipboard';
+import {addDisposableDomListener} from 'browser/Lifecycle';
+import {Linkifier} from './Linkifier';
 import * as Strings from 'browser/LocalizableStrings';
-import { OscLinkProvider } from 'browser/OscLinkProvider';
-import { CharacterJoinerHandler, CustomKeyEventHandler, CustomWheelEventHandler, IBrowser, IBufferRange, ICompositionHelper, ILinkifier2, ITerminal, IViewport } from 'browser/Types';
-import { Viewport } from 'browser/Viewport';
-import { BufferDecorationRenderer } from 'browser/decorations/BufferDecorationRenderer';
-import { OverviewRulerRenderer } from 'browser/decorations/OverviewRulerRenderer';
-import { CompositionHelper } from 'browser/input/CompositionHelper';
-import { DomRenderer } from 'browser/renderer/dom/DomRenderer';
-import { IRenderer } from 'browser/renderer/shared/Types';
-import { CharSizeService } from 'browser/services/CharSizeService';
-import { CharacterJoinerService } from 'browser/services/CharacterJoinerService';
-import { CoreBrowserService } from 'browser/services/CoreBrowserService';
-import { MouseService } from 'browser/services/MouseService';
-import { RenderService } from 'browser/services/RenderService';
-import { SelectionService } from 'browser/services/SelectionService';
-import { ICharSizeService, ICharacterJoinerService, ICoreBrowserService, ILinkProviderService, IMouseService, IRenderService, ISelectionService, IThemeService } from 'browser/services/Services';
-import { ThemeService } from 'browser/services/ThemeService';
-import { channels, color } from 'common/Color';
-import { CoreTerminal } from 'common/CoreTerminal';
-import { EventEmitter, IEvent, forwardEvent } from 'common/EventEmitter';
-import { MutableDisposable, toDisposable } from 'common/Lifecycle';
+import {OscLinkProvider} from 'browser/OscLinkProvider';
+import {
+    CharacterJoinerHandler,
+    CustomKeyEventHandler,
+    CustomWheelEventHandler,
+    IBrowser,
+    IBufferRange,
+    ICompositionHelper,
+    ILinkifier2,
+    ITerminal,
+    IViewport
+} from 'browser/Types';
+import {Viewport} from 'browser/Viewport';
+import {BufferDecorationRenderer} from 'browser/decorations/BufferDecorationRenderer';
+import {OverviewRulerRenderer} from 'browser/decorations/OverviewRulerRenderer';
+import {CompositionHelper} from 'browser/input/CompositionHelper';
+import {DomRenderer} from 'browser/renderer/dom/DomRenderer';
+import {IRenderer} from 'browser/renderer/shared/Types';
+import {CharSizeService} from 'browser/services/CharSizeService';
+import {CharacterJoinerService} from 'browser/services/CharacterJoinerService';
+import {CoreBrowserService} from 'browser/services/CoreBrowserService';
+import {MouseService} from 'browser/services/MouseService';
+import {RenderService} from 'browser/services/RenderService';
+import {SelectionService} from 'browser/services/SelectionService';
+import {
+    ICharacterJoinerService,
+    ICharSizeService,
+    ICoreBrowserService,
+    ILinkProviderService,
+    IMouseService,
+    IRenderService,
+    ISelectionService,
+    IThemeService
+} from 'browser/services/Services';
+import {ThemeService} from 'browser/services/ThemeService';
+import {channels, color} from 'common/Color';
+import {CoreTerminal} from 'common/CoreTerminal';
+import {EventEmitter, forwardEvent, IEvent} from 'common/EventEmitter';
+import {MutableDisposable, toDisposable} from 'common/Lifecycle';
 import * as Browser from 'common/Platform';
-import { ColorRequestType, CoreMouseAction, CoreMouseButton, CoreMouseEventType, IColorEvent, ITerminalOptions, KeyboardResultType, ScrollSource, SpecialColorIndex } from 'common/Types';
-import { DEFAULT_ATTR_DATA } from 'common/buffer/BufferLine';
-import { IBuffer } from 'common/buffer/Types';
-import { C0, C1_ESCAPED } from 'common/data/EscapeSequences';
-import { evaluateKeyboardEvent } from 'common/input/Keyboard';
-import { toRgbString } from 'common/input/XParseColor';
-import { DecorationService } from 'common/services/DecorationService';
-import { IDecorationService } from 'common/services/Services';
-import { IDecoration, IDecorationOptions, IDisposable, ILinkProvider, IMarker } from '@xterm/xterm';
-import { WindowsOptionsReportType } from '../common/InputHandler';
-import { AccessibilityManager } from './AccessibilityManager';
-import { LinkProviderService } from 'browser/services/LinkProviderService';
+import {
+    ColorRequestType,
+    CoreMouseAction,
+    CoreMouseButton,
+    CoreMouseEventType,
+    IColorEvent,
+    ITerminalOptions,
+    KeyboardResultType,
+    ScrollSource,
+    SpecialColorIndex
+} from 'common/Types';
+import {DEFAULT_ATTR_DATA} from 'common/buffer/BufferLine';
+import {IBuffer} from 'common/buffer/Types';
+import {C0, C1_ESCAPED} from 'common/data/EscapeSequences';
+import {evaluateKeyboardEvent} from 'common/input/Keyboard';
+import {toRgbString} from 'common/input/XParseColor';
+import {DecorationService} from 'common/services/DecorationService';
+import {IDecorationService} from 'common/services/Services';
+import {IDecoration, IDecorationOptions, IDisposable, ILinkProvider, IMarker} from '@xterm/xterm';
+import {WindowsOptionsReportType} from '../common/InputHandler';
+import {AccessibilityManager} from './AccessibilityManager';
+import {LinkProviderService} from 'browser/services/LinkProviderService';
 
 export class Terminal extends CoreTerminal implements ITerminal {
   public textarea: HTMLTextAreaElement | undefined;

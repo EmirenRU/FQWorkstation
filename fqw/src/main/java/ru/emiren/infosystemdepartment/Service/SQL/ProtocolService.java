@@ -13,4 +13,6 @@ public interface ProtocolService {
     ProtocolDTO getDtoProtocol(String fullName);
     Protocol getProtocol(String fullName);
     Protocol updateProtocol(Protocol protocol);
+
+    Protocol findByStudentNum(Long studNum);
 } // CD

@@ -63,4 +63,9 @@ public class ReviewerServiceImpl implements ReviewerService {
 
         return reviewerRepository.save(upd);
     }
+
+    @Override
+    public Reviewer findReviewerByName(String reviewerName) {
+        return reviewerRepository.findByName(reviewerName).orElse(null);
+    }
 }

@@ -3,10 +3,10 @@
  * @license MIT
  */
 
-import { IEvent } from 'common/EventEmitter';
-import { CharData, IColor, ICoreTerminal, ITerminalOptions } from 'common/Types';
-import { IBuffer } from 'common/buffer/Types';
-import { IDisposable, Terminal as ITerminalApi } from '@xterm/xterm';
+import {IEvent} from 'common/EventEmitter';
+import {CharData, IColor, ICoreTerminal, ITerminalOptions} from 'common/Types';
+import {IBuffer} from 'common/buffer/Types';
+import {IDisposable, Terminal as ITerminalApi} from '@xterm/xterm';
 
 /**
  * A portion of the public API that are implemented identially internally and simply passed through.

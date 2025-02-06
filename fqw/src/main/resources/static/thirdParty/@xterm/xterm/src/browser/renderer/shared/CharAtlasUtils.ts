@@ -3,11 +3,11 @@
  * @license MIT
  */
 
-import { ICharAtlasConfig } from './Types';
-import { Attributes } from 'common/buffer/Constants';
-import { ITerminalOptions } from '@xterm/xterm';
-import { IColorSet, ReadonlyColorSet } from 'browser/Types';
-import { NULL_COLOR } from 'common/Color';
+import {ICharAtlasConfig} from './Types';
+import {Attributes} from 'common/buffer/Constants';
+import {ITerminalOptions} from '@xterm/xterm';
+import {IColorSet, ReadonlyColorSet} from 'browser/Types';
+import {NULL_COLOR} from 'common/Color';
 
 export function generateConfig(deviceCellWidth: number, deviceCellHeight: number, deviceCharWidth: number, deviceCharHeight: number, options: Required<ITerminalOptions>, colors: ReadonlyColorSet, devicePixelRatio: number): ICharAtlasConfig {
   // null out some fields that don't matter

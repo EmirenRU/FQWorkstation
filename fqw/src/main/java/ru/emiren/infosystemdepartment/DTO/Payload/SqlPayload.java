@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 public class SqlPayload {
+    private   Long id;
     private String fullLecturerName;
     private String academicDegree;
     private String position;

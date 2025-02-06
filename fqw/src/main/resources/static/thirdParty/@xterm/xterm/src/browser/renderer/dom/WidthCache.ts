@@ -3,8 +3,8 @@
  * @license MIT
  */
 
-import { IDisposable } from 'common/Types';
-import { FontWeight } from 'common/services/Services';
+import {IDisposable} from 'common/Types';
+import {FontWeight} from 'common/services/Services';
 
 
 export const enum WidthCacheSettings {

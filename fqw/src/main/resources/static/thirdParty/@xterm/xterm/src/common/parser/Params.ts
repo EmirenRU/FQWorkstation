@@ -2,7 +2,7 @@
  * Copyright (c) 2019 The xterm.js authors. All rights reserved.
  * @license MIT
  */
-import { IParams, ParamsArray } from 'common/parser/Types';
+import {IParams, ParamsArray} from 'common/parser/Types';
 
 // max value supported for a single param/subparam (clamped to positive int32 range)
 const MAX_VALUE = 0x7FFFFFFF;

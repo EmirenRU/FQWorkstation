@@ -3,18 +3,18 @@
  * @license MIT
  */
 
-import { DomRendererRowFactory, RowCss } from 'browser/renderer/dom/DomRendererRowFactory';
-import { WidthCache } from 'browser/renderer/dom/WidthCache';
-import { INVERTED_DEFAULT_COLOR } from 'browser/renderer/shared/Constants';
-import { createRenderDimensions } from 'browser/renderer/shared/RendererUtils';
-import { createSelectionRenderModel } from 'browser/renderer/shared/SelectionRenderModel';
-import { IRenderDimensions, IRenderer, IRequestRedrawEvent, ISelectionRenderModel } from 'browser/renderer/shared/Types';
-import { ICharSizeService, ICoreBrowserService, IThemeService } from 'browser/services/Services';
-import { ILinkifier2, ILinkifierEvent, ITerminal, ReadonlyColorSet } from 'browser/Types';
-import { color } from 'common/Color';
-import { EventEmitter } from 'common/EventEmitter';
-import { Disposable, toDisposable } from 'common/Lifecycle';
-import { IBufferService, IInstantiationService, IOptionsService } from 'common/services/Services';
+import {DomRendererRowFactory, RowCss} from 'browser/renderer/dom/DomRendererRowFactory';
+import {WidthCache} from 'browser/renderer/dom/WidthCache';
+import {INVERTED_DEFAULT_COLOR} from 'browser/renderer/shared/Constants';
+import {createRenderDimensions} from 'browser/renderer/shared/RendererUtils';
+import {createSelectionRenderModel} from 'browser/renderer/shared/SelectionRenderModel';
+import {IRenderDimensions, IRenderer, IRequestRedrawEvent, ISelectionRenderModel} from 'browser/renderer/shared/Types';
+import {ICharSizeService, ICoreBrowserService, IThemeService} from 'browser/services/Services';
+import {ILinkifier2, ILinkifierEvent, ITerminal, ReadonlyColorSet} from 'browser/Types';
+import {color} from 'common/Color';
+import {EventEmitter} from 'common/EventEmitter';
+import {Disposable, toDisposable} from 'common/Lifecycle';
+import {IBufferService, IInstantiationService, IOptionsService} from 'common/services/Services';
 
 
 const TERMINAL_CLASS_PREFIX = 'xterm-dom-renderer-owner-';

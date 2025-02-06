@@ -3,13 +3,13 @@
  * @license MIT
  */
 
-import { css } from 'common/Color';
-import { EventEmitter } from 'common/EventEmitter';
-import { Disposable, toDisposable } from 'common/Lifecycle';
-import { IDecorationService, IInternalDecoration } from 'common/services/Services';
-import { SortedList } from 'common/SortedList';
-import { IColor } from 'common/Types';
-import { IDecoration, IDecorationOptions, IMarker } from '@xterm/xterm';
+import {css} from 'common/Color';
+import {EventEmitter} from 'common/EventEmitter';
+import {Disposable, toDisposable} from 'common/Lifecycle';
+import {IDecorationService, IInternalDecoration} from 'common/services/Services';
+import {SortedList} from 'common/SortedList';
+import {IColor} from 'common/Types';
+import {IDecoration, IDecorationOptions, IMarker} from '@xterm/xterm';
 
 // Work variables to avoid garbage collection
 let $xmin = 0;

@@ -3,11 +3,11 @@
  * @license MIT
  */
 
-import { IBuffer as IBufferApi, IBufferNamespace as IBufferNamespaceApi } from '@xterm/xterm';
-import { BufferApiView } from 'common/public/BufferApiView';
-import { EventEmitter } from 'common/EventEmitter';
-import { ICoreTerminal } from 'common/Types';
-import { Disposable } from 'common/Lifecycle';
+import {IBuffer as IBufferApi, IBufferNamespace as IBufferNamespaceApi} from '@xterm/xterm';
+import {BufferApiView} from 'common/public/BufferApiView';
+import {EventEmitter} from 'common/EventEmitter';
+import {ICoreTerminal} from 'common/Types';
+import {Disposable} from 'common/Lifecycle';
 
 export class BufferNamespaceApi extends Disposable implements IBufferNamespaceApi {
   private _normal: BufferApiView;

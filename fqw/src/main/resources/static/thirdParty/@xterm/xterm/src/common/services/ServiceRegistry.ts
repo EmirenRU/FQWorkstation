@@ -9,7 +9,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IServiceIdentifier } from 'common/services/Services';
+import {IServiceIdentifier} from 'common/services/Services';
 
 const DI_TARGET = 'di$target';
 const DI_DEPENDENCIES = 'di$dependencies';

@@ -34,6 +34,8 @@ build/
 
 ### Custom ###
 logs/
+/frontend/**
+
 
 ### Docker ###
 docker/.env

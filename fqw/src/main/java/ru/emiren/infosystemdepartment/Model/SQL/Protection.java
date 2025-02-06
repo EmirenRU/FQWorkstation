@@ -26,7 +26,7 @@ public class Protection {
     @JoinColumn(name = "orientation_code", referencedColumnName = "code")
     private Orientation orientation;          // Направление
 
-    private Integer dateOfProtection;
+    private Integer dateOfProtection; // Year
 
     @OneToMany(cascade = CascadeType.ALL )
     @JoinColumn(name = "protection_id")

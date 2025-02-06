@@ -3,10 +3,10 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { ColorZoneStore, IColorZone, IColorZoneStore } from 'browser/decorations/ColorZoneStore';
-import { ICoreBrowserService, IRenderService } from 'browser/services/Services';
-import { Disposable, toDisposable } from 'common/Lifecycle';
-import { IBufferService, IDecorationService, IOptionsService } from 'common/services/Services';
+import {ColorZoneStore, IColorZone, IColorZoneStore} from 'browser/decorations/ColorZoneStore';
+import {ICoreBrowserService, IRenderService} from 'browser/services/Services';
+import {Disposable, toDisposable} from 'common/Lifecycle';
+import {IBufferService, IDecorationService, IOptionsService} from 'common/services/Services';
 
 // Helper objects to avoid excessive calculation and garbage collection during rendering. These are
 // static values for each render and can be accessed using the decoration position as the key.

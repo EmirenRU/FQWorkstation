@@ -63,4 +63,9 @@ public class ProtocolServiceImpl implements ProtocolService {
 
         return protocolRepository.save(upd);
     }
+
+    @Override
+    public Protocol findByStudentNum(Long studNum) {
+        return protocolRepository.findByStudentNumber(studNum).orElse(null);
+    }
 }

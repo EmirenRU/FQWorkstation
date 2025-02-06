@@ -41,7 +41,7 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     public List<StudentLecturersDTO> findAllAndSortedByLecturerName() {
         return studentLecturerRepository.findAllSorted().stream()
                 .map(StudentLecturersMapper::mapToStudentLecturersDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -112,6 +112,11 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     @Override
     public StudentLecturers findStudentLecturersByStudentStudNum(Long studNum) {
         return studentLecturerRepository.findByStudentNumber(studNum).orElse(null);
+    }
+
+    @Override
+    public StudentLecturers findStudentLecturersByStudentStudNumAndLecturerName(Long studNum, String name) {
+        return studentLecturerRepository.findByStudentNumberAndLecturerName(studNum, name).orElse(null);
     }
 
 

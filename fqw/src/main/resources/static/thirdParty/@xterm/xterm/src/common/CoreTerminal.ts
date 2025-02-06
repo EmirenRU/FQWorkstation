@@ -21,24 +21,36 @@
  *   http://linux.die.net/man/7/urxvt
  */
 
-import { Disposable, MutableDisposable, toDisposable } from 'common/Lifecycle';
-import { IInstantiationService, IOptionsService, IBufferService, ILogService, ICharsetService, ICoreService, ICoreMouseService, IUnicodeService, LogLevelEnum, ITerminalOptions, IOscLinkService } from 'common/services/Services';
-import { InstantiationService } from 'common/services/InstantiationService';
-import { LogService } from 'common/services/LogService';
-import { BufferService, MINIMUM_COLS, MINIMUM_ROWS } from 'common/services/BufferService';
-import { OptionsService } from 'common/services/OptionsService';
-import { IDisposable, IAttributeData, ICoreTerminal, IScrollEvent, ScrollSource } from 'common/Types';
-import { CoreService } from 'common/services/CoreService';
-import { EventEmitter, IEvent, forwardEvent } from 'common/EventEmitter';
-import { CoreMouseService } from 'common/services/CoreMouseService';
-import { UnicodeService } from 'common/services/UnicodeService';
-import { CharsetService } from 'common/services/CharsetService';
-import { updateWindowsModeWrappedState } from 'common/WindowsMode';
-import { IFunctionIdentifier, IParams } from 'common/parser/Types';
-import { IBufferSet } from 'common/buffer/Types';
-import { InputHandler } from 'common/InputHandler';
-import { WriteBuffer } from 'common/input/WriteBuffer';
-import { OscLinkService } from 'common/services/OscLinkService';
+import {Disposable, MutableDisposable, toDisposable} from 'common/Lifecycle';
+import {
+    IBufferService,
+    ICharsetService,
+    ICoreMouseService,
+    ICoreService,
+    IInstantiationService,
+    ILogService,
+    IOptionsService,
+    IOscLinkService,
+    ITerminalOptions,
+    IUnicodeService,
+    LogLevelEnum
+} from 'common/services/Services';
+import {InstantiationService} from 'common/services/InstantiationService';
+import {LogService} from 'common/services/LogService';
+import {BufferService, MINIMUM_COLS, MINIMUM_ROWS} from 'common/services/BufferService';
+import {OptionsService} from 'common/services/OptionsService';
+import {IAttributeData, ICoreTerminal, IDisposable, IScrollEvent, ScrollSource} from 'common/Types';
+import {CoreService} from 'common/services/CoreService';
+import {EventEmitter, forwardEvent, IEvent} from 'common/EventEmitter';
+import {CoreMouseService} from 'common/services/CoreMouseService';
+import {UnicodeService} from 'common/services/UnicodeService';
+import {CharsetService} from 'common/services/CharsetService';
+import {updateWindowsModeWrappedState} from 'common/WindowsMode';
+import {IFunctionIdentifier, IParams} from 'common/parser/Types';
+import {IBufferSet} from 'common/buffer/Types';
+import {InputHandler} from 'common/InputHandler';
+import {WriteBuffer} from 'common/input/WriteBuffer';
+import {OscLinkService} from 'common/services/OscLinkService';
 
 // Only trigger this warning a single time per session
 let hasWriteSyncWarnHappened = false;

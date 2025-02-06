@@ -4,13 +4,13 @@
  */
 
 import * as Strings from 'browser/LocalizableStrings';
-import { ITerminal, IRenderDebouncer } from 'browser/Types';
-import { TimeBasedDebouncer } from 'browser/TimeBasedDebouncer';
-import { Disposable, toDisposable } from 'common/Lifecycle';
-import { ICoreBrowserService, IRenderService } from 'browser/services/Services';
-import { IBuffer } from 'common/buffer/Types';
-import { IInstantiationService } from 'common/services/Services';
-import { addDisposableDomListener } from 'browser/Lifecycle';
+import {IRenderDebouncer, ITerminal} from 'browser/Types';
+import {TimeBasedDebouncer} from 'browser/TimeBasedDebouncer';
+import {Disposable, toDisposable} from 'common/Lifecycle';
+import {ICoreBrowserService, IRenderService} from 'browser/services/Services';
+import {IBuffer} from 'common/buffer/Types';
+import {IInstantiationService} from 'common/services/Services';
+import {addDisposableDomListener} from 'browser/Lifecycle';
 
 const MAX_ROWS_TO_READ = 20;
 

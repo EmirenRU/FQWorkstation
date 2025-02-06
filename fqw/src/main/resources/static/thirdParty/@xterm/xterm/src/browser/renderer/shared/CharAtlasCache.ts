@@ -3,11 +3,11 @@
  * @license MIT
  */
 
-import { TextureAtlas } from 'browser/renderer/shared/TextureAtlas';
-import { ITerminalOptions, Terminal } from '@xterm/xterm';
-import { ITerminal, ReadonlyColorSet } from 'browser/Types';
-import { ICharAtlasConfig, ITextureAtlas } from 'browser/renderer/shared/Types';
-import { generateConfig, configEquals } from 'browser/renderer/shared/CharAtlasUtils';
+import {TextureAtlas} from 'browser/renderer/shared/TextureAtlas';
+import {ITerminalOptions, Terminal} from '@xterm/xterm';
+import {ITerminal, ReadonlyColorSet} from 'browser/Types';
+import {ICharAtlasConfig, ITextureAtlas} from 'browser/renderer/shared/Types';
+import {configEquals, generateConfig} from 'browser/renderer/shared/CharAtlasUtils';
 
 interface ITextureAtlasCacheEntry {
   atlas: ITextureAtlas;

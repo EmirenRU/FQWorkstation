@@ -3,7 +3,7 @@
  * @license MIT
  */
 
-import { isNode } from 'common/Platform';
+import {isNode} from 'common/Platform';
 
 interface ITaskQueue {
   /**

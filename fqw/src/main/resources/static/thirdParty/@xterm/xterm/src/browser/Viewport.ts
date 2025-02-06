@@ -3,14 +3,14 @@
  * @license MIT
  */
 
-import { addDisposableDomListener } from 'browser/Lifecycle';
-import { IViewport, ReadonlyColorSet } from 'browser/Types';
-import { IRenderDimensions } from 'browser/renderer/shared/Types';
-import { ICharSizeService, ICoreBrowserService, IRenderService, IThemeService } from 'browser/services/Services';
-import { EventEmitter } from 'common/EventEmitter';
-import { Disposable } from 'common/Lifecycle';
-import { IBuffer } from 'common/buffer/Types';
-import { IBufferService, IOptionsService } from 'common/services/Services';
+import {addDisposableDomListener} from 'browser/Lifecycle';
+import {IViewport, ReadonlyColorSet} from 'browser/Types';
+import {IRenderDimensions} from 'browser/renderer/shared/Types';
+import {ICharSizeService, ICoreBrowserService, IRenderService, IThemeService} from 'browser/services/Services';
+import {EventEmitter} from 'common/EventEmitter';
+import {Disposable} from 'common/Lifecycle';
+import {IBuffer} from 'common/buffer/Types';
+import {IBufferService, IOptionsService} from 'common/services/Services';
 
 const FALLBACK_SCROLL_BAR_WIDTH = 15;
 

@@ -69,5 +69,10 @@ public class OrientationServiceImpl implements OrientationService {
         return (temp != null) ? temp.getCode() + " " + temp.getName() : null;
     }
 
+    @Override
+    public Orientation findByCode(String orientationCode) {
+        return orientationRepository.findById(orientationCode).orElse(null);
+    }
+
 
 }

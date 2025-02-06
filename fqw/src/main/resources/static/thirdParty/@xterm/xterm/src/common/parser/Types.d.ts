@@ -3,8 +3,8 @@
  * @license MIT
  */
 
-import { IDisposable } from 'common/Types';
-import { ParserState } from 'common/parser/Constants';
+import {IDisposable} from 'common/Types';
+import {ParserState} from 'common/parser/Constants';
 
 
 /** sequence params serialized to js arrays */
