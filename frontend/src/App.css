@@ -1,0 +1,30 @@
+#root {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+	min-height: 100vh;
+	flex-direction: column;
+	min-width: 760px;
+	width: 100%;
+  
+}
+
+#root {
+	--max-padding: 75px;
+	--min-padding: 50px;
+	--high-res-columns: 2;
+	--low-res-column: 1;
+	--c-gap: 32px;
+	--block-height: 622px;
+	--block-height-1024: 640px;
+	--block-height-678: 650px;
+}
+
+
+
+body {
+	font-family: "Muller", Arial, Helvetica, sans-serif !important;
+	background-image: linear-gradient(to right top, #f9fcff, #d8e6f7, #bad5f7, #89b7f3, #4b9ce7);
+}

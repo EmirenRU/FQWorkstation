@@ -13,7 +13,7 @@ public interface SqlService {
     public CompletableFuture<String> getLecturersAsync(HttpServletRequest request, Model model);
 
     @Async
-    CompletableFuture<ResponseEntity<String>> receiveLecturers(HttpServletRequest request);
+    CompletableFuture<ResponseEntity<String>> receiveLecturers();
 
     @Async
     CompletableFuture<ResponseEntity<String>> receiveThemes(HttpServletRequest request);

@@ -1,0 +1,81 @@
+.display-section {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    max-width: 95%;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+table {
+	margin-bottom: 25px;
+	width: 100%;
+}
+
+
+table thead th {
+	font-weight: bold;
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	background: #d8d8d8;
+	font-size: 14px;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+
+.columns {
+	width: 100%;
+	min-width: 1190px;
+}
+
+.tr-table {
+	background-color: #ffffff;
+	display: flex;
+	width: 100%;
+	outline: 0.5px solid black;
+;
+	flex-direction: row;
+}
+
+.td-table {
+	display: flex;
+	flex-direction: column;
+	width: 12.5%;
+	padding: 0.5%;
+	outline: 0.5px solid black;
+	justify-content: center;
+}
+
+
+.download{
+	display: flex;
+	background-image: url(../img/download.svg);
+	background-repeat: no-repeat;
+	background-size: 32px 32px;
+	background-position: 5% 40%;
+	border: 2px #4670e4 solid;
+	border-radius: 3px;
+	background-color: #4670e4;
+    padding: 10px 50px;
+	justify-content: center;
+	max-width: 265px;
+	
+}
+
+.download-button{
+	line-height: 32px;
+	font-weight: 700;
+	font-size: 1.125rem;
+	padding: 0;
+	color: #FFFFFF !important;
+	text-decoration: none;
+	width: 100%;
+	background: transparent;
+}
+
+.download-button:active{
+	text-decoration: none;
+	border: 0;
+}
+

@@ -32,12 +32,11 @@ public class ApplicationProgrammingInterfaceController {
     /**
      * Receive the SqlPayload for React by request
      *
-     * @param request contains a required data
      * @return a ResponseEntity with a status and FQW in Body
      */
     @GetMapping("/v1/receive_lecturers")
-    public CompletableFuture<ResponseEntity<String>> receiveLecturers(HttpServletRequest request) {
-        return sqlService.receiveLecturers(request).thenApply( reply -> {
+    public CompletableFuture<ResponseEntity<String>> receiveLecturers() {
+        return sqlService.receiveLecturers().thenApply( reply -> {
             log.info("receive lecturers response");
             return reply;
         });

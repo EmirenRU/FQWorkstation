@@ -34,6 +34,7 @@ build/
 
 ### Custom ###
 logs/
+frontend/node_modules/
 
 ### Docker ###
 docker/.env

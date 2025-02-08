@@ -83,16 +83,14 @@ public class SqlServiceImpl implements SqlService {
     /**
      * transporting all data from SL to SqlPayload for React transaction
      *
-     * @param request
      * @return a CompletableFuture (Async) with ResponseEntity's header and body json
      */
     @Async
     @Override
-    public CompletableFuture<ResponseEntity<String>> receiveLecturers(HttpServletRequest request) {
+    public CompletableFuture<ResponseEntity<String>> receiveLecturers() {
         List<SqlPayload> res = studentLecturersService.getAllStudentLecturers();
         Map<String, String> headers = new HashMap<>();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(gson.toJson(res)));
     }
 

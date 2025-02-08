@@ -1,0 +1,166 @@
+.form-support {
+	padding: 50px 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+	margin-bottom: 70px;
+    background-color: aliceblue;
+    border: 5px solid #5a84c9;
+    border-radius: 20px;
+    max-width: 50%;
+
+}
+
+::placeholder { /* Most modern browsers support this now. */
+	color:    rgb(104, 104, 104);
+}
+
+
+.form__header {
+	margin: 0;
+	margin-bottom: 25px;
+	font-size: 48px;
+	font-weight: 400;
+	line-height: 59px;
+	color: #5a84c9;
+
+}
+
+.form-body-support {
+	display: flex;
+	flex-direction: column;
+}
+
+.input {
+	max-width: 570px;
+}
+
+.input__str {
+	color: #1f1f1f;
+	border: 0;
+	background-color: rgb(190, 198, 205) !important;
+
+	border-radius: 16px;
+	min-height: 60px;
+	width: 570px;
+	padding-left: 24px;
+	vertical-align: middle;
+	margin-bottom: 25px;
+}
+
+.input__str-msg {
+	color: #1f1f1f;
+	border: 0;
+	background-color: rgb(190, 198, 205);
+	border-radius: 16px;
+	padding-left: 24px;
+	vertical-align: middle;
+	padding-top: 24px;
+	min-height: 150px;
+	margin-bottom: 32px;
+    min-width: 100%;
+
+}
+
+.send {
+	flex-direction: row;
+	align-items: center;
+}
+
+
+.custom {
+	color: #4f4f4f;
+	flex-direction: column;
+	display: flex;
+}
+
+.custom-checkbox {
+	user-select: none;
+	cursor: pointer;
+}
+
+.custom-checkbox:focus-within {
+	outline: #0051ff 2px solid;
+}
+
+.custom-input {
+	appearance: none;
+	position: absolute;
+}
+
+.custom-text {
+	position: relative;
+	padding-left: 20px;
+}
+
+.custom-text::before {
+	content: " ";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 14px;
+	height: 14px;
+	border: 1px solid #4f4f4f;
+	transform: translateY(-50%);
+}
+
+.custom-text::after {
+	content: " ";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 14px;
+	height: 14px;
+	border: 1px solid #4f4f4f;
+	transform: translateY(-50%);
+	background-image: url(./checked.svg);
+	background-position: center;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	opacity: 0;
+}
+
+.send__button {
+	background-color: #006eff;
+	color: #FFFFFF;
+	border-radius: 16px;
+	font-weight: 600;
+	transition: background-color 0.3s ease-in-out;
+	max-width: 275px;
+	padding: 20px 52px;
+	font-size: 16px;
+	line-height: 15.5px;
+	letter-spacing: -0.5px;
+	margin-right: 20px;
+}
+
+.send__button:active{
+	background-color: #0045a0;
+}
+
+.send__text {
+	letter-spacing: 0.25px;
+}
+
+.custom-input:checked+.custom-text::after {
+	opacity: 1;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: black; /* Замените 'black' на нужный цвет текста */;
+    background-color: rgb(190, 198, 205);
+    box-shadow: inset 0 0 20px 20px rgb(190, 198, 205) !important;
+}
+
+INPUT:-webkit-autofill:hover, INPUT:-webkit-autofill:focus, INPUT:-webkit-autofill:active, SELECT:-webkit-autofill:hover, SELECT:-webkit-autofill:focus, SELECT:-webkit-autofill:active, TEXTAREA:-webkit-autofill:hover, TEXTAREA:-webkit-autofill:focus, TEXTAREA:-webkit-autofill:active {
+    animation-name: onautofillstart;
+    -webkit-background-clip: text;
+    box-shadow: inset 0 0 20px 20px rgb(190, 198, 205);
+    -webkit-box-shadow: 0 0 20px 20px rgb(190, 198, 205) inset !important;
+}
+
+.form-field__error-text{
+	color: red;
+}
