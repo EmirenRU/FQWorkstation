@@ -12,7 +12,7 @@ import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 
 public class SimulationTests extends Simulation {
-    private final HttpProtocolBuilder httpProtocol = http.baseUrl("http://localhost:8080")
+    private final HttpProtocolBuilder httpProtocol = http.baseUrl("http://localhost:13131")
             .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
             .contentTypeHeader("application/x-www-form-urlencoded");
 
@@ -38,7 +38,7 @@ public class SimulationTests extends Simulation {
             );
     {
         setUp(
-                scenarioBuilder.injectOpen(OpenInjectionStep.atOnceUsers(25)).protocols(httpProtocol)
+                scenarioBuilder.injectOpen(OpenInjectionStep.atOnceUsers(20)).protocols(httpProtocol)
         );
     }
 }

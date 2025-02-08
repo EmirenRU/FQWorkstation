@@ -16,8 +16,6 @@ import java.util.Map;
 @Slf4j
 public class DocumentCleanupServiceImpl implements DocumentCleanupService {
     private final FileHolder fileHolder;
-
-
     public DocumentCleanupServiceImpl(FileHolder fileHolder) {
         this.fileHolder = fileHolder;
     }

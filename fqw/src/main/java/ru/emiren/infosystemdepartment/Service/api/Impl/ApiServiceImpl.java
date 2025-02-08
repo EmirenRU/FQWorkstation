@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
-import org.apache.groovy.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -20,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +26,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Controller.Protocol.FunctionsController;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
-import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
-import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
 import ru.emiren.infosystemdepartment.Model.Temporal.FileHolder;
 import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
-import ru.emiren.infosystemdepartment.Service.Deserialization.DeserializationService;
 import ru.emiren.infosystemdepartment.Service.Download.DownloadService;
 import ru.emiren.infosystemdepartment.Service.File.FileService;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
@@ -165,7 +160,7 @@ public class ApiServiceImpl implements ApiService {
      * @return a ResponseEntity containing the status of the upload.
      */
     @Override
-    public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId) {
+    public ResponseEntity<String> handleFileUpload(MultipartFile file, String fileId) {
         log.info("{}", file.getName());
         Map<String, String> headers = new HashMap<>();
         log.info("Received file upload with ID: {}", fileId);
@@ -187,16 +182,16 @@ public class ApiServiceImpl implements ApiService {
                 headers.put("id", fileId);
                 PoitlIOUtils.closeQuietly(processedDocument);
 
-                return ResponseEntity.ok(headers);
+                return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
             } catch (IOException ex) {
                 log.error("Error processing file upload: {}", "Something went wrong");
                 headers.put("status", "500");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
             }
         } else {
             headers.put("status", "200");
             headers.put("id", fileId);
-            return ResponseEntity.status(HttpStatus.OK).body(headers);
+            return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
         }
     }
 
@@ -207,7 +202,7 @@ public class ApiServiceImpl implements ApiService {
      * @return a ResponseEntity with a status of readiness
      */
     @Override
-    public ResponseEntity<?> checkFileAvailability(String id) {
+    public ResponseEntity<String> checkFileAvailability(String id) {
         log.info(id);
         if (fileHolder.containsDocument(id)) {
             return ResponseEntity.status(HttpStatus.OK).body("200");
@@ -280,7 +275,7 @@ public class ApiServiceImpl implements ApiService {
      */
     @Override
     @Async
-    public CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request) {
+    public CompletableFuture<ResponseEntity<String>> receiveLecturers(HttpServletRequest request) {
         List<SqlPayload> res = studentLecturersService.getAllStudentLecturers();
         Map<String, String> headers = new HashMap<>();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -296,9 +291,9 @@ public class ApiServiceImpl implements ApiService {
      */
     @Override
     @Async
-    public CompletableFuture<ResponseEntity<?>> receiveThemes(HttpServletRequest request) {
+    public CompletableFuture<ResponseEntity<String>> receiveThemes(HttpServletRequest request) {
         List<FQWDTO> res = fqwService.getAllFQW();
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res));
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res.toString()));
     }
 
     /**

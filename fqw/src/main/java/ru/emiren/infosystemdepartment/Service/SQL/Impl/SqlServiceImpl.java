@@ -27,13 +27,12 @@ public class SqlServiceImpl implements SqlService {
     private final ProtocolQuestionService protocolQuestionService;
     private final QuestionService questionService;
     private final ProtocolService protocolService;
-    StudentService studentService;
-    DepartmentService departmentService;
-    LecturerService lecturerService;
-    OrientationService orientationService;
-    ProtectionService protectionService;
-    StudentLecturersService studentLecturersService;
-    FQWService fqwService;
+    private final StudentService studentService;
+    private final DepartmentService departmentService;
+    private final LecturerService lecturerService;
+    private final OrientationService orientationService;
+    private final StudentLecturersService studentLecturersService;
+    private final FQWService fqwService;
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
     List<DepartmentDTO> departmentDTOS;
@@ -65,7 +64,6 @@ public class SqlServiceImpl implements SqlService {
         this.departmentService          = departmentService;
         this.lecturerService            = lecturerService;
         this.orientationService         = orientationService;
-        this.protectionService          = protectionService;
         this.studentLecturersService    = studentLecturersService;
         this.fqwService                 = fqwService;
 

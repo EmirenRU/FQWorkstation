@@ -1,6 +1,5 @@
 package ru.emiren.infosystemdepartment.Controller.API;
 
-import jakarta.mail.Message;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +8,9 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import ru.emiren.infosystemdepartment.Service.Support.DataService;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
 import java.io.*;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -23,21 +19,20 @@ import java.util.concurrent.CompletableFuture;
 public class ApplicationProgrammingInterfaceController {
 
     private final ApiService apiService;
-    private final DataService dataService;
 
     @Autowired
-    public ApplicationProgrammingInterfaceController(ApiService apiService, DataService dataService) {this.apiService = apiService;
-        this.dataService = dataService;
+    public ApplicationProgrammingInterfaceController(ApiService apiService) {
+        this.apiService = apiService;
     }
 
     /**
      * Receive the SqlPayload for React by request
      *
-     * @param request
+     * @param request contains a required data
      * @return a ResponseEntity with a status and FQW in Body
      */
     @GetMapping("/v1/receive_lecturers")
-    public CompletableFuture<ResponseEntity<?>> receiveLecturers(HttpServletRequest request) {
+    public CompletableFuture<ResponseEntity<String>> receiveLecturers(HttpServletRequest request) {
         return apiService.receiveLecturers(request).thenApply( reply -> {
             log.info("receive lecturers response");
             return reply;
@@ -47,7 +42,7 @@ public class ApplicationProgrammingInterfaceController {
     /**
      * Receive the FQW by a request from JS
      *
-     * @param request
+     * @param request contains a required data
      * @return a ResponseEntity with a status and FQW in Body
      */
     @GetMapping("/sql/receive_fqw")
@@ -61,9 +56,9 @@ public class ApplicationProgrammingInterfaceController {
     /**
      * handle a message from console
      *
-     * @param request
-     * @param response
-     * @param message
+     * @param request contains a required data
+     * @param response output for a client
+     * @param message data from terminal
      * @return a ResponseEntity with a status
      */
     @PostMapping("/v1/upload_data_to_sql")
