@@ -6,7 +6,7 @@ interface FormData {
     from: string;
     till: string;
     themes: string[];
-    lecturer: string[]; // Adjust the type as needed
+    lecturer: string[]; 
 }
 
 interface FormContextType {

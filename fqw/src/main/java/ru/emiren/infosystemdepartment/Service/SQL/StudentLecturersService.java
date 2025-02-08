@@ -6,6 +6,7 @@ import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 public interface StudentLecturersService {
@@ -35,4 +36,6 @@ public interface StudentLecturersService {
     StudentLecturers findStudentLecturersByStudentStudNum(Long studNum);
 
     StudentLecturers findStudentLecturersByStudentStudNumAndLecturerName(Long studNum, String name);
+
+    List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes, List<Long> departmentCode, Integer dateFrom, Integer dateTo, List<Long> theme, List<Long> lecturerIds);
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 public interface SqlService {
 
     public CompletableFuture<String> getLecturersAsync(HttpServletRequest request, Model model);
+    public CompletableFuture<ResponseEntity<String>> getLecturersAsync(Map<String, Object> data);
 
     @Async
     CompletableFuture<ResponseEntity<String>> receiveLecturers();

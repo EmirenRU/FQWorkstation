@@ -6,12 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.Service.SQL.SqlService;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
-import java.io.*;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -100,6 +98,15 @@ public class ApplicationProgrammingInterfaceController {
     @PostMapping("/v1/save-data")
     public ResponseEntity<String> saveData(@RequestBody Map<String, Object> data) {
         return sqlService.saveDataFromProtocol(data);
+    }
+
+    @PostMapping("/v1/receive-by-params")
+    public CompletableFuture<ResponseEntity<String>> receiveByParams(@RequestBody Map<String, Object> request) {
+        return sqlService.getLecturersAsync(request).thenApply( reply -> {
+                log.info("receive by-params response with data {}", reply);
+                return reply;
+            }
+        );
     }
 
 }

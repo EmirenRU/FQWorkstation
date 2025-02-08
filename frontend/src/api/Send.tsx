@@ -7,18 +7,13 @@ export function registerRequest(username: string, phone: string, email: string, 
         },
         body: JSON.stringify({username, phone, email, message, agreement})
     }).then(validateResponse).then(() => undefined)
-}
-    
-export async function validateResponse(response:Response): Promise<Response>{
-    if(!response.ok){
-        throw new Error(await response.text())
-
     }
-
-    return response;
-}
-
-// export async function getLecturs() : Promise<Response>{
-//     console.log("Getting data from sql");
-//     return fetch("/api/v1/receive_lecturers", {method: "POST", headers: {}, body: JSON.stringify()})
-// }
+    
+    export async function validateResponse(response:Response): Promise<Response>{
+        if(!response.ok){
+            throw new Error(await response.text())
+    
+        }
+    
+        return response;
+    }

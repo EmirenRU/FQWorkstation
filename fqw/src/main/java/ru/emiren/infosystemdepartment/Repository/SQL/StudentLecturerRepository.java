@@ -46,4 +46,21 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
     @Query("SELECT sl FROM StudentLecturers sl JOIN Student st ON st.stud_num = sl.student.stud_num " +
             "JOIN Lecturer l ON l.id = sl.lecturer.id WHERE sl.student.stud_num = :studNum AND sl.lecturer.name = :name")
     Optional<StudentLecturers> findByStudentNumberAndLecturerName(Long studNum, String name);
+
+    @Query("SELECT sl FROM StudentLecturers sl " +
+            "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code " +
+            "WHERE " +
+            " ( (sl.lecturer.id IN :lecturerIds) OR (-1 IN :lecturerIds ) ) AND " +
+            " ( (sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes) ) AND " +
+            " ( (sl.student.department.code IN :departmentCodes ) OR (-1 IN :departmentCodes ) ) AND " +
+            " ( (sl.student.fqw.id IN :themes) OR ( -1 IN :themes ) ) AND " +
+            " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
+            " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
+            " ORDER BY sl.lecturer.name")
+    Optional<List<StudentLecturers>> findAllByIds(List<String> orientationCodes,
+                                                  List<Long> departmentCodes,
+                                                  Integer dateFrom,
+                                                  Integer dateTo,
+                                                  List<Long> themes,
+                                                  List<Long> lecturerIds);
 }

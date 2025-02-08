@@ -119,5 +119,11 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
         return studentLecturerRepository.findByStudentNumberAndLecturerName(studNum, name).orElse(null);
     }
 
+    @Override
+    public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes, List<Long> departmentCode, Integer dateFrom, Integer dateTo, List<Long> themes, List<Long> lecturerIds) {
+        return studentLecturerRepository.findAllByIds(orientationCodes, departmentCode, dateFrom, dateTo, themes, lecturerIds).orElse(null)
+                .stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).toList();
+    }
+
 
 } // C D

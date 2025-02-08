@@ -17,6 +17,7 @@ import ru.emiren.infosystemdepartment.DTO.SQL.*;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -35,6 +36,7 @@ public class SqlServiceImpl implements SqlService {
     private final OrientationService orientationService;
     private final StudentLecturersService studentLecturersService;
     private final FQWService fqwService;
+    private final Gson gson;
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
     List<DepartmentDTO> departmentDTOS;
@@ -61,7 +63,7 @@ public class SqlServiceImpl implements SqlService {
                           ProtectionService protectionService,
                           StudentLecturersService studentLecturersService,
                           FQWService fqwService,
-                          ProtocolQuestionService protocolQuestionService, QuestionService questionService, ProtocolService protocolService){
+                          ProtocolQuestionService protocolQuestionService, QuestionService questionService, ProtocolService protocolService, Gson gson){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
         this.lecturerService            = lecturerService;
@@ -77,6 +79,7 @@ public class SqlServiceImpl implements SqlService {
         this.protocolQuestionService = protocolQuestionService;
         this.questionService = questionService;
         this.protocolService = protocolService;
+        this.gson = gson;
     }
 
 
@@ -184,6 +187,77 @@ public class SqlServiceImpl implements SqlService {
         // TODO api for android client
         log.info("Async getLecturer task has completed");
         return CompletableFuture.completedFuture("lecturers");
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<ResponseEntity<String>> getLecturersAsync(Map<String, Object> data) {
+        log.info("Async getLecturer task");
+        log.info("Request: {}", data);
+        List<String> lecturerParams = (List<String>) data.get("lecturer"); // Long
+        List<Long> lecturerIds = (lecturerParams != null && !lecturerParams.isEmpty()) ? lecturerParams.stream().map(Long::parseLong).toList() : List.of((long) -1);
+
+        List<String> orientationParams = (List<String>) data.get("orientation");
+        List<String> orientationCodes = (orientationParams != null && !orientationParams.isEmpty()) ? orientationParams : List.of("-1");
+
+        List<String> departmentParams = (List<String>) data.get("department"); // Long
+        List<Long> departmentCode = (departmentParams != null && !departmentParams.isEmpty()) ? departmentParams.stream().map(Long::parseLong).toList() : List.of((long) -1);
+
+        List<String> themeParams = (List<String>) data.get("themes");
+        List<Long> theme = (themeParams != null && !themeParams.isEmpty()) ? themeParams.stream().map(Long::parseLong).toList() : List.of((long) -1);
+
+        String strDateFrom = (String) data.get("from");
+        String strDateTo = (String) data.get("till");
+
+        log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
+                lecturerIds,
+                orientationParams,
+                departmentCode,
+                theme,
+                strDateFrom,
+                strDateTo);
+
+        Integer dateFrom = null;
+        Integer dateTo = null;
+
+        if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
+            dateFrom = Integer.valueOf(strDateFrom);
+            dateTo   = Integer.valueOf(strDateTo);
+        }
+
+        log.info("date from and to: {} and {}", dateFrom, dateTo );
+
+//        String stringForQuery = theme.stream()
+//                .map(word -> "%" + word + "%").collect(Collectors.joining("|"));
+
+        List<StudentLecturersDTO> res = studentLecturersService.findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(
+                orientationCodes,
+                departmentCode,
+                dateFrom,
+                dateTo,
+                theme,
+                lecturerIds
+        );
+        log.info("The result is {} empty", res.isEmpty());
+        List<SqlPayload> payloads = res.stream().map(sl -> {
+            log.info("In map function with data: {}", sl.getLecturer().getName().toString());
+            return SqlPayload.builder()
+                    .id(sl.getId())
+                    .fullLecturerName(sl.getLecturer().getName())
+                    .academicDegree(sl.getLecturer().getAcademicDegree())
+                    .position(sl.getLecturer().getPosition())
+                    .department(sl.getLecturer().getDepartment().getName())
+                    .fullStudentName(sl.getStudent().getName())
+                    .studNum(sl.getStudent().getStud_num())
+                    .citizenship(sl.getStudent().getCitizenship())
+                    .theme(sl.getStudent().getFqw().getName())
+                    .build();
+        }).toList();
+
+        log.info("The result is {} empty", res.isEmpty());
+
+        log.info("Async getLecturer task has completed");
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(gson.toJson(payloads)));
     }
 
     @Override

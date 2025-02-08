@@ -118,7 +118,6 @@ export const  LoadSaved = () =>  {
             case 'department':
                 setDepartmentData(selectedValues);
                 saveInputs(name, selectedValues);
-                console.log(typeof setFormData)
 
                 break;
             case 'themes':

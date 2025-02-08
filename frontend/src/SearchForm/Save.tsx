@@ -38,7 +38,7 @@ export const saveInputs = (name:string, value: object, flag?:string) =>{
             //checking if loading state or fresh selection
             if(flag === undefined && typeof selectedItem === "object"){
             saveEntry.value = selectedItem;
-            alert("A GREAT SUCCESS");
+
             }
     }
 
