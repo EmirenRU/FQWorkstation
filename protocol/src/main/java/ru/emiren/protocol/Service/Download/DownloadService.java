@@ -1,9 +1,7 @@
 package ru.emiren.protocol.Service.Download;
 
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.OutputStream;
 import java.util.List;
 
 public interface DownloadService {

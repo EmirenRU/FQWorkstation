@@ -1,13 +1,11 @@
 package ru.emiren.protocol.Service.api;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 public interface ApiService {
     public String downloadProtocols(HttpServletResponse response) throws IOException;

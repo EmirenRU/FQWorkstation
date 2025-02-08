@@ -23,7 +23,7 @@ public class EmailRestController {
     }
 
     @PostMapping("/send-email")
-    public ResponseEntity<?> saveData(String to, @Valid Map<String, String> data, Model model) {
+    public ResponseEntity<String> saveData(String to, @Valid Map<String, String> data, Model model) {
         return emailService.sendSimpleMail(to, data.get("subject"), data.get("text"));
     }
 }
