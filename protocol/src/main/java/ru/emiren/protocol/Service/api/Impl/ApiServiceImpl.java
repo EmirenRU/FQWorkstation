@@ -2,14 +2,22 @@ package ru.emiren.protocol.Service.api.Impl;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -24,19 +32,99 @@ import ru.emiren.protocol.Service.Download.DownloadService;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
 public class ApiServiceImpl implements ApiService {
+    private final DownloadService downloadService;
+    private final WordService wordService;
 
+    @Getter
+    @AllArgsConstructor
+    public enum FileData {
+        FQW("fqw"),
+        GOV("gos"),
+        REV("rev"),
+        COM("com"),
+        PRO("pro");
+        private final String data;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum FileTypes {
+        Excel(".xlsx"),
+        Word(".doc"),
+        PDF(".pdf"),
+        DOCX(".docx");
+        private final String extension;
+    }
+
+
+    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
+
+    private final DateFormat dateFormat;
+
+    List<List<String>> data;
+
+    FileHolder fileHolder = new FileHolder();
+
+    @Autowired
+    ApiServiceImpl(
+                   FileService fileService,
+                   DownloadService downloadService,
+                   WordService wordService,
+                   DateFormat dateFormat,
+                   ResourceLoader resourceLoader){
+        this.downloadService = downloadService;
+        this.wordService = wordService;
+
+        this.dateFormat = dateFormat;
+    }
+
+    /**
+     * Don't mind it
+     * @return a dictionary with file extensions
+     */
+    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
+        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
+        Arrays.stream(FileData.values()).forEach(fileData -> {
+            Map<String, List<FileHeader>> typeMap = new HashMap<>();
+            if (fileData == FileData.PRO) {
+                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
+            } else {
+                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
+                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
+            }
+            map.put(fileData.getData(), typeMap);
+        });
+        return map;
+    }
+
+    /**
+     * Generates and send a protocol file to the client
+     *
+     * @param response
+     * @return a redirect to the function page
+     * @throws IOException
+     */
     @Override
     public String downloadProtocols(HttpServletResponse response) throws IOException {
         downloadService.generateAndSendFile(data, response);
         return "redirect:/functions";
     }
 
+    /**
+     * Handles the upload of a file and processes it.
+     *
+     * @param file
+     * @param fileId
+     * @return a ResponseEntity containing the status of the upload.
+     */
     @Override
-    public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId) {
+    public ResponseEntity<String> handleFileUpload(MultipartFile file, String fileId) {
+        log.info("{}", file.getName());
         Map<String, String> headers = new HashMap<>();
         log.info("Received file upload with ID: {}", fileId);
 
@@ -45,8 +133,7 @@ public class ApiServiceImpl implements ApiService {
                  ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 log.info("Processing file: {}", file.getOriginalFilename());
 
-                List<List<String>> temp_data = wordService.getListOfDataFromFile(is);
-                NiceXWPFDocument processedDocument = wordService.generateWordDocument(temp_data);
+                NiceXWPFDocument processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is));
 
                 log.info("Document generated successfully for file ID: {}", fileId);
                 processedDocument.write(baos);
@@ -58,22 +145,27 @@ public class ApiServiceImpl implements ApiService {
                 headers.put("id", fileId);
                 PoitlIOUtils.closeQuietly(processedDocument);
 
-                return ResponseEntity.ok(headers);
+                return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
             } catch (IOException ex) {
-                log.error("Error processing file upload: {}", ex.getMessage());
+                log.error("Error processing file upload: {}", "Something went wrong");
                 headers.put("status", "500");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
             }
         } else {
             headers.put("status", "200");
             headers.put("id", fileId);
-            return ResponseEntity.status(HttpStatus.OK).body(headers);
+            return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
         }
     }
 
-
+    /**
+     * Check if file is ready by id
+     *
+     * @param id
+     * @return a ResponseEntity with a status of readiness
+     */
     @Override
-    public ResponseEntity<?> checkFileAvailability(String id) {
+    public ResponseEntity<String> checkFileAvailability(String id) {
         log.info(id);
         if (fileHolder.containsDocument(id)) {
             return ResponseEntity.status(HttpStatus.OK).body("200");
@@ -82,6 +174,13 @@ public class ApiServiceImpl implements ApiService {
         }
     }
 
+    /**
+     * On call returns a download process of file
+     *
+     * @param id
+     * @param response
+     * @return a ResponseEntity with status
+     */
     @Override
     public ResponseEntity<String> downloadFile(String id, HttpServletResponse response) {
         log.info("DownloadWordFile is activated with id: {}", id );
@@ -96,7 +195,7 @@ public class ApiServiceImpl implements ApiService {
                             .filename("protocols-" + dateFormat.format(date) + ".docx")
                             .build().toString());
             try (OutputStream os = response.getOutputStream();
-                 BufferedOutputStream bos = new BufferedOutputStream(os);
+                 BufferedOutputStream bos = new BufferedOutputStream(os)
             ) {
                 log.info("In OutputStream for {}", id);
 //                document.write(bos);
@@ -117,50 +216,17 @@ public class ApiServiceImpl implements ApiService {
         return ResponseEntity.badRequest().build();
     }
 
-    @Override
-    public String generateAndSendFile(HttpServletResponse response) throws IOException {
-        return "";
-    }
-
+    /**
+     * no implementation
+     *
+     * @param request to MultipartFile
+     * @return a ResponseEntity status
+     */
     @Override
     public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request) {
         MultipartFile file = request.getFile("data");
 
         return ResponseEntity.status(HttpStatus.OK).body("Proceed");
-    }
-
-    public enum FileData {
-        FQW("fqw"),
-        GOV("gos"),
-        REV("rev"),
-        COM("com"),
-        PRO("pro");
-
-        private final String data;
-
-        FileData(String data) {
-            this.data = data;
-        }
-        public String getData() {
-            return data;
-        }
-    }
-
-    public enum FileTypes {
-        Excel(".xlsx"),
-        Word(".doc"),
-        PDF(".pdf"),
-        DOCX(".docx");
-
-        private final String extension;
-
-        FileTypes(String extension) {
-            this.extension = extension;
-        }
-
-        public String getExtension() {
-            return extension;
-        }
     }
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
@@ -172,7 +238,7 @@ public class ApiServiceImpl implements ApiService {
             String theme = row.get(3);
             String jobAndPost = row.get(4);
             String SupervisionsName = row.get(5);
-            String consRP = row.get(6); //idk what it is
+            String consRP = row.get(6); //I don't know what it is
             String Reviewer = row.get(7); //Рец-нт?
             String reviewersJobAndPost = row.get(8);
             String C = row.get(9);
@@ -196,53 +262,5 @@ public class ApiServiceImpl implements ApiService {
 
 
         }
-    }
-
-    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
-        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
-        Arrays.stream(FileData.values()).forEach(fileData -> {
-            Map<String, List<FileHeader>> typeMap = new HashMap<>();
-            if (fileData == FileData.PRO) {
-                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
-            } else {
-                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
-                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
-            }
-            map.put(fileData.getData(), typeMap);
-        });
-        return map;
-    }
-
-    private final FileService fileService;
-    private final DeserializationService deserializationService;
-    private final DownloadService downloadService;
-    private final WordService wordService;
-
-    private final ProtocolController functionsController;
-
-    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
-
-    private DateFormat dateFormat;
-
-    List<List<String>> data;
-
-    FileHolder fileHolder = new FileHolder();
-
-    @Autowired
-    ApiServiceImpl(
-                   FileService fileService,
-                   DeserializationService deserializationService,
-                   DownloadService downloadService,
-                   WordService wordService,
-                   ProtocolController functionsController,
-                   DateFormat dateFormat
-    ){
-        this.fileService = fileService;
-        this.deserializationService = deserializationService;
-        this.downloadService = downloadService;
-        this.wordService = wordService;
-
-        this.functionsController = functionsController;
-        this.dateFormat = dateFormat;
     }
 }

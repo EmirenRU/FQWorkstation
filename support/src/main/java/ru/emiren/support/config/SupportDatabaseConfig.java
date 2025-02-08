@@ -65,7 +65,7 @@ public class SupportDatabaseConfig{
         HashMap<String, Object> properties = (HashMap<String, Object>) postgresSupportDataSourceProperties.getProperties();
         return builder.dataSource(dataSource)
                 .properties(properties)
-                .packages("ru.emiren.infosystemdepartment.Model.Support")
+                .packages("ru.emiren.support.model")
                 .persistenceUnit("Support")
                 .build();
     }

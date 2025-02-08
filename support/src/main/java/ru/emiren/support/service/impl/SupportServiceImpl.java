@@ -31,8 +31,7 @@ public class SupportServiceImpl implements SupportService {
 
     private List<SupportDataDTO> dataDTOList;
 
-    @Value("${email.location.uri}")
-    private String location;
+    private static final String location = "http://localhost:13132";
 
     @Autowired
     public SupportServiceImpl(RestTemplate restTemplate, SupportDataRepository supportDataRepository, Gson gson) {

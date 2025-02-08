@@ -1,5 +1,7 @@
 package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +12,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -78,6 +78,38 @@ public class SqlServiceImpl implements SqlService {
         this.questionService = questionService;
         this.protocolService = protocolService;
     }
+
+
+    /**
+     * transporting all data from SL to SqlPayload for React transaction
+     *
+     * @param request
+     * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     */
+    @Async
+    @Override
+    public CompletableFuture<ResponseEntity<String>> receiveLecturers(HttpServletRequest request) {
+        List<SqlPayload> res = studentLecturersService.getAllStudentLecturers();
+        Map<String, String> headers = new HashMap<>();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(gson.toJson(res)));
+    }
+
+    /**
+     * receive all FQW data
+     *
+     * @param request
+     * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     */
+    @Async
+    @Override
+    public CompletableFuture<ResponseEntity<String>> receiveThemes(HttpServletRequest request) {
+        List<FQWDTO> res = fqwService.getAllFQW();
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res.toString()));
+    }
+
+
 
     @Override
     public String viewLecturer(Model model) {
@@ -237,7 +269,7 @@ public class SqlServiceImpl implements SqlService {
         return "lecturers";
     }
 
-
+    @Override
     @Scheduled(fixedRate = 60000) // 60 * 1000 = 1 min
     public void refreshData(){
         log.info("Refreshing data...");
