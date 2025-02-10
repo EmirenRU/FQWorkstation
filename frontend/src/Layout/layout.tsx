@@ -6,11 +6,6 @@ import { Support } from "../Support/Support";
 import { Lecturers } from "../Lecturers/Lecturers";
 import { Protocol } from "../Protocol/Protocol";
 
-
-
-
-
-
 export const PageLayout = () => {
     return (
         <Router>

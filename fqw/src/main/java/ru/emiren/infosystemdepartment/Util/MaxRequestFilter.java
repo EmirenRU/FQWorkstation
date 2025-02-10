@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MaxRequestFilter extends OncePerRequestFilter {
 
     private final Map<String, RequestCount> requestCounts = new ConcurrentHashMap<>();
-    private static final int MAX_REQUESTS_PER_MINUTE = 60; // requests it can proceed from one IP (1 ip can produce till 15 requests)
+    private static final int MAX_REQUESTS_PER_MINUTE = 20; // requests it can proceed from one IP (1 ip can produce till 15 requests)
     private static final int TIME_WINDOW = 60; // time in sec to clean
 
     @Override

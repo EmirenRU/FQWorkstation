@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class ApplicationProgrammingInterfaceController {

@@ -1,4 +1,4 @@
-package ru.emiren.email.Config;
+package ru.emiren.protocol.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,10 +19,10 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private static final String JS_ACCESS = "JS_ACCESS";
     private static final String ADMIN_ACCESS = "ADMIN";
     private static final String USER_ACCESS = "USER";
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
