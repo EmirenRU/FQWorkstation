@@ -5,6 +5,7 @@ import { FAQ } from "../FAQ/FAQ";
 import { Support } from "../Support/Support";
 import { Lecturers } from "../Lecturers/Lecturers";
 import { Protocol } from "../Protocol/Protocol";
+import { SendFile } from "../SendFile/SendFile";
 
 export const PageLayout = () => {
     return (
@@ -15,6 +16,7 @@ export const PageLayout = () => {
                 <Route path="/faq" Component={FAQ} />
                 <Route path="/support"  element={<Support  />} />
                 <Route path="/protocol" Component={Protocol} />
+                <Route path = "/sendFile" Component={SendFile}/>
                 <Route path="/" Component={Lecturers} /> {/* По умолчанию отображаем Lecturers */}
             </Routes>
             <Footer />

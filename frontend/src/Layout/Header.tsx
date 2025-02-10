@@ -24,7 +24,10 @@ export const Header = () => {
                                 <a href="/support" className="nav__links">Поддержка</a>
                             </li>
                             <li className="nav__item">
-                            <a href="/protocol" className="nav__links">Протокол</a>
+                            <a href="/protocol" className="nav__links">Добавить</a>
+                            </li>
+                            <li className="nav__item">
+                            <a href="/sendFile" className="nav__links">Протокол</a>
                             </li>
                         </ul>
                     </nav>
