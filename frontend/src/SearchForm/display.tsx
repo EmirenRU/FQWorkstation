@@ -13,7 +13,7 @@ export function ToggleDisplayAndSaveState ({ ready}) {
     const { formData } = useFormContext();
     const [loading, setLoading] = useState(true);
     const [sortedData, setSortedData] = useState<Array<DTO>>([])
-    const [tableBody, setTableBody] = useState<string[]>([]);
+    const [tableBody, setTableBody] = useState<any[]>([]);
     const [sortDirection, setSortDirection] = useState(false);
     const [parsedData, setParsedData] = useState([]);
     const [error, setError] = useState<string | null>(null);
@@ -23,24 +23,19 @@ export function ToggleDisplayAndSaveState ({ ready}) {
             console.log("In try section of fetch data")
             const result = await getFakeInfo(formData, setParsedData);
             setReadyAction(false)
-            console.log("Parsed", parsedData);
-            setSortedData(result)
+            console.log("Parsed",parsedData);
+            setSortedData(result);
             setLoading(false)
-
+            createTableBody(result)
         } catch (error) {
             console.error("Error fetching data:", error);
             setError("Error fetching data:")
         }
     }
 
-
     if(ReadyAction) {
         fetchData()
     }
-    
-
-    
-
 
     function handleDownloadExcel() {
         downloadExcel({
@@ -77,7 +72,6 @@ export function ToggleDisplayAndSaveState ({ ready}) {
                 row.theme,
             ]);
             setTableBody(tmpBody);
-            console.log("TMP BODY IS",tmpBody)
         }
     }
 

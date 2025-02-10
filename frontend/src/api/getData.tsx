@@ -7,11 +7,10 @@ export function getTableInfo (data, set) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     };
-    const response = fetch('/api/v1/receive-by-params', requestOptions)
+    const response = fetch('/fqw-api/api/v1/receive-by-params', requestOptions)
         .then(response => response.json());
         console.log('Response',response);
     return response.then(res => set(res));
-
 }
 
 
