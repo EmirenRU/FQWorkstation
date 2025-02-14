@@ -89,24 +89,30 @@ public class SqlServiceImpl implements SqlService {
     /**
      * transporting all data from SL to SqlPayload for React transaction
      * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     * @deprecated not required anymore
      */
     @Async
     @Override
+    @Deprecated(forRemoval = true)
     public CompletableFuture<ResponseEntity<String>> receiveLecturers() {
         List<SqlPayload> res = studentLecturersService.getAllStudentLecturers();
-        Map<String, String> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>(Map.of("Content-Type", "application/json"));
         Gson gsonBeautify = new GsonBuilder().setPrettyPrinting().create();
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(gsonBeautify.toJson(res)));
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK)
+                                                                .header(headers.toString())
+                                                                .body(gsonBeautify.toJson(res)));
     }
 
     /**
      * receive all FQW data
      *
-     * @param request
+     * @param request a client's headers and request
      * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     * @deprecated not required anymore
      */
     @Async
     @Override
+    @Deprecated(forRemoval = true)
     public CompletableFuture<ResponseEntity<String>> receiveThemes(HttpServletRequest request) {
         List<FQWDTO> res = fqwService.getAllFQW();
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res.toString()));
@@ -228,7 +234,6 @@ public class SqlServiceImpl implements SqlService {
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
-
 //        String stringForQuery = theme.stream()
 //                .map(word -> "%" + word + "%").collect(Collectors.joining("|"));
 
@@ -240,6 +245,7 @@ public class SqlServiceImpl implements SqlService {
                 theme,
                 lecturerIds
         );
+
         log.info("The result is {} empty", res.isEmpty());
         List<SqlPayload> payloads = res.stream().map(sl -> {
             log.info("In map function with data: {}", sl.getLecturer().getName().toString());
@@ -357,7 +363,6 @@ public class SqlServiceImpl implements SqlService {
     @Override
     public String getDetailPage(HttpServletRequest request, Model model, String id) {
         StudentLecturersDTO res = studentLecturersService.findStudentLecturersDTOById(Long.valueOf(id));
-
         model.addAttribute("detail", res);
         return "detail";
     }
