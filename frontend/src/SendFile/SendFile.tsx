@@ -20,7 +20,8 @@ export const SendFile = () => {
     }, [file]); // Dependency array ensures this runs only when `file` changes
 
     const handleUpload = async () => {
-        if (file) {
+        if (file)
+        {
             console.log('Uploading file...');
 
             const formData = new FormData();
@@ -32,33 +33,34 @@ export const SendFile = () => {
                 formData.append('file', file);
                 formData.append('id', hashId);
 
-                console.log("Hash is",hashId)
+                console.log("Hash is", hashId)
 
                 const settings = {
                     method: 'POST',
                     body: formData,
                 }
-            
+
                 try {
-                    const response = await fetch('/api/v2/upload_file', settings);
-                    const respData = await response.json();
-            
-                    if (respData.status === '200') {
+
+                    const response = await fetch('/protocol-api/api/protocol/upload_file', settings);
+                    console.log(await response.status)
+                    if (response.status === 200) {
                         alert("Successful")
                         await checkFileAvailability(hashId);
                     } else {
-                        alert("Error uploading file " );
+                        alert("Error uploading file ");
                     }
                 } catch (error) {
                     console.error("Error:", error);
-                    alert("Error uploading file " );
+                    alert("Error uploading file ");
                 }
-        }
-        catch(error){
-            console.log("Something fucked up",error)
+            } catch (error) {
+                console.log("Something fucked up", error)
+            }
+        } else{
+            console.log("Ending");
         }
     }
-}
 
     return (
         <div className="container">

@@ -26,7 +26,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
             " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
             " ORDER BY sl.lecturer.name")
-    List<StudentLecturers> findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment(
+    List<StudentLecturers> findAllByAndThemeAndDateAndOrientationAndDepartmentAndSortedByLecturer(
             @Param("orientationCodes") List<String> orientationCodes,
             @Param("departmentCode") List<Long> departmentCode,
             @Param("dateFrom") Integer dateFrom,

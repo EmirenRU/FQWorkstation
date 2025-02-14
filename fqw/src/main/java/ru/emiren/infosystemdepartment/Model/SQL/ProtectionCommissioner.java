@@ -3,8 +3,6 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @Builder
 @Entity

@@ -67,11 +67,12 @@ public class InfoSystemDepartmentApplicationTests {
 	private void performAndValidateGetRequest(String url) {
 
 		try {
-			MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sql/lecturers")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+			MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sql/lecturers"))
+					.andExpect(MockMvcResultMatchers.status().isOk())
+					.andReturn();
 			String content = result.getResponse().getContentAsString();
 			Assertions.assertNotNull(content, "Response content should not be null");
-//			log.info("Response Content: {}", content);
-
+			log.info("Response Content: {}", content);
 		} catch (Exception e) {
 			log.error("Error during GET request to {}", url, e);
 			throw new RuntimeException(e);

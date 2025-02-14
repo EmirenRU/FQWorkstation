@@ -3,14 +3,12 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
-import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 import ru.emiren.infosystemdepartment.Repository.SQL.OrientationRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.OrientationService;
-import ru.emiren.infosystemdepartment.Mapper.SQL.OrientationMapper;
+import ru.emiren.infosystemdepartment.Mapper.OrientationMapper;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service

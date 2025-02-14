@@ -4,7 +4,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.CommissionerDTO;
-import ru.emiren.infosystemdepartment.Mapper.SQL.CommissionerMapper;
+import ru.emiren.infosystemdepartment.Mapper.CommissionerMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Commissioner;
 import ru.emiren.infosystemdepartment.Repository.SQL.CommissionerRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.CommissionerService;

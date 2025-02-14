@@ -1,17 +1,11 @@
 package ru.emiren.infosystemdepartment.DTO.SQL;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.YearSerializer;
 import lombok.Builder;
 import lombok.Data;
 import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
-import ru.emiren.infosystemdepartment.Model.SQL.ProtectionCommissioner;
 
-import java.time.LocalDate;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 

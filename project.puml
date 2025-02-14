@@ -34,7 +34,7 @@ class ru.emiren.infosystemdepartment.Service.Support.Impl.DataServiceImpl {
 }
 
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.LecturerMapper {
+class ru.emiren.infosystemdepartment.Mapper.LecturerMapper {
 + {static} Lecturer mapToLecturer(LecturerDTO)
 + {static} LecturerDTO mapToLecturerDTO(Lecturer)
 }
@@ -324,17 +324,17 @@ interface ru.emiren.infosystemdepartment.Service.SQL.FQWService {
 
 class ru.emiren.infosystemdepartment.InfoSystemDepartmentApplicationTests {
 }
-class ru.emiren.infosystemdepartment.Mapper.SQL.ProtocolMapper {
+class ru.emiren.infosystemdepartment.Mapper.ProtocolMapper {
 + {static} Protocol mapToProtocol(ProtocolDTO)
 + {static} ProtocolDTO mapToProtocolDTO(Protocol)
 }
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.DepartmentMapper {
+class ru.emiren.infosystemdepartment.Mapper.DepartmentMapper {
 + {static} Department mapToDepartment(DepartmentDTO)
 + {static} DepartmentDTO mapToDepartmentDTO(Department)
 }
 
-class ru.emiren.infosystemdepartment.Model.Protocol.Data {
+class ru.emiren.infosystemdepartment.Model.SQL.Protocol.Data {
 }
 interface ru.emiren.infosystemdepartment.Service.SQL.ProtectionCommissionerService {
 ~ ProtectionCommissioner saveProtectionCommissioner(ProtectionCommissioner)
@@ -434,7 +434,7 @@ class ru.emiren.infosystemdepartment.Service.SQL.Impl.FQWServiceImpl {
 }
 
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.ProtectionMapper {
+class ru.emiren.infosystemdepartment.Mapper.ProtectionMapper {
 + {static} Protection mapToProtection(ProtectionDTO)
 + {static} ProtectionDTO protectionDTO(Protection)
 }
@@ -530,12 +530,12 @@ interface ru.emiren.infosystemdepartment.Service.SQL.StudentLecturersService {
 ~ List<StudentLecturersDTO> findAllAndSortedByDate(String)
 }
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper {
+class ru.emiren.infosystemdepartment.Mapper.StudentLecturersMapper {
 + {static} StudentLecturers mapToStudentLecturers(StudentLecturersDTO)
 + {static} StudentLecturersDTO mapToStudentLecturersDTO(StudentLecturers)
 }
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.OrientationMapper {
+class ru.emiren.infosystemdepartment.Mapper.OrientationMapper {
 + {static} Orientation mapToOrientation(OrientationDTO)
 + {static} OrientationDTO mapToOrientationDTO(Orientation)
 }
@@ -638,7 +638,7 @@ interface ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository {
 
 interface ru.emiren.infosystemdepartment.Repository.SQL.ProtectionCommissionerRepository {
 }
-class ru.emiren.infosystemdepartment.Mapper.SQL.ReviewerMapper {
+class ru.emiren.infosystemdepartment.Mapper.ReviewerMapper {
 + {static} Reviewer mapToReviewer(ReviewerDTO)
 + {static} ReviewerDTO mapToReviewerDTO(Reviewer)
 }
@@ -677,12 +677,12 @@ class ru.emiren.infosystemdepartment.Service.Word.Impl.WordServiceImpl {
 }
 
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.FQWMapper {
+class ru.emiren.infosystemdepartment.Mapper.FQWMapper {
 + {static} FQW mapToFQW(FQWDTO)
 + {static} FQWDTO mapToFQWDTO(FQW)
 }
 
-class ru.emiren.infosystemdepartment.Mapper.SQL.StudentMapper {
+class ru.emiren.infosystemdepartment.Mapper.StudentMapper {
 + {static} Student mapToStudent(StudentDTO)
 + {static} StudentDTO mapToStudentDTO(Student)
 }

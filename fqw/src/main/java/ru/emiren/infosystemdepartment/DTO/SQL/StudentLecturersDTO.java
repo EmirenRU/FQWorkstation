@@ -3,8 +3,6 @@ package ru.emiren.infosystemdepartment.DTO.SQL;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-import ru.emiren.infosystemdepartment.Model.SQL.Lecturer;
-import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
 @Data
 @Builder

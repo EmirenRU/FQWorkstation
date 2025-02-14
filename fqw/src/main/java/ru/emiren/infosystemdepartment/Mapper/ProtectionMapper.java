@@ -1,4 +1,4 @@
-package ru.emiren.infosystemdepartment.Mapper.SQL;
+package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Protection;

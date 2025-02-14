@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionDTO;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
-import ru.emiren.infosystemdepartment.Mapper.SQL.ProtectionMapper;
+import ru.emiren.infosystemdepartment.Mapper.ProtectionMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Protection;
 import ru.emiren.infosystemdepartment.Repository.SQL.ProtectionRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.ProtectionService;

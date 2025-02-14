@@ -48,7 +48,7 @@ public class ApplicationProgrammingInterfaceController {
      * @return a ResponseEntity with a status and FQW in Body
      */
     @GetMapping("/sql/receive_fqw")
-    public CompletableFuture<ResponseEntity<?>> receiveFqw(HttpServletRequest request) {
+    public CompletableFuture<ResponseEntity<String>> receiveFqw(HttpServletRequest request) {
         return sqlService.receiveThemes(request).thenApply(res -> {
             log.info("receive fqw response");
             return res;
@@ -57,33 +57,21 @@ public class ApplicationProgrammingInterfaceController {
 
     /**
      * handle a message from console
-     *
      * @param request contains a required data
      * @param response output for a client
      * @param message data from terminal
      * @return a ResponseEntity with a status
      */
     @PostMapping("/v1/upload_data_to_sql")
-    public CompletableFuture<ResponseEntity<?>> handleDataUpload(HttpServletRequest request, HttpServletResponse response, @RequestBody String message) {
+    public CompletableFuture<ResponseEntity<Object>> handleDataUpload(HttpServletRequest request,
+                                                                 HttpServletResponse response,
+                                                                 @RequestBody String message) {
         log.info("{}, {}", request.getAttribute("message"), message);
         return apiService.handleDataUpload(message).thenApply(
                 res -> {
                     log.info("has completed handling data upload with message {}", message);
                     return res;
                 });
-    }
-
-    /**
-     * Transfer from client to sevice to handle all CRUD operations in message
-     *
-     * @param request a Client's Data
-     * @return a RequestEntity with Status of operation
-     * @deprecated use {@link #handleDataUpload(HttpServletRequest, HttpServletResponse, String)} instead
-     */
-    @Deprecated(forRemoval = true)
-    @PostMapping("/v1/upload-data")
-    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request){
-        return apiService.uploadDataAndProceedToModels(request);
     }
 
     @GetMapping("/v1/get-department-and-orientation/{studNumber}")
@@ -101,14 +89,19 @@ public class ApplicationProgrammingInterfaceController {
         return sqlService.saveDataFromProtocol(data);
     }
 
+
+    /**
+     * Handler for selectors in /sql/lecturers
+     * @param data a json with data from selectors
+     * @return a Response
+     */
     @PostMapping("/v1/receive-by-params")
-    public CompletableFuture<ResponseEntity<String>> receiveByParams(@RequestBody Map<String, Object> request) {
-        return sqlService.getLecturersAsync(request).thenApply( reply -> {
+    public CompletableFuture<ResponseEntity<String>> receiveByParams(@RequestBody Map<String, Object> data) {
+        return sqlService.getLecturersAsync(data).thenApply( reply -> {
                 log.info("receive by-params response with data {}", reply);
                 return reply;
             }
         );
     }
-
 }
 

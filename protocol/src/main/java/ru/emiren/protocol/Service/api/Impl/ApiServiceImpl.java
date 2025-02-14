@@ -105,12 +105,11 @@ public class ApiServiceImpl implements ApiService {
     /**
      * Generates and send a protocol file to the client
      *
-     * @param response
+     * @param response a client's Servlet
      * @return a redirect to the function page
-     * @throws IOException
      */
     @Override
-    public String downloadProtocols(HttpServletResponse response) throws IOException {
+    public String downloadProtocols(HttpServletResponse response)  {
         downloadService.generateAndSendFile(data, response);
         return "redirect:/functions";
     }
@@ -118,8 +117,8 @@ public class ApiServiceImpl implements ApiService {
     /**
      * Handles the upload of a file and processes it.
      *
-     * @param file
-     * @param fileId
+     * @param file a decree to process
+     * @param fileId hashed file to simple string as ID
      * @return a ResponseEntity containing the status of the upload.
      */
     @Override
@@ -161,7 +160,7 @@ public class ApiServiceImpl implements ApiService {
     /**
      * Check if file is ready by id
      *
-     * @param id
+     * @param id hashed file as ID
      * @return a ResponseEntity with a status of readiness
      */
     @Override
@@ -198,7 +197,6 @@ public class ApiServiceImpl implements ApiService {
                  BufferedOutputStream bos = new BufferedOutputStream(os)
             ) {
                 log.info("In OutputStream for {}", id);
-//                document.write(bos);
                 bos.write(document);
                 log.info("Out OutputStream");
                 return ResponseEntity.ok("200");
@@ -214,19 +212,6 @@ public class ApiServiceImpl implements ApiService {
             }
         }
         return ResponseEntity.badRequest().build();
-    }
-
-    /**
-     * no implementation
-     *
-     * @param request to MultipartFile
-     * @return a ResponseEntity status
-     */
-    @Override
-    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request) {
-        MultipartFile file = request.getFile("data");
-
-        return ResponseEntity.status(HttpStatus.OK).body("Proceed");
     }
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {

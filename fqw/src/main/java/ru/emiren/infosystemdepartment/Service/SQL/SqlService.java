@@ -10,18 +10,15 @@ import java.util.concurrent.CompletableFuture;
 
 public interface SqlService {
 
-    public CompletableFuture<String> getLecturersAsync(HttpServletRequest request, Model model);
-    public CompletableFuture<ResponseEntity<String>> getLecturersAsync(Map<String, Object> data);
+    CompletableFuture<String> getLecturersAsync(HttpServletRequest request, Model model);
+    CompletableFuture<ResponseEntity<String>> getLecturersAsync(Map<String, Object> data);
 
-    @Async
     CompletableFuture<ResponseEntity<String>> receiveLecturers();
-
-    @Async
     CompletableFuture<ResponseEntity<String>> receiveThemes(HttpServletRequest request);
 
-    public String viewLecturer(Model model);
-    public String createLectureForm(Model model, String year, HttpServletRequest request);
-    public String getLecturers(HttpServletRequest request,
+    String viewLecturer(Model model);
+    String createLectureForm(Model model, String year, HttpServletRequest request);
+    String getLecturers(HttpServletRequest request,
                                Model model);
     String getDetailPage(HttpServletRequest request, Model model, String id);
     String getDepartmentNameByStudentNumber(Long studNumber);

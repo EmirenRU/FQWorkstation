@@ -4,13 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
-import ru.emiren.infosystemdepartment.Mapper.SQL.LecturerMapper;
-import ru.emiren.infosystemdepartment.Mapper.SQL.StudentLecturersMapper;
+import ru.emiren.infosystemdepartment.Mapper.StudentLecturersMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 import ru.emiren.infosystemdepartment.Repository.SQL.StudentLecturerRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.StudentLecturersService;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +58,7 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
                 theme,
                 dateFrom,
                 dateTo);
-        return studentLecturerRepository.findAllAndSortedByLecturerAndThemeAndDateAndOrientationAndDepartment
+        return studentLecturerRepository.findAllByAndThemeAndDateAndOrientationAndDepartmentAndSortedByLecturer
         (orientationCodes,
         departmentCode,
         dateFrom,
