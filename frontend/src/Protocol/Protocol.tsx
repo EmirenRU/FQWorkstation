@@ -114,7 +114,7 @@ export function Protocol  (){
         console.log(data)
         alert("Time to send!")
 
-        fetch('/fqw-api/api/add-data', {
+        fetch('/api/name', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

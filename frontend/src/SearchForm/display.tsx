@@ -1,10 +1,11 @@
-import {  useEffect, useRef, useState } from 'react';
+import {  useRef, useState } from 'react';
 import {  useFormContext } from '../context';
 import { downloadExcel } from "react-export-table-to-excel";
 import "./display.css"
-import { getFakeInfo, getTableInfo } from '../api/getData';
+import { getFakeInfo } from '../api/getData';
+//import { getTableInfo } from '../api/getData';
 
-export function ToggleDisplayAndSaveState ({ ready}) {
+export function ToggleDisplayAndSaveState ({ready}) {
 
 ///changed
     const [ReadyAction, setReadyAction] = useState(ready);
@@ -13,7 +14,7 @@ export function ToggleDisplayAndSaveState ({ ready}) {
     const { formData } = useFormContext();
     const [loading, setLoading] = useState(true);
     const [sortedData, setSortedData] = useState<Array<DTO>>([])
-    const [tableBody, setTableBody] = useState<any[]>([]);
+    const [tableBody, setTableBody] =  useState<(string | number | boolean)[][]>([])
     const [sortDirection, setSortDirection] = useState(false);
     const [parsedData, setParsedData] = useState([]);
     const [error, setError] = useState<string | null>(null);
@@ -23,21 +24,28 @@ export function ToggleDisplayAndSaveState ({ ready}) {
             console.log("In try section of fetch data")
             const result = await getFakeInfo(formData, setParsedData);
             setReadyAction(false)
-            console.log("Parsed",parsedData);
-            setSortedData(result);
-            setLoading(false)
+            console.log("Parsed", parsedData);
+            setSortedData(result)
             createTableBody(result)
+            setLoading(false)
+
         } catch (error) {
             console.error("Error fetching data:", error);
             setError("Error fetching data:")
         }
     }
 
+
     if(ReadyAction) {
         fetchData()
     }
+    
+
+    
+
 
     function handleDownloadExcel() {
+      //  createTableBody(sortedData);
         downloadExcel({
             fileName: "Таблица данных учеников",
             sheet: "1",
@@ -72,6 +80,7 @@ export function ToggleDisplayAndSaveState ({ ready}) {
                 row.theme,
             ]);
             setTableBody(tmpBody);
+            console.log("TMP BODY IS",tmpBody)
         }
     }
 
@@ -103,17 +112,17 @@ export function ToggleDisplayAndSaveState ({ ready}) {
     return( <>
         { (sortedData.length === 0  && !ready) ? <span> wait a little  more</span> :
             <div className='container-fluid display-section'>
-                <table className="columns"  ref={tableRef}>
-                    <thead>
+                <table className="table table-striped table-bordered "  ref={tableRef}>
+                    <thead className="thead-light">
                     <tr className="tr-table">
-                        <th className="td-table" onClick={() => handleSort('fullLecturerName')} >ФИО Преподавателя</th>
-                        <th className="td-table" onClick={() => handleSort('academicDegree')}>Ученная степень</th>
-                        <th className="td-table" onClick={() => handleSort('position')}>Должность</th>
-                        <th className="td-table" onClick={() => handleSort('department')}>Кафедра</th>
+                        <th scope="col" className="td-table" onClick={() => handleSort('fullLecturerName')} >ФИО Преподавателя</th>
+                        <th scope="col" className="td-table" onClick={() => handleSort('academicDegree')}>Ученная степень</th>
+                        <th scope="col" className="td-table" onClick={() => handleSort('position')}>Должность</th>
+                        <th scope="col" className="td-table" onClick={() => handleSort('department')}>Кафедра</th>
                         <th className="td-table" onClick={() => handleSort('fullStudentName')}>ФИО Студента</th>
-                        <th className="td-table" onClick={() => handleSort('studNum')}>Студ.Номер</th>
-                        <th className="td-table" onClick={() => handleSort('citizenship')}>Гражданство</th>
-                        <th className="td-table"  onClick={() => handleSort('theme')}>Тема</th>
+                        <th scope="col" className="td-table" onClick={() => handleSort('studNum')}>Студ.Номер</th>
+                        <th scope="col" className="td-table" onClick={() => handleSort('citizenship')}>Гражданство</th>
+                        <th scope="col" className="td-table"  onClick={() => handleSort('theme')}>Тема</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -132,7 +141,7 @@ export function ToggleDisplayAndSaveState ({ ready}) {
                     </tbody>
                 </table>
                 <div className="download">
-                    <button className="download-button table-download-btn" type="button" onClick={handleDownloadExcel} >Скачать таблицу</button>
+                    <button className="download-button table-download-btn btn btn-primary" type="button" onClick={handleDownloadExcel} >Скачать таблицу</button>
                 </div>
             </div>
         }
