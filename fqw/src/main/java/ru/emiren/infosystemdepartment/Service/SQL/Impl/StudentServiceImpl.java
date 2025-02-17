@@ -3,15 +3,13 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentDTO;
-import ru.emiren.infosystemdepartment.Mapper.SQL.StudentMapper;
+import ru.emiren.infosystemdepartment.Mapper.StudentMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
-import ru.emiren.infosystemdepartment.Repository.SQL.LecturerRepository;
 import ru.emiren.infosystemdepartment.Repository.SQL.StudentRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.StudentService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {

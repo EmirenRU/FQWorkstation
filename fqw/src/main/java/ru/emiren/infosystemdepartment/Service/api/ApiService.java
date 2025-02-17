@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface ApiService {
-    public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message);
-    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request);
-
+    public CompletableFuture<ResponseEntity<Object>> handleDataUpload(String message);
     ResponseEntity<String> returnJsFile(String s);
 }

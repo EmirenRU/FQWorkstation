@@ -36,18 +36,7 @@ public class ApiServiceImpl implements ApiService {
 
     }
 
-    /**
-     * no implementation
-     *
-     * @param request to MultipartFile
-     * @return a ResponseEntity status
-     */
-    @Override
-    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request) {
-        MultipartFile file = request.getFile("data");
 
-        return ResponseEntity.status(HttpStatus.OK).body("Proceed");
-    }
 
     @Override
     public ResponseEntity<String> returnJsFile(String s) {
@@ -64,13 +53,10 @@ public class ApiServiceImpl implements ApiService {
      */
     @Override
     @Async
-    public CompletableFuture<ResponseEntity<?>> handleDataUpload(String message) {
+    public CompletableFuture<ResponseEntity<Object>> handleDataUpload(String message) {
         Map<String, String> headers = new HashMap<>();
         headers.put("message", message);
         log.info("Message received: {}", message);
-
-        // TODO Write more safe query
-
         try {
             if (message.toUpperCase().contains("SELECT")){
                 headers.put("result", String.valueOf(jdbcTemplate.queryForList(message)));

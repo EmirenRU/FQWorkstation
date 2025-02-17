@@ -1,11 +1,8 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -5,13 +5,14 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.emiren.protocol.Service.Word.WordService;
 
@@ -19,6 +20,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 @Service
@@ -64,7 +66,9 @@ public class WordServiceImpl implements WordService {
             document = new NiceXWPFDocument(file);
             List<XWPFTable> tables = document.getTables();
 
-            log.info("The number of tables in file {} is {}", document.getProperties().getThumbnailFilename(), document.getTables().size());
+            log.info("The number of tables in file {} is {}",
+                    document.getProperties().getThumbnailFilename(),
+                    document.getTables().size());
             if (tables.size() == 3) {
                 data = processThreeTables(tables);
             } else if (tables.size() == 2){ // check file_name
@@ -229,7 +233,7 @@ public class WordServiceImpl implements WordService {
     public NiceXWPFDocument generateWordDocument(List<List<String>> data) {
         NiceXWPFDocument document = null;
         this.classPathResource = new ClassPathResource("template_copy.docx");
-        log.info("data size: {}", data.getFirst().size());
+        log.info("data size: {}", String.valueOf(data.getFirst().size()));
         File temp_file = null;
         try {
             log.info("Trying to get input stream from template.docx");
@@ -246,11 +250,20 @@ public class WordServiceImpl implements WordService {
 
             for (int i = 0; i < data.size()-1; i++) {
                 List<String> arr = data.get(i);
-                log.info("Array's elements: {}", arr.toString());
                 Map<String, Object> dataMap = getStringObjectMap(arr);
-                log.info("The dataMap contains: {}", dataMap);
 
-                NiceXWPFDocument tempDoc = XWPFTemplate.compile(temp_file, Configure.createDefault()).render(dataMap).getXWPFDocument();
+                log.info("The dataMap contains: {}", dataMap);
+                try {
+                    saveDataAsync(new HashMap<>(dataMap));
+                } catch (RestClientException e){
+                    log.warn("RestClientException: {}", e.getMessage());
+                } catch (Exception e) {
+                    log.warn("Async Exception: {}", e.getMessage());
+                }
+                NiceXWPFDocument tempDoc = XWPFTemplate.compile(temp_file,
+                                                                Configure.createDefault())
+                                                        .render(dataMap)
+                                                        .getXWPFDocument();
 
                 if (i < data.size()) {
                     XWPFParagraph paragraph = tempDoc.createParagraph();
@@ -269,8 +282,8 @@ public class WordServiceImpl implements WordService {
             log.info("closing the documents list");
             for (NiceXWPFDocument doc : documents) { doc.close(); } // Stream.map does not provide without try_catch
             log.info("Done closing the documents list");
-
-            log.info("Have deleted the temp_file? {}", Files.deleteIfExists(Path.of(temp_file.getPath())));
+            boolean flag = Files.deleteIfExists(Path.of(temp_file.getPath()));
+            log.info("Have deleted the temp_file? {}", flag);
             return document;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());
@@ -287,7 +300,7 @@ public class WordServiceImpl implements WordService {
         dataMap.put("FullName", checkArrayBeforeInserting(arr, 1));
         dataMap.put("StudNum", studNumber);
         dataMap.put("Theme", checkArrayBeforeInserting(arr, 3));
-        dataMap.put("SuData", checkArrayBeforeInserting(arr, 4)); // Scientific Supervisor
+        dataMap.put("SuData", checkArrayBeforeInserting(arr, 4));
         dataMap.put("SuName", checkArrayBeforeInserting(arr, 5));
         dataMap.put("Questioner1", checkArrayBeforeInserting(arr, 11));
         dataMap.put("Question1", checkArrayBeforeInserting(arr, 12));
@@ -301,17 +314,30 @@ public class WordServiceImpl implements WordService {
 
         dataMap.putIfAbsent("Department", "?");
         dataMap.putIfAbsent("Orientation", "?");
-
-        Map<String, String> map = restTemplate.getForObject(sqlLocation + "/api/v1/get-department-and-orientation/" + studNumber,
-                                                                Map.class);
-        String departmentName = map.get("Department");
-        String orientationCodeWithName = map.get("Orientation");
-
+        log.info("Before transfering REST GET method");
+        Map<String, String> map = new HashMap<>();
+        String departmentName = "?";
+        String orientationCodeWithName = "?";
+        try {
+            log.info("After transfering REST GET method");
+            map = (Map<String, String>) restTemplate.getForObject(sqlLocation + "/api/v1/get-department-and-orientation/" + studNumber,
+                    Map.class);
+            departmentName = map.get("Department");
+            orientationCodeWithName = map.get("Orientation");
+            log.info("After transfering REST GET method");
+        } catch (RestClientException e){
+            log.warn("RestClientException: {}", e.getMessage());
+        }
+        log.info("DeparmentName and orientationCodeWithName: {}; {}", departmentName, orientationCodeWithName);
         if (departmentName != null && !departmentName.equals("?")) {
             dataMap.put("Department", departmentName);
+        } else {
+            dataMap.put("Department", "?");
         }
         if (orientationCodeWithName != null && !orientationCodeWithName.equals("?")) {
             dataMap.put("Orientation", orientationCodeWithName);
+        } else {
+            dataMap.put("Orientation", "?");
         }
 
         dataMap.put("Answer1", "?");
@@ -335,8 +361,20 @@ public class WordServiceImpl implements WordService {
         log.info("Ended processing score: {}", score);
         dataMap.put("IndividualOpinion", "?");
 
-        log.info("Saving the dataMap with student number {} is {}", dataMap.get("StudNum") ,restTemplate.postForEntity(sqlLocation+"/api/v1/save-data", dataMap, ResponseEntity.class).getBody());
         return dataMap;
+    }
+
+    @Async("asyncTaskExecutor")
+    @Override
+    public CompletableFuture<Void> saveDataAsync(Map<String, Object> dataMap) {
+        String studentNumber = String.valueOf(dataMap.get("StudNum"));
+
+        log.info("Tring to ", studentNumber);
+        ResponseEntity<?> responseEntity = restTemplate.postForEntity(sqlLocation + "/api/v1/save-data", dataMap, ResponseEntity.class);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            log.info("Saving the dataMap with student number {} is {}", studentNumber, responseEntity.getBody());
+        }
+        return CompletableFuture.completedFuture(null);
     }
 
     private String checkArrayBeforeInserting(List<String> arr, int index) {

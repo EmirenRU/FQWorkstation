@@ -1,10 +1,7 @@
-package ru.emiren.infosystemdepartment.Mapper.SQL;
+package ru.emiren.infosystemdepartment.Mapper;
 
-import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
-
-import java.util.stream.Collectors;
 
 public class StudentMapper {
 

@@ -22,9 +22,8 @@ public class RestProtocolController {
 
     /**
      * Uploads a file to process to generate a protocol
-     *
-     * @param file
-     * @param fileId
+     * @param file a MultiparFile from JavaScript's fetch
+     * @param fileId a hash ID of a file
      * @return a ResponseEntity with a status
      */
     @PostMapping("/upload_file")
@@ -37,8 +36,7 @@ public class RestProtocolController {
 
     /**
      * returns a download status of file with ID
-     *
-     * @param id
+     * @param id a hash ID of a file
      * @return a ResponseEntity with a status
      */
     @PostMapping("/check_file_availability/{id}")
@@ -48,9 +46,8 @@ public class RestProtocolController {
 
     /**
      * Download the file from the server
-     *
-     * @param id // HashID
-     * @param response Client's data
+     * @param id hash ID of a file
+     * @param response Client's Response Servlet
      * @return a ResponseEntity with a status
      */
     @GetMapping("/download_file/{id}")

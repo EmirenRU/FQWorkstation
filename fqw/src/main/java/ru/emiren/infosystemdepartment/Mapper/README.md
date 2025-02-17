@@ -1,4 +1,4 @@
-# Description
+- Description
 Mapper converts from Entity Model to Data Object Layer and vice versa
 
 # Example

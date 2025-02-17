@@ -1,8 +1,7 @@
-package ru.emiren.infosystemdepartment.Mapper.SQL;
+package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
-import ru.emiren.infosystemdepartment.Model.SQL.Student;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 
 public class StudentLecturersMapper {

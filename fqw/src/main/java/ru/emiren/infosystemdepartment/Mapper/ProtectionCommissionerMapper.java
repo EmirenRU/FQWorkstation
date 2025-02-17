@@ -1,9 +1,7 @@
-package ru.emiren.infosystemdepartment.Mapper.SQL;
+package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionCommissionerDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.ProtectionCommissioner;
-
-import java.util.List;
 
 public class ProtectionCommissionerMapper {
 

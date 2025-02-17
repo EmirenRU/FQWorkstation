@@ -12,5 +12,4 @@ public interface ApiService {
     public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId);
     public ResponseEntity<?> checkFileAvailability(String id);
     public ResponseEntity<String> downloadFile(String id, HttpServletResponse response);
-    public ResponseEntity<String> uploadDataAndProceedToModels(MultipartHttpServletRequest request);
 }

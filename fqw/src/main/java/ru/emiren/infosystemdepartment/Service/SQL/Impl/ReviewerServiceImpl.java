@@ -3,7 +3,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.ReviewerDTO;
-import ru.emiren.infosystemdepartment.Mapper.SQL.ReviewerMapper;
+import ru.emiren.infosystemdepartment.Mapper.ReviewerMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Reviewer;
 import ru.emiren.infosystemdepartment.Repository.SQL.ReviewerRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.ReviewerService;

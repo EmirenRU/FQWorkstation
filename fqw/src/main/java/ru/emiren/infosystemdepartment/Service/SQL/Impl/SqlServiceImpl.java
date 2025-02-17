@@ -17,7 +17,6 @@ import ru.emiren.infosystemdepartment.DTO.SQL.*;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -43,6 +42,7 @@ public class SqlServiceImpl implements SqlService {
     List<FQWDTO> fqwdtos;
 
     DateTimeFormatter dateTimeFormatter;
+    private static final String lecturerTemplate = "lecturer";
 
     @DateTimeFormat(pattern = "yyyy")
     private LocalDate date;
@@ -63,7 +63,10 @@ public class SqlServiceImpl implements SqlService {
                           ProtectionService protectionService,
                           StudentLecturersService studentLecturersService,
                           FQWService fqwService,
-                          ProtocolQuestionService protocolQuestionService, QuestionService questionService, ProtocolService protocolService, Gson gson){
+                          ProtocolQuestionService protocolQuestionService,
+                          QuestionService questionService,
+                          ProtocolService protocolService,
+                          Gson gson){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
         this.lecturerService            = lecturerService;
@@ -85,26 +88,31 @@ public class SqlServiceImpl implements SqlService {
 
     /**
      * transporting all data from SL to SqlPayload for React transaction
-     *
      * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     * @deprecated not required anymore
      */
     @Async
     @Override
+    @Deprecated(forRemoval = true)
     public CompletableFuture<ResponseEntity<String>> receiveLecturers() {
         List<SqlPayload> res = studentLecturersService.getAllStudentLecturers();
-        Map<String, String> headers = new HashMap<>();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).header(headers.toString()).body(gson.toJson(res)));
+        Map<String, String> headers = new HashMap<>(Map.of("Content-Type", "application/json"));
+        Gson gsonBeautify = new GsonBuilder().setPrettyPrinting().create();
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK)
+                                                                .header(headers.toString())
+                                                                .body(gsonBeautify.toJson(res)));
     }
 
     /**
      * receive all FQW data
      *
-     * @param request
+     * @param request a client's headers and request
      * @return a CompletableFuture (Async) with ResponseEntity's header and body json
+     * @deprecated not required anymore
      */
     @Async
     @Override
+    @Deprecated(forRemoval = true)
     public CompletableFuture<ResponseEntity<String>> receiveThemes(HttpServletRequest request) {
         List<FQWDTO> res = fqwService.getAllFQW();
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(res.toString()));
@@ -120,7 +128,7 @@ public class SqlServiceImpl implements SqlService {
         model.addAttribute(params.get(3), fqwdtos);
 
         log.info("View Lecturer model prepared asynchronously.");
-        return "lecturers";
+        return lecturerTemplate;
     }
 
     @Override
@@ -180,13 +188,13 @@ public class SqlServiceImpl implements SqlService {
         if (lecturerIds.getFirst() == -1){
             model.addAttribute(params.get(5), lecturerService.createDummyLecturer());
             log.info("Async getLecturer task has completed");
-            return CompletableFuture.completedFuture("lecturers");
+            return CompletableFuture.completedFuture(lecturerTemplate);
         }
 
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
         log.info("Async getLecturer task has completed");
-        return CompletableFuture.completedFuture("lecturers");
+        return CompletableFuture.completedFuture(lecturerTemplate);
     }
 
     @Override
@@ -226,7 +234,6 @@ public class SqlServiceImpl implements SqlService {
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
-
 //        String stringForQuery = theme.stream()
 //                .map(word -> "%" + word + "%").collect(Collectors.joining("|"));
 
@@ -238,6 +245,7 @@ public class SqlServiceImpl implements SqlService {
                 theme,
                 lecturerIds
         );
+
         log.info("The result is {} empty", res.isEmpty());
         List<SqlPayload> payloads = res.stream().map(sl -> {
             log.info("In map function with data: {}", sl.getLecturer().getName().toString());
@@ -332,13 +340,13 @@ public class SqlServiceImpl implements SqlService {
 
         if (lecturerIds.getFirst() == -1){
             model.addAttribute(params.get(5), lecturerService.createDummyLecturer());
-            return "lecturers";
+            return lecturerTemplate;
         }
         // TODO make one or ALL
         // todo or suggestion: EXCEL API to SAVE Object to Repository
         // TODO api for android client
 
-        return "lecturers";
+        return lecturerTemplate;
     }
 
     @Override
@@ -355,7 +363,6 @@ public class SqlServiceImpl implements SqlService {
     @Override
     public String getDetailPage(HttpServletRequest request, Model model, String id) {
         StudentLecturersDTO res = studentLecturersService.findStudentLecturersDTOById(Long.valueOf(id));
-
         model.addAttribute("detail", res);
         return "detail";
     }
@@ -394,131 +401,139 @@ public class SqlServiceImpl implements SqlService {
             + 31    Citizenship Student.citizenship
             ? 32    Program
          */
-        String code = "?";
-        String name = "?";
-        String orientationParse = data.get("Orientation").toString();
-        if (!orientationParse.contains("?") && orientationParse.length() > 8) {
-            code = orientationParse.substring(0, 8);
-            name = orientationParse.substring(9).trim();
-        }
-        Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
-        if (orientation == null) {
-            orientation = new Orientation();
-            orientation.setCode(code);
-            orientation.setName(name);
-        }
-
-
-        FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
-        fqw.setName((String) data.get("Theme"));    
-        fqw.setFeedback((String) data.get("IndividualOpinion"));
-
-        Student student = studentService.findStudentByStudNum((Long) data.get("StudNum"));
-        if (student == null) {
-            student = new Student();
-            student.setStud_num((Long) data.get("StudNum"));
-            student.setName((String) data.get("FullName"));
-            student.setCitizenship((String) data.get("Citizenship"));
-        }
-        student.setFqw(fqw);
-
-        String[] names = (String[]) data.get("Names").toString().split(";");
-        if (names.length > 1) {
-            for (String s : names) {
-
+        try {
+            log.info("Data contains: {}", data);
+            String code = "?";
+            String name = "?";
+            String orientationParse = data.get("Orientation").toString();
+            if (!orientationParse.contains("?") && orientationParse.length() > 8) {
+                code = orientationParse.substring(0, 8);
+                name = orientationParse.substring(9).trim();
             }
-        }
-        Lecturer lecturer = lecturerService.findByLecturerName((String) data.get("SuName"));
-        if (lecturer == null) {
-            lecturer = new Lecturer();
-            lecturer.setName((String) data.get("SuName"));
-            List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
-            String adPdep = "";
-            String pos = "";
-            if (dat.size() == 2) {
-                adPdep = dat.getFirst();
-                pos = dat.getLast();
-            } else if (dat.size() == 3) {
-                adPdep = dat.getFirst();
-                pos = dat.get(1) + dat.getLast();
+            Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
+            if (orientation == null) {
+                orientation = new Orientation();
+                orientation.setCode(code);
+                orientation.setName(name);
             }
-            lecturer.setPosition(pos);
-            lecturer.setAcademicDegree(adPdep);
+
+
+            FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
+            fqw.setName((String) data.get("Theme"));
+            fqw.setFeedback((String) data.get("IndividualOpinion"));
+
+            Student student = studentService.findStudentByStudNum((Long) data.get("StudNum"));
+            if (student == null) {
+                student = new Student();
+                student.setStud_num((Long) data.get("StudNum"));
+                student.setName((String) data.get("FullName"));
+                student.setCitizenship((String) data.get("Citizenship"));
+            }
+            student.setFqw(fqw);
+
+            String[] names = (String[]) data.get("Names").toString().split(";");
+            if (names.length > 1) {
+                for (String s : names) {
+
+                }
+            }
+            Lecturer lecturer = lecturerService.findByLecturerName((String) data.get("SuName"));
+            if (lecturer == null) {
+                lecturer = new Lecturer();
+                lecturer.setName((String) data.get("SuName"));
+                List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
+                String adPdep = "";
+                String pos = "";
+                if (dat.size() == 2) {
+                    adPdep = dat.getFirst();
+                    pos = dat.getLast();
+                } else if (dat.size() == 3) {
+                    adPdep = dat.getFirst();
+                    pos = dat.get(1) + dat.getLast();
+                }
+                lecturer.setPosition(pos);
+                lecturer.setAcademicDegree(adPdep);
+            }
+
+            StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num());
+            if (studentLecturers == null) {
+                studentLecturers = new StudentLecturers();
+                studentLecturers.setLecturer(lecturer);
+                studentLecturers.setStudent(student);
+                studentLecturers.setIsScientificSupervisor(true);
+            }
+
+            student.getLecturers().add(studentLecturers);
+            lecturer.getStudents().add(studentLecturers);
+
+            Protocol protocol = new Protocol();
+            protocol.setStudent(student);
+            protocol.setFqw(fqw);
+            protocol.setHeadOfTheFQW(lecturer.getName());
+            protocol.setGrade(data.get("Score").equals("?") ? -1 : Integer.parseInt(data.get("Score").toString().substring(0, 3).trim()));
+            protocol.setLanguage((String) data.get("Language"));
+
+            Question question1 = new Question();
+            question1.setQuestioner((String) data.get("Questioner1"));
+            question1.setQuestion((String) data.get("Question1"));
+
+            Question question2 = new Question();
+            question2.setQuestioner((String) data.get("Questioner2"));
+            question2.setQuestion((String) data.get("Question1"));
+
+            Question question3 = new Question();
+            question3.setQuestioner((String) data.get("Questioner3"));
+            question3.setQuestion((String) data.get("Question3"));
+
+            ProtocolQuestion pq1 = new ProtocolQuestion();
+            pq1.setProtocol(protocol);
+            pq1.setQuestion(question1);
+            question1.getProtocolQuestion().add(pq1);
+            protocol.getQuestions().add(pq1);
+
+            ProtocolQuestion pq2 = new ProtocolQuestion();
+            pq2.setProtocol(protocol);
+            pq2.setQuestion(question2);
+            question2.getProtocolQuestion().add(pq2);
+            protocol.getQuestions().add(pq2);
+
+            ProtocolQuestion pq3 = new ProtocolQuestion();
+            pq3.setProtocol(protocol);
+            pq3.setQuestion(question3);
+            question3.getProtocolQuestion().add(pq3);
+            protocol.getQuestions().add(pq3);
+
+            Lecturer finalLecturer = lecturer;
+            Student finalStudent = student;
+            StudentLecturers finalStudentLecturers = studentLecturers;
+            CompletableFuture.runAsync(() -> {
+                fqwService.saveFqw(fqw);
+                lecturerService.saveLecturer(finalLecturer);
+                studentService.saveStudent(finalStudent);
+                studentLecturersService.saveStudentLecturers(finalStudentLecturers);
+                questionService.saveQuestion(question1);
+                questionService.saveQuestion(question2);
+                questionService.saveQuestion(question3);
+                protocolService.saveProtocol(protocol);
+                protocolQuestionService.saveProtocolQuestion(pq1);
+                protocolQuestionService.saveProtocolQuestion(pq2);
+                protocolQuestionService.saveProtocolQuestion(pq3);
+            });
+            return ResponseEntity.status(HttpStatus.OK).body("OK");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
-        StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num());
-        if (studentLecturers == null) {
-            studentLecturers = new StudentLecturers();
-            studentLecturers.setLecturer(lecturer);
-            studentLecturers.setStudent(student);
-            studentLecturers.setIsScientificSupervisor(true);
-        }
-
-        student.getLecturers().add(studentLecturers);
-        lecturer.getStudents().add(studentLecturers);
-
-        Protocol protocol = new Protocol();
-        protocol.setStudent(student);
-        protocol.setFqw(fqw);
-        protocol.setHeadOfTheFQW(lecturer.getName());
-        protocol.setGrade(data.get("Score").equals("?") ? -1 :Integer.parseInt(data.get("Score").toString().substring(0, 3).trim()));
-        protocol.setLanguage((String) data.get("Language"));
-
-        Question question1 = new Question();
-        question1.setQuestioner((String) data.get("Questioner1"));
-        question1.setQuestion((String) data.get("Question1"));
-
-        Question question2 = new Question();
-        question2.setQuestioner((String) data.get("Questioner2"));
-        question2.setQuestion((String) data.get("Question1"));
-
-        Question question3 = new Question();
-        question3.setQuestioner((String) data.get("Questioner3"));
-        question3.setQuestion((String) data.get("Question3"));
-
-        ProtocolQuestion pq1 = new ProtocolQuestion();
-        pq1.setProtocol(protocol);
-        pq1.setQuestion(question1);
-        question1.getProtocolQuestion().add(pq1);
-        protocol.getQuestions().add(pq1);
-
-        ProtocolQuestion pq2 = new ProtocolQuestion();
-        pq2.setProtocol(protocol);
-        pq2.setQuestion(question2);
-        question2.getProtocolQuestion().add(pq2);
-        protocol.getQuestions().add(pq2);
-
-        ProtocolQuestion pq3 = new ProtocolQuestion();
-        pq3.setProtocol(protocol);
-        pq3.setQuestion(question3);
-        question3.getProtocolQuestion().add(pq3);
-        protocol.getQuestions().add(pq3);
-
-        Lecturer finalLecturer = lecturer;
-        Student finalStudent = student;
-        StudentLecturers finalStudentLecturers = studentLecturers;
-        CompletableFuture.runAsync(() -> {
-            fqwService.saveFqw(fqw);
-            lecturerService.saveLecturer(finalLecturer);
-            studentService.saveStudent(finalStudent);
-            studentLecturersService.saveStudentLecturers(finalStudentLecturers);
-            questionService.saveQuestion(question1);
-            questionService.saveQuestion(question2);
-            questionService.saveQuestion(question3);
-            protocolService.saveProtocol(protocol);
-            protocolQuestionService.saveProtocolQuestion(pq1);
-            protocolQuestionService.saveProtocolQuestion(pq2);
-            protocolQuestionService.saveProtocolQuestion(pq3);
-        });
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
     }
 
     @Override
     public ResponseEntity<Map<String, String>> findDepartmentAndOrientationByStudNumber(String studNumber) {
         String dep = departmentService.findDepartmentByStudentNumber(Long.valueOf(studNumber));
         String ori = orientationService.OrientationCodeWithNameByStudentNumber(Long.valueOf(studNumber));
-        if (ori.isEmpty()) {
+        if (ori == null) {
             ori = "";
+        } if (dep == null) {
+            dep = "";
         }
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("Department", dep,
                 "Orientation", ori));

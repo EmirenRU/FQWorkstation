@@ -1,4 +1,4 @@
-package ru.emiren.infosystemdepartment.Mapper.SQL;
+package ru.emiren.infosystemdepartment.Mapper;
 
 import ru.emiren.infosystemdepartment.Model.SQL.ProtocolQuestion;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtocolQuestionDTO;
