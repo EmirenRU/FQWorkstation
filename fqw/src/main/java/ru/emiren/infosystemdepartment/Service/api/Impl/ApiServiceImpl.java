@@ -19,6 +19,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
+import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
+import ru.emiren.infosystemdepartment.Service.SQL.SqlService;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
 import java.text.DateFormat;
@@ -29,11 +32,14 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ApiServiceImpl implements ApiService {
     private final JdbcTemplate jdbcTemplate;
+    private final SqlService sqlService;
+    private final Gson gson;
 
     @Autowired
-    ApiServiceImpl(@Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate){
+    ApiServiceImpl(@Qualifier("sqlJdbcTemplate") JdbcTemplate jdbcTemplate, SqlService sqlService, Gson gson){
         this.jdbcTemplate = jdbcTemplate;
-
+        this.sqlService = sqlService;
+        this.gson = gson;
     }
 
 
@@ -43,6 +49,15 @@ public class ApiServiceImpl implements ApiService {
         // TODO make later implementation of CDN
 //        String js = resourceLoader.getResource("classpath:/static/js/"+s);
         return ResponseEntity.status(HttpStatus.OK).body(s);
+    }
+
+    @Override
+    public CompletableFuture<ResponseEntity<String>> receiveSelectorPayload(HttpServletRequest request) {
+        SelectorSqlPayload payload = sqlService.receiveSelectors();
+        if (payload == null) {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        }
+        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(gson.toJson(payload)));
     }
 
     /**

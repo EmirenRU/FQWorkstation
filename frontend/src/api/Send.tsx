@@ -1,6 +1,6 @@
 export function registerRequest(username: string, phone: string, email: string, message: string, agreement: boolean):Promise<void> {
     alert("Sending");
-    return fetch(" /api/support/message ",{
+    return fetch("/support-api/api/support/message ",{
         method: "POST",
         headers: {
             "Content-Type":"application/json"

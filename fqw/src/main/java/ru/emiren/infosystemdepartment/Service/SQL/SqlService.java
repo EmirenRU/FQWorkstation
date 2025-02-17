@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.ui.Model;
+import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -27,4 +28,6 @@ public interface SqlService {
 
     ResponseEntity<Map<String, String>> findDepartmentAndOrientationByStudNumber(String studNumber);
     void refreshData();
+
+    SelectorSqlPayload receiveSelectors();
 }
