@@ -1,4 +1,4 @@
-import { LoadSaved} from "./Load";
+import { LoadSaved } from "./Load";
 
 
 function jsonToData(data: string): object {
@@ -7,19 +7,19 @@ function jsonToData(data: string): object {
 
 
 
-export const FormContent = () => {
-    
-    const locData = () => {  
+export const FormContent = ({signal,setReady}) =>  {
+
+    const locData = () => {
         const data = localStorage.getItem('Restore data');
-        return data ? jsonToData(data) : {}; 
+        return data ? jsonToData(data) : {};
     }
 
-    const data = locData(); 
+    const data = locData();
 
     if (Object.keys(data).length === 0) {
-        return (<LoadSaved/>);
+        return (<LoadSaved signal={signal} setReady={setReady} />);
     } else {
-        return (<LoadSaved />);
+        return (<LoadSaved signal={signal} setReady={setReady} />);
     }
 }
 

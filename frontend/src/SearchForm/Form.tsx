@@ -6,18 +6,19 @@ import { ToggleDisplayAndSaveState } from "./display";
 
 export const SearchForm = () => {
     const { formData } = useFormContext();
-    const [ready, setReady] = useState(false)
+    const [signal, setReady] = useState("none")
 
     function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+        setReady(signal =>("none"))
         event.preventDefault();
         console.log("Submitted Data:", formData);
-        setReady(true);
-        console.log("Ready ?", ready);
+        setReady(signal =>("display"))
+        console.log("Ready ?", signal);
     }
 
     useEffect(() => {
-        console.log("Ready ?", ready);
-    }, [ready]);
+        console.log("Ready ?", signal);
+    }, [signal]);
 
     return (
         <main>
@@ -27,13 +28,13 @@ export const SearchForm = () => {
                 <div className="form-space flex">
                     <form method="post" className="form-body" onSubmit={handleSubmit}>
 
-                    <FormContent />
+                    <FormContent  signal={signal} setReady={setReady}/>
                     </form>
 
                 </div>
             </div>
         </section>
-            {ready ? <ToggleDisplayAndSaveState ready/>: <span></span>}
+            {(signal === "display" || signal === "pending") ? <ToggleDisplayAndSaveState signal={signal} setReady={setReady}/>: <span></span>}
                     </main>
     )
 }

@@ -38,7 +38,7 @@ interface DepartmentProps {
   themeName: string;
   themeValue: string;
   }
-export const  LoadSaved = () =>  {
+export const  LoadSaved = ({signal,setReady}) =>  {
 
     const [orientationData, setOrientationData] = useState<string[]>([]);
     const [themesData, setThemesData] = useState<string[]>([]);
@@ -166,8 +166,9 @@ export const  LoadSaved = () =>  {
         if (selectorsStatus) {
             // Initialize bootstrap-select
             $('.selectpicker').selectpicker('refresh');
+
         }
-    }, [selectorsStatus, Departments, Orientations, Teachers, Themes]);
+    }, [selectorsStatus]);
 
 
     const handleYearsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -195,31 +196,38 @@ export const  LoadSaved = () =>  {
         const selectedValues = Array.from(options)
             .filter(option => option.selected)
             .map(option => option.value);
+    
         console.log("Selected values", selectedValues);
-
+        console.log("options", options);
+    
         switch (name) {
             case 'orientation':
-                setOrientationData(selectedValues);
+                setOrientationData(selectedValues); // Update state directly
                 saveInputs(name, selectedValues);
-
                 break;
             case 'department':
                 setDepartmentData(selectedValues);
                 saveInputs(name, selectedValues);
-
                 break;
             case 'themes':
                 setThemesData(selectedValues);
                 saveInputs(name, selectedValues);
-
                 break;
             case 'lecturer':
                 setLecturerData(selectedValues);
                 saveInputs(name, selectedValues);
-
+                break;
+            default:
                 break;
         }
     };
+    
+    useEffect(() => {
+        if (selectorsStatus) {
+            // Refresh bootstrap-select after state updates
+            $('.selectpicker').selectpicker('refresh');
+        }
+    }, [orientationData, departmentData, themesData, lecturerData, selectorsStatus]);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault;
