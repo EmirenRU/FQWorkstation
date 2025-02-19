@@ -25,4 +25,6 @@ public interface LecturerService {
 
 
     List<LecturerDTO> getConnectedLecturers();
+
+    Long getMaxId();
 }

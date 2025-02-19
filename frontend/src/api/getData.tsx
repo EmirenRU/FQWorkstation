@@ -9,12 +9,16 @@ export function getTableInfo (data, set) {
     };
     const response = fetch('/fqw-api/api/v1/receive-by-params', requestOptions)
         .then(response => response.json());
-        console.log('Response',response);
+    console.log('Response',response);
     return response.then(res => res);
 
 }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 export function getFakeInfo(data, set){
     return import('./data.json') // Adjust the path to your local JSON file
     .then(localData => {
@@ -27,6 +31,21 @@ export function getFakeInfo(data, set){
 }
 
 
+<<<<<<< HEAD
+=======
+export function getFakeSelectorData( ) {
+    return import('./SelectorData.json') // Adjust the path to your local JSON file
+        .then(localData => {
+            return localData.default; // Return the local JSON data
+        })
+        .catch(error => {
+            console.error('Failed to load local JSON:', error);
+            throw error; // Re-throw the error for the caller to handle
+        });
+}
+
+
+>>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 export function getSelectors( ){
     const getOptions = {
         method: 'GET',

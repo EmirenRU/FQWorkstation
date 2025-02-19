@@ -15,4 +15,6 @@ public interface ProtocolService {
     Protocol updateProtocol(Protocol protocol);
 
     Protocol findByStudentNum(Long studNum);
+
+    Long getMaxId();
 } // CD

@@ -20,4 +20,7 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
 
     @Query("Select l FROM Lecturer l JOIN StudentLecturers sl ON sl.lecturer.id = l.id")
     List<Lecturer> getAllConnectedLecturers();
+
+    @Query("SELECT MAX(l.id) FROM Lecturer l")
+    Long getMaxId();
 }

@@ -40,10 +40,10 @@ export const SendFile = () => {
                 }
             
                 try {
-                    const response = await fetch('/api/v2/upload_file', settings);
-                    const respData = await response.json();
+                    const response = await fetch('/protocol-api/api/protocol/upload_file', settings);
+                    // const respData = await response.json();
             
-                    if (respData.status === '200') {
+                    if (response.status === 200) {
                         alert("Successful")
                         await checkFileAvailability(hashId);
                     } else {

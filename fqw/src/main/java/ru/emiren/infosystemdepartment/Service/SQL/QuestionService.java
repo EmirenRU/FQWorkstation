@@ -6,4 +6,6 @@ public interface QuestionService {
     void saveQuestion(Question question);
 
     Question findQuestion(String s);
+
+    Long getMaxId();
 }

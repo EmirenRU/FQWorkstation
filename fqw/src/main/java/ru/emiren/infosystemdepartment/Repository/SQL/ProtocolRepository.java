@@ -11,4 +11,7 @@ public interface ProtocolRepository extends JpaRepository<Protocol, String> {
 
     @Query("SELECT p FROM Protocol p WHERE p.student.stud_num = :studNum")
     Optional<Protocol> findByStudentNumber(Long studNum);
+
+    @Query("Select MAX(p.id) FROM Protocol p")
+    Long getMaxId();
 }
