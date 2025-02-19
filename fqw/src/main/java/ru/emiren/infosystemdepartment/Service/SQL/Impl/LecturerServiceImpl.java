@@ -88,4 +88,9 @@ public class LecturerServiceImpl implements LecturerService {
     public List<LecturerDTO> getConnectedLecturers() {
         return lecturerRepository.getAllConnectedLecturers().stream().map(LecturerMapper::mapToLecturerDTO).toList();
     }
+
+    @Override
+    public Long getMaxId() {
+        return lecturerRepository.getMaxId();
+    }
 }

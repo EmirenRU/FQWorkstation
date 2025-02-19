@@ -22,5 +22,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT s FROM Student s WHERE s.stud_num = :studNum")
     Optional<Student> findByStudNum(Long studNum);
+
+    @Query("SELECT MAX(s.id) FROM Student s")
+    long getMaxId();
 }
 

@@ -108,8 +108,8 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     }
 
     @Override
-    public StudentLecturers findStudentLecturersByStudentStudNum(Long studNum) {
-        return studentLecturerRepository.findByStudentNumber(studNum).orElse(null);
+    public StudentLecturers findStudentLecturersByStudentStudNum(Long studNum, String leName) {
+        return studentLecturerRepository.findByStudentNumber(studNum, leName).orElse(null);
     }
 
     @Override
@@ -121,6 +121,11 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
     public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes, List<Long> departmentCode, Integer dateFrom, Integer dateTo, List<Long> themes, List<Long> lecturerIds) {
         return studentLecturerRepository.findAllByIds(orientationCodes, departmentCode, dateFrom, dateTo, themes, lecturerIds).orElse(null)
                 .stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).toList();
+    }
+
+    @Override
+    public Long getMaxId() {
+        return studentLecturerRepository.getMaxId();
     }
 
 

@@ -1,6 +1,7 @@
 package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.Model.SQL.ProtocolQuestion;
 import ru.emiren.infosystemdepartment.Repository.SQL.ProtocolQuestionRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.ProtocolQuestionService;
@@ -14,6 +15,7 @@ public class ProtocolQuestionServiceImpl implements ProtocolQuestionService {
     }
 
 
+    @Transactional
     @Override
     public void saveProtocolQuestion(ProtocolQuestion pq) {
         protocolQuestionRepository.save(pq);
@@ -22,5 +24,10 @@ public class ProtocolQuestionServiceImpl implements ProtocolQuestionService {
     @Override
     public ProtocolQuestion findByQuestionAndProtocolStudent(String question, Long studNum) {
         return protocolQuestionRepository.findByQuestionAndStudNum(question, studNum).orElse(null);
+    }
+
+    @Override
+    public Long getMaxId() {
+        return protocolQuestionRepository.getMaxId();
     }
 }

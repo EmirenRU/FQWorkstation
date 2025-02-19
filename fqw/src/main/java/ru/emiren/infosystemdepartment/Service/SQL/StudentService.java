@@ -26,4 +26,6 @@ public interface StudentService {
     Student findStudentByName(String studName);
 
     Student findStudentByStudNum(Long studNum);
+
+    long getMaxId();
 } // CD

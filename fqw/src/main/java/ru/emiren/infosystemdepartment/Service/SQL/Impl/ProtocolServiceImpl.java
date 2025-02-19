@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtocolDTO;
 import ru.emiren.infosystemdepartment.Mapper.ProtocolMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Protocol;
@@ -20,6 +21,7 @@ public class ProtocolServiceImpl implements ProtocolService {
     }
 
     @Override
+    @Transactional
     public Protocol saveProtocol(Protocol protocol) {
         return protocolRepository.save(protocol);
     }
@@ -66,5 +68,10 @@ public class ProtocolServiceImpl implements ProtocolService {
     @Override
     public Protocol findByStudentNum(Long studNum) {
         return protocolRepository.findByStudentNumber(studNum).orElse(null);
+    }
+
+    @Override
+    public Long getMaxId() {
+        return protocolRepository.getMaxId();
     }
 }

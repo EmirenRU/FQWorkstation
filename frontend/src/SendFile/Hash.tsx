@@ -36,7 +36,7 @@ export async function checkFileAvailability(id: string) {
 
     while (!isAvailable) {
         console.log("Checking file availability...");
-        const response = await fetch("/api/v2/check_file_availability/" + id, settings);
+        const response = await fetch("/protocol-api/api/protocol/check_file_availability/" + id, settings);
 
         if (await response.text() === '200') {
             console.log("File is available. Proceeding to download...");
@@ -51,7 +51,7 @@ export async function checkFileAvailability(id: string) {
 
 async function downloadFile(options) {
     try {
-        const response = await fetch("/api/v2/download_file/" + options, { method: "GET" });
+        const response = await fetch("/protocol-api/api/protocol/download_file/" + options, { method: "GET" });
 
         if (!response.ok) {
             throw new Error('Network response was not ok');

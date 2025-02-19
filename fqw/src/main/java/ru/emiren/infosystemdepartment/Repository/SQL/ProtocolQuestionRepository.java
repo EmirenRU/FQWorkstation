@@ -12,4 +12,7 @@ public interface ProtocolQuestionRepository extends JpaRepository<ProtocolQuesti
 
     @Query("SELECT pq FROM protocol_question pq WHERE pq.protocol.student.stud_num = :studNum AND pq.question.question = :question")
     Optional<ProtocolQuestion> findByQuestionAndStudNum(String question, Long studNum);
+
+    @Query("SELECT MAX(pq.id) FROM protocol_question pq")
+    Long getMaxId();
 }

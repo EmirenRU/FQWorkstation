@@ -13,6 +13,7 @@ public class DepartmentMapper {
     }
 
     public static DepartmentDTO mapToDepartmentDTO(Department department){
+        if (department == null) return null; //todo solve the problem
         return DepartmentDTO.builder()
                 .code(department.getCode())
                 .name(department.getName())

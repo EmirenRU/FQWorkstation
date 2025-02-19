@@ -6,4 +6,6 @@ public interface ProtocolQuestionService {
     void saveProtocolQuestion(ProtocolQuestion pq);
 
     ProtocolQuestion findByQuestionAndProtocolStudent(String question, Long studNum);
+
+    Long getMaxId();
 }

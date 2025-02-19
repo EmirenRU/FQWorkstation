@@ -40,8 +40,9 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             "ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllSortedByDate(String date);
 
-    @Query("SELECT sl FROM StudentLecturers sl JOIN Student st ON st.stud_num = sl.student.stud_num WHERE st.stud_num = :studNum")
-    Optional<StudentLecturers> findByStudentNumber(Long studNum);
+    @Query("SELECT sl FROM StudentLecturers sl " +
+            "WHERE sl.student.stud_num = :studNum AND :leName = sl.lecturer.name")
+    Optional<StudentLecturers> findByStudentNumber(Long studNum, String leName);
 
     @Query("SELECT sl FROM StudentLecturers sl JOIN Student st ON st.stud_num = sl.student.stud_num " +
             "JOIN Lecturer l ON l.id = sl.lecturer.id WHERE sl.student.stud_num = :studNum AND sl.lecturer.name = :name")
@@ -63,4 +64,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
                                                   Integer dateTo,
                                                   List<Long> themes,
                                                   List<Long> lecturerIds);
+
+    @Query("SELECT MAX(sl.id) FROM StudentLecturers sl")
+    Long getMaxId();
 }

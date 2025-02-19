@@ -96,4 +96,9 @@ public class StudentServiceImpl implements StudentService {
     public Student findStudentByStudNum(Long studNum) {
         return studentRepository.findByStudNum(studNum).orElse(null);
     }
+
+    @Override
+    public long getMaxId() {
+        return studentRepository.getMaxId();
+    }
 }

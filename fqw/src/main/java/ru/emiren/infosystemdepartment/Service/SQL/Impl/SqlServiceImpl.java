@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,10 +84,7 @@ public class SqlServiceImpl implements SqlService {
         this.studentLecturersService    = studentLecturersService;
         this.fqwService                 = fqwService;
 
-        lecturerDTOS       = lecturerService.getConnectedLecturers();
-        departmentDTOS     = departmentService.getAllDepartments();
-        orientationDTOS    = orientationService.getAllOrientations();
-        fqwdtos            = fqwService.getAllFQW();
+
         dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         this.protocolQuestionService = protocolQuestionService;
         this.questionService = questionService;
@@ -433,40 +431,51 @@ public class SqlServiceImpl implements SqlService {
             String code = "?";
             String name = "?";
             String orientationParse = data.get("Orientation").toString();
-            if (!orientationParse.contains("?") && orientationParse.length() > 8) {
+            if (!orientationParse.trim().equals("?") && orientationParse.length() > 8) {
                 code = orientationParse.substring(0, 8);
                 name = orientationParse.substring(9).trim();
             }
+            log.info("1");
             Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
             if (orientation == null) {
                 orientation = new Orientation();
                 orientation.setCode(code);
                 orientation.setName(name);
+                orientationService.saveOrientation(orientation);
             }
-
+            log.info("2");
 
             FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
-            fqw.setName((String) data.get("Theme"));
-            fqw.setFeedback((String) data.get("IndividualOpinion"));
+            if (fqw == null) {
+                fqw = new FQW();
+                fqw.setName((String) data.get("Theme"));
+                fqw.setFeedback((String) data.get("IndividualOpinion"));
+                fqwService.saveFqw(fqw);
 
-            Student student = studentService.findStudentByStudNum((Long) data.get("StudNum"));
+            }
+
+            log.info("3");
+
+            Long studNum = (!data.get("StudNum").toString().equals("?")) ? Long.valueOf(data.get("StudNum").toString()) : 0l;
+            Student student = studentService.findStudentByStudNum(studNum);
             if (student == null) {
                 student = new Student();
+                Long id = studentService.getMaxId();
+                if (id != null) {student.setId(id +1);}
                 student.setStud_num((Long) data.get("StudNum"));
                 student.setName((String) data.get("FullName"));
                 student.setCitizenship((String) data.get("Citizenship"));
+                student.setFqw(fqw);
+                studentService.saveStudent(student);
             }
-            student.setFqw(fqw);
+            log.info("4");
 
-            String[] names = (String[]) data.get("Names").toString().split(";");
-            if (names.length > 1) {
-                for (String s : names) {
-
-                }
-            }
             Lecturer lecturer = lecturerService.findByLecturerName((String) data.get("SuName"));
             if (lecturer == null) {
                 lecturer = new Lecturer();
+                Long id = lecturerService.getMaxId();
+                log.info("id is {}", id);
+                if (id != null) {lecturer.setId(id +1);}
                 lecturer.setName((String) data.get("SuName"));
                 List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
                 String adPdep = "";
@@ -480,72 +489,117 @@ public class SqlServiceImpl implements SqlService {
                 }
                 lecturer.setPosition(pos);
                 lecturer.setAcademicDegree(adPdep);
+                log.info("pre-saving");
+                lecturerService.saveLecturer(lecturer);
             }
 
-            StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num());
+            StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num(), lecturer.getName());
             if (studentLecturers == null) {
                 studentLecturers = new StudentLecturers();
+                Long id = studentLecturersService.getMaxId();
+                if (id != null) {studentLecturers.setId(id +1);}
                 studentLecturers.setLecturer(lecturer);
                 studentLecturers.setStudent(student);
                 studentLecturers.setIsScientificSupervisor(true);
+                studentLecturersService.saveStudentLecturers(studentLecturers);
             }
 
-            student.getLecturers().add(studentLecturers);
-            lecturer.getStudents().add(studentLecturers);
+//            student.getLecturers().add(studentLecturers);
+//            lecturer.getStudents().add(studentLecturers);
 
-            Protocol protocol = new Protocol();
-            protocol.setStudent(student);
-            protocol.setFqw(fqw);
-            protocol.setHeadOfTheFQW(lecturer.getName());
-            protocol.setGrade(data.get("Score").equals("?") ? -1 : Integer.parseInt(data.get("Score").toString().substring(0, 3).trim()));
-            protocol.setLanguage((String) data.get("Language"));
+            log.info("p");
 
-            Question question1 = new Question();
-            question1.setQuestioner((String) data.get("Questioner1"));
-            question1.setQuestion((String) data.get("Question1"));
-
-            Question question2 = new Question();
-            question2.setQuestioner((String) data.get("Questioner2"));
-            question2.setQuestion((String) data.get("Question1"));
-
-            Question question3 = new Question();
-            question3.setQuestioner((String) data.get("Questioner3"));
-            question3.setQuestion((String) data.get("Question3"));
-
-            ProtocolQuestion pq1 = new ProtocolQuestion();
-            pq1.setProtocol(protocol);
-            pq1.setQuestion(question1);
-            question1.getProtocolQuestion().add(pq1);
-            protocol.getQuestions().add(pq1);
-
-            ProtocolQuestion pq2 = new ProtocolQuestion();
-            pq2.setProtocol(protocol);
-            pq2.setQuestion(question2);
-            question2.getProtocolQuestion().add(pq2);
-            protocol.getQuestions().add(pq2);
-
-            ProtocolQuestion pq3 = new ProtocolQuestion();
-            pq3.setProtocol(protocol);
-            pq3.setQuestion(question3);
-            question3.getProtocolQuestion().add(pq3);
-            protocol.getQuestions().add(pq3);
-
-            Lecturer finalLecturer = lecturer;
-            Student finalStudent = student;
-            StudentLecturers finalStudentLecturers = studentLecturers;
-            CompletableFuture.runAsync(() -> {
-                fqwService.saveFqw(fqw);
-                lecturerService.saveLecturer(finalLecturer);
-                studentService.saveStudent(finalStudent);
-                studentLecturersService.saveStudentLecturers(finalStudentLecturers);
-                questionService.saveQuestion(question1);
-                questionService.saveQuestion(question2);
-                questionService.saveQuestion(question3);
+            Protocol protocol = protocolService.findByStudentNum(student.getStud_num());
+            if (protocol == null) {
+                protocol = new Protocol();
+                Long id = protocolService.getMaxId();
+                if (id != null) {protocol.setId(id +1);}
+                protocol.setStudent(student);
+                protocol.setFqw(fqw);
+                protocol.setHeadOfTheFQW(lecturer.getName());
+                protocol.setGrade(data.get("Score").equals("?") ? -1 : Integer.parseInt(data.get("Score").toString().substring(0, 3).trim()));
+                protocol.setLanguage((String) data.get("Language"));
                 protocolService.saveProtocol(protocol);
+            }
+            log.info("q");
+
+            Long id = questionService.getMaxId();
+            if (id == null){ id = 0l; }
+            Question question1 = questionService.findQuestion((String) data.get("Question1"));
+            if (question1 == null) {
+                question1 = new Question();
+                id++;
+                question1.setId(id);
+                question1.setQuestioner((String) data.get("Questioner1"));
+                question1.setQuestion((String) data.get("Question1"));
+                questionService.saveQuestion(question1);
+
+            }
+
+            Question question2 = questionService.findQuestion((String) data.get("Question2"));
+            if (question2 == null) {
+                question2 = new Question();
+                id++;
+                question2.setId(id);
+                question2.setQuestioner((String) data.get("Questioner2"));
+                question2.setQuestion((String) data.get("Question2"));
+                questionService.saveQuestion(question2);
+            }
+
+            Question question3 = questionService.findQuestion((String) data.get("Question3"));
+            if (question3 == null) {
+                question3 = new Question();
+                id++;
+                question3.setId(id);
+                question3.setQuestioner((String) data.get("Questioner3"));
+                question3.setQuestion((String) data.get("Question3"));
+                questionService.saveQuestion(question3);
+            }
+            log.info("pq");
+
+
+
+            ProtocolQuestion pq1 = protocolQuestionService.findByQuestionAndProtocolStudent(question1.getQuestion(), protocol.getStudent().getStud_num());
+            id = protocolQuestionService.getMaxId();
+            if (id == null) { id = 0l; }
+            if (pq1 == null) {
+                pq1 = new ProtocolQuestion();
+                id++;
+                pq1.setId(id);
+                pq1.setProtocol(protocol);
+                pq1.setQuestion(question1);
+                question1.getProtocolQuestion().add(pq1);
+                protocol.getQuestions().add(pq1);
                 protocolQuestionService.saveProtocolQuestion(pq1);
+            }
+
+            ProtocolQuestion pq2 = protocolQuestionService.findByQuestionAndProtocolStudent(question2.getQuestion(), protocol.getStudent().getStud_num());
+            if (pq2 == null) {
+                pq2 = new ProtocolQuestion();
+                id++;
+                pq2.setId(id);
+                pq2.setProtocol(protocol);
+                pq2.setQuestion(question2);
+                question2.getProtocolQuestion().add(pq2);
+                protocol.getQuestions().add(pq2);
                 protocolQuestionService.saveProtocolQuestion(pq2);
+            }
+
+            ProtocolQuestion pq3 = protocolQuestionService.findByQuestionAndProtocolStudent(question3.getQuestion(), protocol.getStudent().getStud_num());
+            if (pq3 == null) {
+                pq3 = new ProtocolQuestion();
+                id++;
+                pq3.setId(id);
+                pq3.setProtocol(protocol);
+                pq3.setQuestion(question3);
+                question3.getProtocolQuestion().add(pq3);
+                protocol.getQuestions().add(pq3);
                 protocolQuestionService.saveProtocolQuestion(pq3);
-            });
+            }
+            log.info("end");
+
+
+            log.info("Saving has ended");
             return ResponseEntity.status(HttpStatus.OK).body("OK");
         } catch (Exception e) {
             log.info(e.getMessage());
