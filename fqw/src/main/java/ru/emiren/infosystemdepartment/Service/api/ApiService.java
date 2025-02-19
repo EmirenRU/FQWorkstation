@@ -14,4 +14,6 @@ import java.util.concurrent.CompletableFuture;
 public interface ApiService {
     public CompletableFuture<ResponseEntity<Object>> handleDataUpload(String message);
     ResponseEntity<String> returnJsFile(String s);
+
+    CompletableFuture<ResponseEntity<String>> receiveSelectorPayload(HttpServletRequest request);
 }

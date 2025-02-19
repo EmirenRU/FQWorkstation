@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
+import ru.emiren.infosystemdepartment.DTO.Payload.Selector.ThemeSelector;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 
@@ -25,6 +26,14 @@ public class FQWMapper {
                 .feedback(fqw.getFeedback())
                 .volume(fqw.getVolume())
                 .reviewer(ReviewerMapper.mapToReviewerDTO(fqw.getReviewer()))
+                .build();
+    }
+
+    public static ThemeSelector mapToSelector(FQWDTO fqwdto){
+        return ThemeSelector
+                .builder()
+                .value(fqwdto.getId().toString())
+                .name(fqwdto.getName())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
+import ru.emiren.infosystemdepartment.DTO.Payload.Selector.OrientationSelector;
 import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 
@@ -16,6 +17,13 @@ public class OrientationMapper {
         return OrientationDTO.builder()
                 .code(orientation.getCode())
                 .name(orientation.getName())
+                .build();
+    }
+
+    public static OrientationSelector mapToSelector(OrientationDTO orientationDTO){
+        return OrientationSelector.builder()
+                .name(orientationDTO.getCode() + " " + orientationDTO.getName())
+                .value(orientationDTO.getCode())
                 .build();
     }
 }

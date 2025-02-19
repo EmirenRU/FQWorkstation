@@ -103,5 +103,13 @@ public class ApplicationProgrammingInterfaceController {
             }
         );
     }
-}
 
+    @GetMapping("/v2/receive-selectors")
+    public CompletableFuture<ResponseEntity<String>> receiveSelectors(HttpServletRequest request) {
+        return apiService.receiveSelectorPayload(request).thenApply(reply ->{
+            log.info("receive selectors response");
+            return reply;
+            }
+        );
+    }
+}

@@ -12,8 +12,17 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import ru.emiren.infosystemdepartment.DTO.Payload.Selector.DepartmentSelector;
+import ru.emiren.infosystemdepartment.DTO.Payload.Selector.LecturerSelector;
+import ru.emiren.infosystemdepartment.DTO.Payload.Selector.OrientationSelector;
+import ru.emiren.infosystemdepartment.DTO.Payload.Selector.ThemeSelector;
+import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
+import ru.emiren.infosystemdepartment.Mapper.DepartmentMapper;
+import ru.emiren.infosystemdepartment.Mapper.FQWMapper;
+import ru.emiren.infosystemdepartment.Mapper.LecturerMapper;
+import ru.emiren.infosystemdepartment.Mapper.OrientationMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
 import ru.emiren.infosystemdepartment.Service.SQL.*;
 
@@ -358,6 +367,24 @@ public class SqlServiceImpl implements SqlService {
         orientationDTOS = orientationService.getAllOrientations();
         fqwdtos = fqwService.getAllFQW();
         log.info("Data refreshed successfully.");
+    }
+
+    @Override
+    public SelectorSqlPayload receiveSelectors() {
+        /*
+        List<LecturerDTO> lecturerDTOS;
+        List<OrientationDTO> orientationDTOS;
+        List<DepartmentDTO> departmentDTOS;
+        List<FQWDTO> fqwdtos;
+         */
+
+        SelectorSqlPayload selectorSqlPayload = new SelectorSqlPayload(
+                departmentDTOS.stream().map(DepartmentMapper::mapToSelector).toList(),
+                orientationDTOS.stream().map(OrientationMapper::mapToSelector).toList(),
+                lecturerDTOS.stream().map(LecturerMapper::mapToSelector).toList(),
+                fqwdtos.stream().map(FQWMapper::mapToSelector).toList());
+
+        return selectorSqlPayload;
     }
 
     @Override

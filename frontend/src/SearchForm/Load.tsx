@@ -2,7 +2,7 @@ import  { useState, useEffect} from 'react';
 import { saveInputs } from './Save';
 
 import { useFormContext } from '../context';
-import { getFakeSelectorData } from '../api/getData';
+import { getSelectors } from "../api/getData.tsx";
 
 
 function jsonToData(data: string): object {
@@ -71,7 +71,7 @@ export const  LoadSaved = ({signal,setReady}) =>  {
     async function fetchSelectorData() {
         try {
             console.log("In try section of fetch data");
-            const result = await getFakeSelectorData();
+            const result = await getSelectors();
             console.log("Parsed", result); // Log the result to verify its structure
             
             if (result && result.department && result.orientation && result.student && result.theme) {
