@@ -40,7 +40,7 @@ export function ComissionData({ comissionerName1, comissionerName2, comissionerN
 
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="comissionerUniversity1" pattern="\d*" type="text" id="1-field" required value={comissionerUniversity1} onChange={e => updateFields({ comissionerUniversity1: e.target.value })} />
+        <input className="form-input" name="comissionerUniversity1" pattern="\w*" type="text" id="1-field" required value={comissionerUniversity1} onChange={e => updateFields({ comissionerUniversity1: e.target.value })} />
 
 
         <label className="form-label">Кафедра</label>
@@ -67,7 +67,7 @@ export function ComissionData({ comissionerName1, comissionerName2, comissionerN
 
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="comissionerUniversity2" pattern="\d*" type="text" id="1-field" required value={comissionerUniversity2} onChange={e => updateFields({ comissionerUniversity2: e.target.value })} />
+        <input className="form-input" name="comissionerUniversity2" pattern="\w*" type="text" id="1-field" required value={comissionerUniversity2} onChange={e => updateFields({ comissionerUniversity2: e.target.value })} />
 
 
         <label className="form-label">Кафедра</label>
@@ -93,7 +93,7 @@ export function ComissionData({ comissionerName1, comissionerName2, comissionerN
 
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="comissionerUniversity3" pattern="\d*" type="text" id="1-field" required value={comissionerUniversity3} onChange={e => updateFields({ comissionerUniversity3: e.target.value })} />
+        <input className="form-input" name="comissionerUniversity3" pattern="\w*" type="text" id="1-field" required value={comissionerUniversity3} onChange={e => updateFields({ comissionerUniversity3: e.target.value })} />
 
 
         <label className="form-label">Кафедра</label>

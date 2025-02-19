@@ -26,7 +26,7 @@ export function ReviewerData({ReviewerName, ReviewerDegree, ReviewerDuty,  updat
 
 
         <label className="form-label">Ученая степень</label>
-        <input className="form-input" name="ReviewerDegree" pattern="\d*" type="text" id="1-field" required value={ReviewerDegree} onChange={e => updateFields ({ReviewerDegree: e.target.value})}/>
+        <input className="form-input" name="ReviewerDegree" pattern="\w*" type="text" id="1-field" required value={ReviewerDegree} onChange={e => updateFields ({ReviewerDegree: e.target.value})}/>
 
 
         <label className="form-label">Должность</label>
