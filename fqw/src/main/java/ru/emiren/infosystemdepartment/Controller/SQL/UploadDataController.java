@@ -68,72 +68,69 @@ public class UploadDataController {
     @PostMapping("/api/add-data")
     public String addData(@RequestBody Map<String, String> request){
         log.info(request.toString());
-        /*
-        name=a, studnum=13, citizenship=a, education=a,
-        clasifyer=a, code=02.03.01, naming=a,
-        studdate=2025-02-04T13:36:18.888Z,
-        teachers_name=a, degree=a, postion=a, department_name=a, is_supervisor=true, is_consultant=false, subject=a, originality=1, review=a, volume=a, FQWSupervisor=a, critique=a, assessment=a, protocolVolume=a, ReviewerName=a, ReviewerDegree=a, ReviewerDuty=a, comissionerName1=a, comissionerName2=b, comissionerName3=c, comissionerUniversity1=a, comissionerUniversity2=b, comissionerUniversity3=c, comissionerDepartment1=a, comissionerDepartment2=b, comissionerDepartment3=c, comissionerQuestion1=a, comissionerQuestion2=b, comissionerQuestion3=c}
-         */
-        log.info(request.get("is_supervisor")+ " " + request.get("studdate"));
+        Integer dateOfProtection = DateUtil.parseYear(request.get("dateOfProtection"));
 
-        Date dateOfProtection = Date.from(Instant.now());
-//        Date dateOfProtection = DateUtil.stringToDate(request.get("dateOfProtection"));
+        Department department = createDepartment(request);
+        departmentService.saveDepartment(department);
+        Orientation orientation = createOrientation(request);
+        orientationService.saveOrientation(orientation);
+
+
+        Protection protection = createProtection(orientation, dateOfProtection);
+        protection.setOrientation(orientation);
+        protectionService.saveProtection(protection);
+
+        Reviewer reviewer = createReviewer(request);
+        reviewerService.saveReviewer(reviewer);
+        FQW fqw = createFQW(request, reviewer);
+        fqw.setReviewer(reviewer);
+        fqwService.saveFqw(fqw);
+        Commissioner commissioner1 = createCommissioner(request, "1");
+        commissionerService.saveCommissioner(commissioner1);
+        Commissioner commissioner2 = createCommissioner(request, "2");
+        commissionerService.saveCommissioner(commissioner2);
+        Commissioner commissioner3 = createCommissioner(request, "3");
+        commissionerService.saveCommissioner(commissioner3);
 
         Student student = createStudent(request);
+        student.setOrientation(orientation);
+        student.setFqw(fqw);
+        student.setDepartment(department);
+
+        studentService.saveStudent(student);
         Lecturer lecturer = createLecturer(request);
+        lecturer.setDepartment(department);
+        lecturerService.saveLecturer(lecturer);
         StudentLecturers sl = createStudentLecturers(request, student, lecturer);
-        Reviewer reviewer = createReviewer(request);
-        Department department = createDepartment(request);
-        Orientation orientation = createOrientation(request);
-        FQW fqw = createFQW(request, reviewer);
+        studentLecturersService.saveStudentLecturers(sl);
+
         Protocol protocol = createProtocol(request);
-        Protection protection = createProtection(orientation, dateOfProtection);
-        Commissioner commissioner1 = createCommissioner(request, "1");
-        Commissioner commissioner2 = createCommissioner(request, "2");
-        Commissioner commissioner3 = createCommissioner(request, "3");
-        ProtectionCommissioner pc1 = createProtectionCommissioner(protection, commissioner1);
-        ProtectionCommissioner pc2 = createProtectionCommissioner(protection, commissioner2);
-        ProtectionCommissioner pc3 = createProtectionCommissioner(protection, commissioner3);
+        protocol.setStudent(student);
+        protocolService.saveProtocol(protocol);
+
+
         Question q1 = createQuestion(request, "1", commissioner1);
         Question q2 = createQuestion(request, "2", commissioner3);
         Question q3 = createQuestion(request, "3", commissioner2);
+
+        ProtectionCommissioner pc1 = createProtectionCommissioner(protection, commissioner1);
+        protectionCommissionerService.saveProtectionCommissioner(pc1);
+        ProtectionCommissioner pc2 = createProtectionCommissioner(protection, commissioner2);
+        protectionCommissionerService.saveProtectionCommissioner(pc2);
+        ProtectionCommissioner pc3 = createProtectionCommissioner(protection, commissioner3);
+        protectionCommissionerService.saveProtectionCommissioner(pc3);
+
         ProtocolQuestion pq1 = createProtocolQuestion(request, protocol, q1);
+        protocolQuestionService.saveProtocolQuestion(pq1);
         ProtocolQuestion pq2 = createProtocolQuestion(request, protocol, q2);
+        protocolQuestionService.saveProtocolQuestion(pq2);
         ProtocolQuestion pq3 = createProtocolQuestion(request, protocol, q3);
+        protocolQuestionService.saveProtocolQuestion(pq3);
 
-        protection.getCommissioners().addAll(List.of(pc1, pc2, pc3));
-        protocol.getQuestions().addAll(List.of(pq1, pq2, pq3));
-        protocol.setStudent(student);
 
-        student.setDepartment(department);
-        student.setOrientation(orientation);
-        student.setFqw(fqw);
-        student.getLecturers().add(sl);
-        lecturer.setDepartment(department);
         lecturer.getStudents().add(sl);
-        lecturer.setDepartment(department);
-        orientation.setProtection(List.of(protection));
         orientation.getProtection().add(protection);
 
-        protection.setOrientation(orientation);
-        fqw.setReviewer(reviewer);
-
-        // TODO rewrite the mappers
-        studentService.saveStudent(student);
-        lecturerService.saveLecturer(lecturer);
-        studentLecturersService.saveStudentLecturers(sl);
-        reviewerService.saveReviewer(reviewer);
-        departmentService.saveDepartment(department);
-        orientationService.saveOrientation(orientation);
-        fqwService.saveFqw(fqw);
-        commissionerService.saveCommissioner(commissioner1);
-        commissionerService.saveCommissioner(commissioner2);
-        commissionerService.saveCommissioner(commissioner3);
-        protocolService.saveProtocol(protocol);
-        protectionService.saveProtection(protection);
-        protectionCommissionerService.saveProtectionCommissioner(pc1);
-        protectionCommissionerService.saveProtectionCommissioner(pc2);
-        protectionCommissionerService.saveProtectionCommissioner(pc3);
 
         return "redirect:/upload-data-form";
     }
@@ -142,14 +139,15 @@ public class UploadDataController {
 
     private Student createStudent(Map<String, String> request) {
         Student student = null;
-        if (request.get("studnum") != null) {
+        if (request.get("studNum") != null) {
             Long studNum = Long.parseLong(request.get("studNum"));
             student = studentService.findStudentByStudNum(studNum);
         }
         if (student == null) {
             student = new Student();
-
-            String name = request.get("name");
+            long id = studentService.getMaxId() + 1;
+            student.setId(id);
+            String name = request.get("studName");
             if (name != null) {
                 student.setName(name);
             } else {
@@ -201,11 +199,12 @@ public class UploadDataController {
     private Lecturer createLecturer(Map<String, String> request) {
         Lecturer lecturer = null;
         if (request.get("lecturerName") != null) {
-            lecturer = lecturerService.findByLecturerName(request.get("lecturerName"));
+            lecturer = lecturerService.findByLecturerName(request.get("lecturersName"));
         }
         if (lecturer == null) {
             lecturer = new Lecturer();
-
+            long id = lecturerService.getMaxId() + 1;
+            lecturer.setId(id);
             String lecturersName = request.get("lecturersName");
             if (lecturersName != null) {
                 lecturer.setName(lecturersName);
@@ -240,6 +239,8 @@ public class UploadDataController {
                                                                      lecturer.getName());
         if (studentLecturers == null) {
             studentLecturers = new StudentLecturers();
+            long id = studentLecturersService.getMaxId() + 1;
+            studentLecturers.setId(id);
             studentLecturers.setStudent(student);
             studentLecturers.setLecturer(lecturer);
             studentLecturers.setIsScientificSupervisor(Boolean.parseBoolean(request.get("isScientificSupervisor")));
@@ -272,7 +273,8 @@ public class UploadDataController {
         Reviewer reviewer = reviewerService.findReviewerByName(request.get("reviewerName"));
         if (reviewer == null) {
             reviewer = new Reviewer();
-
+            long id = reviewerService.getMaxId() + 1;
+            reviewer.setId(id);
             String reviewerName = request.get("reviewerName");
             if (reviewerName != null) {
                 reviewer.setName(reviewerName);
@@ -305,7 +307,8 @@ public class UploadDataController {
         Department department = departmentService.findDepartmentByName(request.get("departmentName"));
         if (department == null) {
             department = new Department();
-
+            long id = departmentService.getMaxId()+1;
+            department.setCode(id);
             String departmentName = request.get("departmentName");
             if (departmentName != null) {
                 department.setName(departmentName);
@@ -347,6 +350,8 @@ public class UploadDataController {
         FQW fqw = fqwService.findByName(request.get("themeName"));
         if (fqw == null) {
             fqw = new FQW();
+            long id = fqwService.getMaxId() + 1;
+            fqw.setId(id);
             String themeName = request.get("themeName");
             if (themeName != null) {
                 fqw.setName(themeName);
@@ -360,7 +365,7 @@ public class UploadDataController {
                     fqw.setUniqueness(Float.parseFloat(uniquenessStr));
                 } catch (NumberFormatException e) {
                     log.warn("Uniqueness must be a valid float");
-                    fqw.setUniqueness(0.0f); // Set a default value if needed
+                    fqw.setUniqueness(0.0f);
                 }
             } else {
                 log.warn("Uniqueness is null");
@@ -397,7 +402,8 @@ public class UploadDataController {
         Protocol protocol = protocolService.findByStudentNum(Long.parseLong(request.get("studNum")));
         if (protocol == null) {
             protocol = new Protocol();
-
+            long id = protocolService.getMaxId()+1;
+            protocol.setId(id);
             String volumeStr = request.get("volume");
             if (volumeStr != null) {
                 try {
@@ -450,9 +456,11 @@ public class UploadDataController {
         return protocol;
     }
 
-    private Protection createProtection(Orientation orientation, Date dateOfProtection) {
+    private Protection createProtection(Orientation orientation, Integer dateOfProtection) {
         Protection protection = new Protection();
+        long id = protectionService.getMaxId()+1;
 
+        protection.setId(id);
         if (orientation != null) {
             protection.setOrientation(orientation);
         } else {
@@ -461,9 +469,8 @@ public class UploadDataController {
         }
 
         if (dateOfProtection != null) {
-            String yearStr = DateUtil.getYear(dateOfProtection);
             try {
-                protection.setDateOfProtection(Integer.parseInt(yearStr));
+                protection.setDateOfProtection(dateOfProtection);
             } catch (NumberFormatException e) {
                 log.warn("Year must be a valid integer");
                 protection.setDateOfProtection(0);
@@ -485,7 +492,8 @@ public class UploadDataController {
         Commissioner commissioner = commissionerService.findByName(commissionerName);
         if (commissioner == null) {
             commissioner = new Commissioner();
-
+            long id = commissionerService.getMaxId() + 1;
+            commissioner.setId(id);
             if (commissionerName != null) {
                 commissioner.setName(commissionerName);
             } else {
@@ -513,7 +521,8 @@ public class UploadDataController {
 
     private ProtectionCommissioner createProtectionCommissioner(Protection protection, Commissioner commissioner) {
         ProtectionCommissioner pc = new ProtectionCommissioner();
-
+        long id = protectionCommissionerService.getMaxId()+1;
+        pc.setId(id);
         if (protection != null) {
             pc.setProtection(protection);
         } else {
@@ -530,9 +539,11 @@ public class UploadDataController {
 
 
     private Question createQuestion(Map<String, String> request, String questionNumber, Commissioner commissioner) {
-        Question questionObject = questionService.findQuestion(request.get("question" + questionNumber));
+        Question questionObject = questionService.findQuestion(request.get("question" + questionNumber)); // Questioner from commissionerName1,2,3,
         if (questionObject == null) {
             questionObject = new Question();
+            long id = questionService.getMaxId()+1;
+            questionObject.setId(id);
 
             String questionText = request.get("question" + questionNumber);
             if (questionText != null) {
@@ -558,6 +569,8 @@ public class UploadDataController {
         ProtocolQuestion protocolQuestion = protocolQuestionService.findByQuestionAndProtocolStudent(question.getQuestion(), protocol.getStudent().getStud_num());
         if (protocolQuestion == null) {
             protocolQuestion = new ProtocolQuestion();
+            long id = protocolQuestionService.getMaxId()+1;
+            protocolQuestion.setId(id);
 
             if (question != null) {
                 protocolQuestion.setQuestion(question);

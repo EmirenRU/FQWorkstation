@@ -13,4 +13,7 @@ public interface DepartmentRepository extends JpaRepository<Department, String> 
     Optional<Department> findDepartmentNameByStudNumber(Long studNumber);
 
     Optional<Department> findByName(String name);
+
+    @Query("SELECT MAX(d.code) FROM Department d")
+    Long getMaxId();
 }

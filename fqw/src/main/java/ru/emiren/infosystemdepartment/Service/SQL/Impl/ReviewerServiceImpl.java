@@ -68,4 +68,9 @@ public class ReviewerServiceImpl implements ReviewerService {
     public Reviewer findReviewerByName(String reviewerName) {
         return reviewerRepository.findByName(reviewerName).orElse(null);
     }
+
+    @Override
+    public Long getMaxId() {
+        return reviewerRepository.getMaxId();
+    }
 }

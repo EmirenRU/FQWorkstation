@@ -16,4 +16,6 @@ public interface FQWService {
     FQW getFqwByName(String theme);
 
     FQW findByName(String themeName);
+
+    Long getMaxId();
 }

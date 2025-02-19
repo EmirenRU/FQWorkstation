@@ -68,4 +68,9 @@ public class CommissionerServiceImpl implements CommissionerService {
     public Commissioner findByName(String commissionerName) {
         return commissionerRepository.findByName(commissionerName).orElse(null);
     }
+
+    @Override
+    public Long getMaxId() {
+        return commissionerRepository.getMaxId();
+    }
 }
