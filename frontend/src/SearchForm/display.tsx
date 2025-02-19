@@ -20,14 +20,7 @@ export const ToggleDisplayAndSaveState =({signal,setReady}) => {
 
     async function fetchData() {
         try {
-<<<<<<< HEAD
             const result = await getFakeInfo(formData, setParsedData);
-=======
-            console.log("In try section of fetch data")
-            const result = await getTableInfo(formData, setParsedData);
-            console.log(parsedData)
-            setReadyAction(false)
->>>>>>> af95d9d4a35e3d59fae08ed239d8b0cf714031b6
             console.log("Parsed", parsedData);
             setSortedData(result)
             createTableBody(result)

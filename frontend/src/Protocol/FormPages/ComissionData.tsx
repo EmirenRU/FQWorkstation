@@ -1,18 +1,18 @@
 import { FormWrapper } from "../FormWrapper/FormWrapper"
 
 type ComissionFieldsData = {
-    comissionerName1: string,
-    comissionerName2: string,
-    comissionerName3: string,
-    comissionerUniversity1: string,
-    comissionerUniversity2: string,
-    comissionerUniversity3: string,
-    comissionerDepartment1: string,
-    comissionerDepartment2: string,
-    comissionerDepartment3: string,
-    comissionerQuestion1: string,
-    comissionerQuestion2: string,
-    comissionerQuestion3: string,
+    commissionerName1: string,
+    commissionerName2: string,
+    commissionerName3: string,
+    commissionerUniv1: string,
+    commissionerUniv2: string,
+    commissionerUniv3: string,
+    commissionerDep1: string,
+    commissionerDep2: string,
+    commissionerDep3: string,
+    question1: string,
+    question2: string,
+    question3: string,
 
 }
 
@@ -21,10 +21,10 @@ type ComissionFormProps = ComissionFieldsData & {
     updateFields: (fields: Partial<ComissionFieldsData>) => void
 }
 
-export function ComissionData({ comissionerName1, comissionerName2, comissionerName3,
-     comissionerUniversity1,comissionerUniversity2,comissionerUniversity3,
-     comissionerDepartment1,comissionerDepartment2,comissionerDepartment3,
-     comissionerQuestion1,comissionerQuestion2,comissionerQuestion3,
+export function ComissionData({ commissionerName1, commissionerName2, commissionerName3,
+     commissionerUniv1,commissionerUniv2,commissionerUniv3,
+     commissionerDep1,commissionerDep2,commissionerDep3,
+     question1,question2,question3,
       updateFields }: ComissionFormProps) {
 
 
@@ -35,23 +35,23 @@ export function ComissionData({ comissionerName1, comissionerName2, comissionerN
 
         <label className="form-label">ФИО </label>
 
-        <input className="form-input" name="comissionerName1" type="text" id="0-field" value={comissionerName1} required onChange={e => updateFields({ comissionerName1: e.target.value })} />
+        <input className="form-input" name="commissionerName1" type="text" id="0-field" value={commissionerName1} required onChange={e => updateFields({ commissionerName1: e.target.value })} />
 
 
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="comissionerUniversity1" pattern="\d*" type="text" id="1-field" required value={comissionerUniversity1} onChange={e => updateFields({ comissionerUniversity1: e.target.value })} />
+        <input className="form-input" name="commissionerUniv1" pattern="\d*" type="text" id="1-field" required value={commissionerUniv1} onChange={e => updateFields({ commissionerUniv1: e.target.value })} />
 
 
         <label className="form-label">Кафедра</label>
 
-        <input className="form-input" name=" comissionerDepartment1" type="text" id="2-field" required value={ comissionerDepartment1} onChange={e => updateFields({  comissionerDepartment1: e.target.value })} />
+        <input className="form-input" name=" commissionerDep1" type="text" id="2-field" required value={ commissionerDep1} onChange={e => updateFields({  commissionerDep1: e.target.value })} />
 
 
 
         <label className="form-label">Вопрос</label>
 
-        <input className="form-input" name="comissionerQuestion1" type="text" id="3-field" required value={comissionerQuestion1} onChange={e => updateFields({ comissionerQuestion1: e.target.value })} />
+        <input className="form-input" name="question1" type="text" id="3-field" required value={question1} onChange={e => updateFields({ question1: e.target.value })} />
 
 
 
@@ -61,24 +61,24 @@ export function ComissionData({ comissionerName1, comissionerName2, comissionerN
 
         <label className="form-label">ФИО </label>
 
-        <input className="form-input" name="comissionerName2" type="text" id="0-field" value={comissionerName2} required onChange={e => updateFields({ comissionerName2: e.target.value })} />
+        <input className="form-input" name="commissionerName2" type="text" id="0-field" value={commissionerName2} required onChange={e => updateFields({ commissionerName2: e.target.value })} />
 
 
 
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="comissionerUniversity2" pattern="\d*" type="text" id="1-field" required value={comissionerUniversity2} onChange={e => updateFields({ comissionerUniversity2: e.target.value })} />
+        <input className="form-input" name="commissionerUniv2" pattern="\d*" type="text" id="1-field" required value={commissionerUniv2} onChange={e => updateFields({ commissionerUniv2: e.target.value })} />
 
 
         <label className="form-label">Кафедра</label>
 
-        <input className="form-input" name=" comissionerDepartment2" type="text" id="2-field" required value={ comissionerDepartment2} onChange={e => updateFields({  comissionerDepartment2: e.target.value })} />
+        <input className="form-input" name=" commissionerDep2" type="text" id="2-field" required value={ commissionerDep2} onChange={e => updateFields({  commissionerDep2: e.target.value })} />
 
 
 
         <label className="form-label">Вопрос</label>
 
-        <input className="form-input" name="comissionerQuestion2" type="text" id="3-field" required value={comissionerQuestion2} onChange={e => updateFields({ comissionerQuestion2: e.target.value })} />
+        <input className="form-input" name="question2" type="text" id="3-field" required value={question2} onChange={e => updateFields({ question2: e.target.value })} />
 
 
 
@@ -87,24 +87,24 @@ export function ComissionData({ comissionerName1, comissionerName2, comissionerN
 
         <label className="form-label">ФИО </label>
 
-        <input className="form-input" name="comissionerName3" type="text" id="0-field" value={comissionerName3} required onChange={e => updateFields({ comissionerName3: e.target.value })} />
+        <input className="form-input" name="commissionerName3" type="text" id="0-field" value={commissionerName3} required onChange={e => updateFields({ commissionerName3: e.target.value })} />
 
 
 
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="comissionerUniversity3" pattern="\d*" type="text" id="1-field" required value={comissionerUniversity3} onChange={e => updateFields({ comissionerUniversity3: e.target.value })} />
+        <input className="form-input" name="commissionerUniv3" pattern="\d*" type="text" id="1-field" required value={commissionerUniv3} onChange={e => updateFields({ commissionerUniv3: e.target.value })} />
 
 
         <label className="form-label">Кафедра</label>
 
-        <input className="form-input" name=" comissionerDepartment3" type="text" id="2-field" required value={ comissionerDepartment3} onChange={e => updateFields({  comissionerDepartment3: e.target.value })} />
+        <input className="form-input" name=" commissionerDep3" type="text" id="2-field" required value={ commissionerDep3} onChange={e => updateFields({  commissionerDep3: e.target.value })} />
 
 
 
         <label className="form-label">Вопрос</label>
 
-        <input className="form-input" name="comissionerQuestion3" type="text" id="3-field" required value={comissionerQuestion3} onChange={e => updateFields({comissionerQuestion3: e.target.value })} />
+        <input className="form-input" name="question3" type="text" id="3-field" required value={question3} onChange={e => updateFields({question3: e.target.value })} />
 
 
     </FormWrapper>

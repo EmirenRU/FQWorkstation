@@ -1,10 +1,10 @@
 import { FormWrapper } from "../FormWrapper/FormWrapper"
 
 type ProtocolFieldsData = {
-    FQWSupervisor: string,
-    critique: string,
-    assessment: string,
-    protocolVolume: string
+    headOfTheFQW: string,
+    review: string,
+    grade: string,
+    protocolVolume: string,
 }
 
 type ProtocolFormProps = ProtocolFieldsData &{
@@ -12,7 +12,7 @@ type ProtocolFormProps = ProtocolFieldsData &{
     updateFields: (fields: Partial<ProtocolFieldsData>) => void
 }
 
-export function ProtocolData({ FQWSupervisor, critique, assessment, protocolVolume,  updateFields}: ProtocolFormProps) {
+export function ProtocolData({ headOfTheFQW, review, grade, protocolVolume,  updateFields}: ProtocolFormProps) {
 
     
 
@@ -22,18 +22,18 @@ export function ProtocolData({ FQWSupervisor, critique, assessment, protocolVolu
 
         <label className="form-label">Руководитель ВКР</label>
 
-        <input className="form-input" name="FQWSupervisor" type="text" id="0-field" value={ FQWSupervisor} required onChange={e => updateFields ({FQWSupervisor: e.target.value})}/>
+        <input className="form-input" name="headOfTheFQW" type="text" id="0-field" value={ headOfTheFQW} required onChange={e => updateFields ({headOfTheFQW: e.target.value})}/>
 
 
 
 
         <label className="form-label">Рецензия</label>
-        <input className="form-input" name="critique"  type="text" id="1-field" required value={critique} onChange={e => updateFields ({critique: e.target.value})}/>
+        <input className="form-input" name="review"  type="text" id="1-field" required value={review} onChange={e => updateFields ({review: e.target.value})}/>
 
 
         <label className="form-label">Оценка</label>
 
-        <input className="form-input" name="assessment" type="text" id="2-field" required value={assessment} onChange={e => updateFields ({assessment: e.target.value})} />
+        <input className="form-input" name="grade" type="text" id="2-field" required value={grade} onChange={e => updateFields ({grade: e.target.value})} />
 
 
 
