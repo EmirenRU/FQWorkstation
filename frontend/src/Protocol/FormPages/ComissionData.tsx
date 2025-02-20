@@ -37,7 +37,7 @@ export function ComissionData({ commissionerName1, commissionerName2, commission
         <input className="form-input" name="commissionerName1" type="text" id="0-field" value={commissionerName1} required onChange={e => updateFields({ commissionerName1: e.target.value })} />
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="commissionerUniversity1" pattern="\w*" type="text" id="1-field" required value={commissionerUniversity1} onChange={e => updateFields({ commissionerUniversity1: e.target.value })} />
+        <input className="form-input" name="commissionerUniversity1" type="text" id="1-field" required value={commissionerUniversity1} onChange={e => updateFields({ commissionerUniversity1: e.target.value })} />
 
         <label className="form-label">Кафедра</label>
         <input className="form-input" name=" commissionerDep1" type="text" id="2-field" required value={ commissionerDepartment1} onChange={e => updateFields({  commissionerDepartment1: e.target.value })} />
@@ -49,7 +49,7 @@ export function ComissionData({ commissionerName1, commissionerName2, commission
         <input className="form-input" name="commissionerName2" type="text" id="0-field" value={commissionerName2} required onChange={e => updateFields({ commissionerName2: e.target.value })} />
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="commissionerUniversity2" pattern="\w*" type="text" id="1-field" required value={commissionerUniversity2} onChange={e => updateFields({ commissionerUniversity2: e.target.value })} />
+        <input className="form-input" name="commissionerUniversity2"  type="text" id="1-field" required value={commissionerUniversity2} onChange={e => updateFields({ commissionerUniversity2: e.target.value })} />
 
         <label className="form-label">Кафедра</label>
         <input className="form-input" name=" commissionerDep2" type="text" id="2-field" required value={ commissionerDepartment2} onChange={e => updateFields({  commissionerDepartment2: e.target.value })} />
@@ -62,7 +62,7 @@ export function ComissionData({ commissionerName1, commissionerName2, commission
         <input className="form-input" name="commissionerName3" type="text" id="0-field" value={commissionerName3} required onChange={e => updateFields({ commissionerName3: e.target.value })} />
 
         <label className="form-label">Университет</label>
-        <input className="form-input" name="commissionerUniversity3" pattern="\w*" type="text" id="1-field" required value={commissionerUniversity3} onChange={e => updateFields({ commissionerUniversity3: e.target.value })} />
+        <input className="form-input" name="commissionerUniversity3" type="text" id="1-field" required value={commissionerUniversity3} onChange={e => updateFields({ commissionerUniversity3: e.target.value })} />
 
         <label className="form-label">Кафедра</label>
         <input className="form-input" name="commissionerDepartment3" type="text" id="2-field" required value={ commissionerDepartment3} onChange={e => updateFields({  commissionerDepartment3: e.target.value })} />

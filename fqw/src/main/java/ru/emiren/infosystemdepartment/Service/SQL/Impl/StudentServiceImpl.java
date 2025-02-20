@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentDTO;
 import ru.emiren.infosystemdepartment.Mapper.StudentMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
@@ -23,6 +24,7 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
+    @Transactional
     public Student saveStudent(Student studentDTO) {
         return studentRepository.save(studentDTO);
     }
@@ -98,7 +100,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public long getMaxId() {
+    public Long getMaxId() {
         return studentRepository.getMaxId();
     }
+
 }

@@ -462,7 +462,7 @@ public class SqlServiceImpl implements SqlService {
                 student = new Student();
                 Long id = studentService.getMaxId();
                 if (id != null) {student.setId(id +1);}
-                student.setStud_num((Long) data.get("StudNum"));
+                student.setStud_num(studNum);
                 student.setName((String) data.get("FullName"));
                 student.setCitizenship((String) data.get("Citizenship"));
                 student.setFqw(fqw);

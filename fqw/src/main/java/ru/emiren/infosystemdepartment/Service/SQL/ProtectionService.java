@@ -16,4 +16,6 @@ public interface ProtectionService {
     Protection updateProtection(Protection protection);
 
     Long getMaxId();
+
+    Protection findByDateOfProtectionAndOrientationCode(String code, Integer dateOfProtection);
 }
