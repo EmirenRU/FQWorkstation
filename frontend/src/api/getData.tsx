@@ -15,10 +15,6 @@ export function getTableInfo (data, set) {
 }
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 export function getFakeInfo(data, set){
     return import('./data.json') // Adjust the path to your local JSON file
     .then(localData => {
@@ -31,8 +27,6 @@ export function getFakeInfo(data, set){
 }
 
 
-<<<<<<< HEAD
-=======
 export function getFakeSelectorData( ) {
     return import('./SelectorData.json') // Adjust the path to your local JSON file
         .then(localData => {
@@ -45,7 +39,6 @@ export function getFakeSelectorData( ) {
 }
 
 
->>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 export function getSelectors( ){
     const getOptions = {
         method: 'GET',

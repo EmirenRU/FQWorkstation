@@ -20,13 +20,9 @@ export const ToggleDisplayAndSaveState =({signal,setReady}) => {
 
     async function fetchData() {
         try {
-<<<<<<< HEAD
-            const result = await getFakeInfo(formData, setParsedData);
-=======
             console.log("In try section of fetch data")
-            const result = await getTableInfo(formData, setParsedData);
+            const result = await getFakeInfo(formData, setParsedData);
 
->>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
             console.log("Parsed", parsedData);
             setSortedData(result)
             createTableBody(result)
@@ -150,7 +146,7 @@ export const ToggleDisplayAndSaveState =({signal,setReady}) => {
                                 <td className="td-table student_citizenship">{value.citizenship}</td>
                                 <td className="td-table fqw_name">{value.theme}</td>
                             </tr>
-                        ))}
+                        ))} 
                     </tbody>
                 </table>
                 <div className="download">

@@ -25,10 +25,12 @@ export function StudentData({ studName, studNum, citizenship, loe, classifier, o
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newDateString = e.target.value; // Get the new date string from the input
         setDate(newDateString); // Update the state with the new date string
-
+        
         // Check if the date string is not empty
         if (newDateString) {
             const newDate = new Date(newDateString);
+            let forFucksSake = newDate.toDateString();
+            console.log("For fucks sake", forFucksSake);
             console.log(newDate);
             // Check if the date is valid
             if (!isNaN(newDate.getTime())) {

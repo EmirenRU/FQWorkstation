@@ -40,11 +40,7 @@ export function ComissionData({ commissionerName1, commissionerName2, commission
 
 
         <label className="form-label">Университет</label>
-<<<<<<< HEAD
         <input className="form-input" name="commissionerUniv1" pattern="\d*" type="text" id="1-field" required value={commissionerUniv1} onChange={e => updateFields({ commissionerUniv1: e.target.value })} />
-=======
-        <input className="form-input" name="comissionerUniversity1" pattern="\w*" type="text" id="1-field" required value={comissionerUniversity1} onChange={e => updateFields({ comissionerUniversity1: e.target.value })} />
->>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 
 
         <label className="form-label">Кафедра</label>
@@ -71,11 +67,7 @@ export function ComissionData({ commissionerName1, commissionerName2, commission
 
 
         <label className="form-label">Университет</label>
-<<<<<<< HEAD
         <input className="form-input" name="commissionerUniv2" pattern="\d*" type="text" id="1-field" required value={commissionerUniv2} onChange={e => updateFields({ commissionerUniv2: e.target.value })} />
-=======
-        <input className="form-input" name="comissionerUniversity2" pattern="\w*" type="text" id="1-field" required value={comissionerUniversity2} onChange={e => updateFields({ comissionerUniversity2: e.target.value })} />
->>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 
 
         <label className="form-label">Кафедра</label>
@@ -101,11 +93,7 @@ export function ComissionData({ commissionerName1, commissionerName2, commission
 
 
         <label className="form-label">Университет</label>
-<<<<<<< HEAD
         <input className="form-input" name="commissionerUniv3" pattern="\d*" type="text" id="1-field" required value={commissionerUniv3} onChange={e => updateFields({ commissionerUniv3: e.target.value })} />
-=======
-        <input className="form-input" name="comissionerUniversity3" pattern="\w*" type="text" id="1-field" required value={comissionerUniversity3} onChange={e => updateFields({ comissionerUniversity3: e.target.value })} />
->>>>>>> ff53f91d87ebb8894329ba611ef0261817a64bd9
 
 
         <label className="form-label">Кафедра</label>

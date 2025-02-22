@@ -113,7 +113,6 @@ export function Protocol  (){
             next();
         else{
         console.log(data)
-        alert("Time to send!")
 
         fetch('/fqw-api/api/add-data', {
             method: 'POST',

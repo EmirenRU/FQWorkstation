@@ -2,7 +2,7 @@ import  { useState, useEffect} from 'react';
 import { saveInputs } from './Save';
 
 import { useFormContext } from '../context';
-import { getSelectors } from "../api/getData.tsx";
+import { getFakeSelectorData, getSelectors } from "../api/getData.tsx";
 
 
 function jsonToData(data: string): object {
@@ -71,7 +71,7 @@ export const  LoadSaved = ({signal,setReady}) =>  {
     async function fetchSelectorData() {
         try {
             console.log("In try section of fetch data");
-            const result = await getSelectors();
+            const result = await getFakeSelectorData();
             console.log("Parsed", result); // Log the result to verify its structure
             
             if (result && result.department && result.orientation && result.student && result.theme) {
@@ -249,7 +249,7 @@ export const  LoadSaved = ({signal,setReady}) =>  {
         
             <div className="selector-patch">
                 <label className="selection-param">Направление
-                <select name="orientation" className="selectpicker" onChange={handleInputChange} id="orientation" multiple data-live-search="true" value={orientationData}>
+                <select name="orientation" className="selectpicker" onChange={handleInputChange} id="orientation" multiple data-live-search="true" value={orientationData} data-actions-box="true" data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
                         {selectorsStatus ? (
                             Orientations.map((init) => (
                                 console.log("Output cycle", init),
@@ -257,14 +257,14 @@ export const  LoadSaved = ({signal,setReady}) =>  {
 
                             ))
                         ) : (
-                            <option value="-1">Loading...</option>
+                            <option value="-1"  disabled>Loading...</option>
                         )}
                         </select>
                 </label>
             </div>
             <div className="selector-patch">
                 <label className="selection-param">Кафедра
-                    <select name="department"  className="selectpicker" multiple onChange={handleInputChange} id="department" value={departmentData}>
+                    <select name="department"  className="selectpicker" multiple onChange={handleInputChange} id="department" value={departmentData} data-actions-box="true" data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
                         {selectorsStatus ? (
                             Departments.map((init) => (
                                 <option key={crypto.randomUUID()} value={init.departmentValue}>
@@ -273,7 +273,7 @@ export const  LoadSaved = ({signal,setReady}) =>  {
                             ),
 
                         )) : (
-                            <option value="-1">Loading...</option>
+                            <option value="-1"  disabled>Loading...</option>
                         )}
                     </select>
                 </label>
@@ -290,8 +290,7 @@ export const  LoadSaved = ({signal,setReady}) =>  {
             </div>
             <div className="selector-patch-2">
                 <label className="selection-param">Тема
-                    <select className="selectpicker" name="themes" data-placeholder="Select or type to search" onChange={handleInputChange} id="themes" multiple data-live-search="true" value={themesData}>
-                        <option value="-1" disabled>Выберите тему: </option>
+                    <select className="selectpicker" name="themes" data-placeholder="Select or type to search" onChange={handleInputChange} id="themes" multiple data-live-search="true" value={themesData} data-actions-box="true" data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
                         {selectorsStatus ? (
                             Themes.map((init) => (
                                 <option key={init.themeName} value={init.themeValue}>
@@ -299,14 +298,14 @@ export const  LoadSaved = ({signal,setReady}) =>  {
                                 </option>
                             ))
                         ) : (
-                            <option value="-1">Loading...</option>
+                            <option value="-1"  disabled>Loading...</option>
                         )}
                     </select>
                 </label>
             </div>
             <div className="selector-patch-2 margin-fix">
                 <label className="selection-param">Науч рук
-                    <select name="lecturer" className="selectpicker" onChange={handleInputChange} value={lecturerData} id="lecturer" multiple data-live-search="true">
+                    <select name="lecturer" className="selectpicker" onChange={handleInputChange} value={lecturerData} id="lecturer" multiple data-live-search="true" data-actions-box="true" data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
                         <option value="-1">
                             Выберите преподавателя
                         </option>
@@ -317,7 +316,7 @@ export const  LoadSaved = ({signal,setReady}) =>  {
                                 </option>
                             ))
                         ) : (
-                            <option value="-1">Loading...</option>
+                            <option value="-1"  disabled>Loading...</option>
                         )}
                     </select>
                 </label>
