@@ -63,4 +63,9 @@ public class ProtectionCommissionerServiceImpl implements ProtectionCommissioner
 
         return protectionCommissionerRepository.save(ProtectionCommissionerMapper.mapToProtectionCommissioner(upd));
     }
+
+    @Override
+    public Long getMaxId() {
+        return protectionCommissionerRepository.getMaxId();
+    }
 }

@@ -16,4 +16,6 @@ public interface DepartmentService {
     String findDepartmentByStudentNumber(Long studNumber);
 
     Department findDepartmentByName(String departmentName);
+
+    Long getMaxId();
 }

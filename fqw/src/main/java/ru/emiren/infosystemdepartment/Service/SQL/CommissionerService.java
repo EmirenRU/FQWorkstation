@@ -15,4 +15,6 @@ public interface CommissionerService {
     CommissionerDTO getCommissionerDTO(Long id);
 
     Commissioner findByName(String commissionerName);
+
+    Long getMaxId();
 }

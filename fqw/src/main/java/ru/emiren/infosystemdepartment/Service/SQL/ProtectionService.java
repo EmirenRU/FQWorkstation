@@ -15,4 +15,7 @@ public interface ProtectionService {
     ProtectionDTO getProtectionDTOById(Long id);
     Protection updateProtection(Protection protection);
 
+    Long getMaxId();
+
+    Protection findByDateOfProtectionAndOrientationCode(String code, Integer dateOfProtection);
 }

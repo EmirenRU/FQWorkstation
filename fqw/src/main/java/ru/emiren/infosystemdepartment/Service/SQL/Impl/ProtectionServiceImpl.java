@@ -69,4 +69,14 @@ public class ProtectionServiceImpl implements ProtectionService {
 
         return protectionRepository.save(oldProtection);
     }
+
+    @Override
+    public Long getMaxId() {
+        return protectionRepository.getMaxId();
+    }
+
+    @Override
+    public Protection findByDateOfProtectionAndOrientationCode(String code, Integer dateOfProtection) {
+        return protectionRepository.findByOrientationCodeAndDateOfProtection(code, dateOfProtection).orElse(null);
+    }
 }

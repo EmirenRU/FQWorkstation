@@ -12,4 +12,6 @@ public interface ProtectionCommissionerService {
     ProtectionCommissioner    getProtectionCommissionerById(Long id);
     ProtectionCommissionerDTO getProtectioCommissionerDTOById(Long id);
     ProtectionCommissioner updatePC(ProtectionCommissioner pc);
+
+    Long getMaxId();
 }

@@ -27,5 +27,6 @@ public interface StudentService {
 
     Student findStudentByStudNum(Long studNum);
 
-    long getMaxId();
+    Long getMaxId();
+
 } // CD

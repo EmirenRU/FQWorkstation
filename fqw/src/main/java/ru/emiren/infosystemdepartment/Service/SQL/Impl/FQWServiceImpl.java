@@ -78,4 +78,9 @@ public class FQWServiceImpl implements FQWService {
     public FQW findByName(String themeName) {
         return fqwRepository.findByName(themeName).orElse(null);
     }
+
+    @Override
+    public Long getMaxId() {
+        return fqwRepository.getMaxId();
+    }
 }

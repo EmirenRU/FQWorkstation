@@ -79,4 +79,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Department findDepartmentByName(String departmentName) {
         return departmentRepository.findByName(departmentName).orElse(null);
     }
+
+    @Override
+    public Long getMaxId() {
+        return departmentRepository.getMaxId();
+    }
 }

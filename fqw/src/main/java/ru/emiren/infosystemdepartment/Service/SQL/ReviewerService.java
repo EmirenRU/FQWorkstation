@@ -15,4 +15,6 @@ public interface ReviewerService {
     Reviewer    updateReviewer(Reviewer reviewer);
 
     Reviewer findReviewerByName(String reviewerName);
+
+    Long getMaxId();
 }

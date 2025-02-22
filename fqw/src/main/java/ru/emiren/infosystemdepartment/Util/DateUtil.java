@@ -3,6 +3,8 @@ package ru.emiren.infosystemdepartment.Util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -65,4 +67,17 @@ public class DateUtil {
         return dateFormat.format(new Date());
     }
 
+    public static Integer parseYear(String dateOfProtection) {
+        if (dateOfProtection == null) return LocalDate.now().getYear();
+        int yearNumber = 0;
+        String[] arr = dateOfProtection.split("-");
+
+        for (String s : arr) {
+            if (s.length() == 4){
+                return Integer.parseInt(s);
+            }
+        }
+
+        return LocalDate.now().getYear(); // todo rewrite it later or do something with imagination date
+    }
 }
