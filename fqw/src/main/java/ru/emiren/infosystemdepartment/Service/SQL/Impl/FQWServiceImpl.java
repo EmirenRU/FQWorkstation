@@ -4,19 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Mapper.FQWMapper;
+import ru.emiren.infosystemdepartment.Model.SQL.Decree;
 import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 import ru.emiren.infosystemdepartment.Repository.SQL.FQWRepository;
+import ru.emiren.infosystemdepartment.Service.SQL.DecreeService;
 import ru.emiren.infosystemdepartment.Service.SQL.FQWService;
 
 import java.util.List;
 
 @Service
 public class FQWServiceImpl implements FQWService {
+    private final DecreeService decreeService;
     FQWRepository fqwRepository;
 
     @Autowired
-    public FQWServiceImpl(FQWRepository fqwRepository) {
+    public FQWServiceImpl(FQWRepository fqwRepository, DecreeService decreeService) {
         this.fqwRepository = fqwRepository;
+        this.decreeService = decreeService;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class FQWServiceImpl implements FQWService {
 
     @Override
     public FQW getFQW(String name) {
-        return fqwRepository.findByName(name).orElse(null);
+        return fqwRepository.findByNameAndNumberOfDecree(name,null).orElse(null);
     }
 
     @Override
@@ -53,8 +57,10 @@ public class FQWServiceImpl implements FQWService {
                 .findById(name)
                 .orElse(new FQW());
 
-        if (!name.isEmpty()) {
-            upd.setName(name);
+        Decree decree = decreeService.findDecreeByTheme(name);
+
+        if (decree!=null) {
+            upd.setDecree(decree);
         } if (fqw.getClassifier() != null) {
             upd.setClassifier(fqw.getClassifier());
         } if (fqw.getUniqueness() != null) {
@@ -71,12 +77,12 @@ public class FQWServiceImpl implements FQWService {
 
     @Override
     public FQW getFqwByName(String theme) {
-        return fqwRepository.findByName(theme).orElse(null);
+        return fqwRepository.findByNameAndNumberOfDecree(theme, null).orElse(null);
     }
 
     @Override
     public FQW findByName(String themeName) {
-        return fqwRepository.findByName(themeName).orElse(null);
+        return fqwRepository.findByNameAndNumberOfDecree(themeName, null).orElse(null);
     }
 
     @Override

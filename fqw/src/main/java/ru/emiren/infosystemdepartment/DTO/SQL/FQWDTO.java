@@ -17,6 +17,7 @@ public class FQWDTO {
     private Float uniqueness; // оригинальность
     private String feedback; // отзыв
     private String volume; // объем
+    private DecreeDTO decree;
 
     private ReviewerDTO reviewer;
 }

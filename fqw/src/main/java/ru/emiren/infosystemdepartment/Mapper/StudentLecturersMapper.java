@@ -30,7 +30,7 @@ public class StudentLecturersMapper {
         return SqlPayload.builder()
                 .id(sl.getId())
                 .academicDegree(sl.getLecturer().getAcademicDegree())
-                .theme(sl.getStudent().getFqw().getName())
+                .theme(sl.getStudent().getFqw().getDecree().getTheme())
                 .fullLecturerName(sl.getLecturer().getName())
                 .fullStudentName(sl.getStudent().getName())
                 .position(sl.getLecturer().getPosition())

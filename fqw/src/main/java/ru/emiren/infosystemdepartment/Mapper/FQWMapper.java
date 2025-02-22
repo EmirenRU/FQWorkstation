@@ -8,7 +8,7 @@ public class FQWMapper {
     public static FQW mapToFQW(FQWDTO fqwdto){
         return FQW.builder()
                 .id(fqwdto.getId())
-                .name(fqwdto.getName())
+                .decree(DecreeMapper.mapToDecree(fqwdto.getDecree()))
                 .classifier(fqwdto.getClassifier())
                 .uniqueness(fqwdto.getUniqueness())
                 .feedback(fqwdto.getFeedback())
@@ -20,7 +20,7 @@ public class FQWMapper {
     public static FQWDTO mapToFQWDTO(FQW fqw){
         return FQWDTO.builder()
                 .id(fqw.getId())
-                .name(fqw.getName())
+                .decree(DecreeMapper.mapToDecreeDTO(fqw.getDecree()))
                 .classifier(fqw.getClassifier())
                 .uniqueness(fqw.getUniqueness())
                 .feedback(fqw.getFeedback())

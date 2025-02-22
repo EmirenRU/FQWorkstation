@@ -18,7 +18,9 @@ public class FQW {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "decree_id",referencedColumnName = "id")
+    private Decree decree;
 
     private String classifier; // классификатор
     private Float uniqueness; // оригинальность

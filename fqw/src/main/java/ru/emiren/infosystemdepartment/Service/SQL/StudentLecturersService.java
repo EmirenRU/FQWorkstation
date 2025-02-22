@@ -35,7 +35,12 @@ public interface StudentLecturersService {
 
     StudentLecturers findStudentLecturersByStudentStudNumAndLecturerName(Long studNum, String name);
 
-    List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes, List<Long> departmentCode, Integer dateFrom, Integer dateTo, List<Long> theme, List<Long> lecturerIds);
+    List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes,
+                                                                                                   List<Long> departmentCode,
+                                                                                                   Integer dateFrom,
+                                                                                                   Integer dateTo,
+                                                                                                   List<Long> theme,
+                                                                                                   List<Long> lecturerIds);
 
     Long getMaxId();
 }

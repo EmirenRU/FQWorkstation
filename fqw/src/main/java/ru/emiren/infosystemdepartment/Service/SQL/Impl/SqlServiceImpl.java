@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import ru.emiren.infosystemdepartment.DTO.Payload.Selector.DepartmentSelector;
-import ru.emiren.infosystemdepartment.DTO.Payload.Selector.LecturerSelector;
-import ru.emiren.infosystemdepartment.DTO.Payload.Selector.OrientationSelector;
-import ru.emiren.infosystemdepartment.DTO.Payload.Selector.ThemeSelector;
 import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.*;
@@ -45,6 +40,7 @@ public class SqlServiceImpl implements SqlService {
     private final OrientationService orientationService;
     private final StudentLecturersService studentLecturersService;
     private final FQWService fqwService;
+    private final DecreeService decreeService;
     private final Gson gson;
     List<LecturerDTO> lecturerDTOS;
     List<OrientationDTO> orientationDTOS;
@@ -75,7 +71,7 @@ public class SqlServiceImpl implements SqlService {
                           FQWService fqwService,
                           ProtocolQuestionService protocolQuestionService,
                           QuestionService questionService,
-                          ProtocolService protocolService,
+                          ProtocolService protocolService, DecreeService decreeService,
                           Gson gson){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
@@ -83,6 +79,7 @@ public class SqlServiceImpl implements SqlService {
         this.orientationService         = orientationService;
         this.studentLecturersService    = studentLecturersService;
         this.fqwService                 = fqwService;
+        this.decreeService              = decreeService;
 
 
         dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -265,7 +262,8 @@ public class SqlServiceImpl implements SqlService {
                     .fullStudentName(sl.getStudent().getName())
                     .studNum(sl.getStudent().getStud_num())
                     .citizenship(sl.getStudent().getCitizenship())
-                    .theme(sl.getStudent().getFqw().getName())
+                    .theme(sl.getStudent().getFqw().getDecree().getTheme())
+                    .numberOfDecree(sl.getStudent().getFqw().getDecree().getNumberOfDecree())
                     .build();
         }).toList();
 
@@ -445,10 +443,21 @@ public class SqlServiceImpl implements SqlService {
             }
             log.info("2");
 
+            Decree decree = decreeService.findDecreeByThemeAndNumberOfDecreeAndStudNum((Long) data.get("studNum"), (String) data.get("Theme"), (String) data.get("NumberOfDecree"));
+            boolean studentFlag = false;
+            if (decree == null) {
+                decree = new Decree();
+                decree.setTheme((String) data.get("Theme"));
+                decree.setNumberOfDecree((String) data.get("NumberOfDecree"));
+                decree.setStudNum((Long) data.get("StudNum"));
+                decreeService.saveDecree(decree);
+            }
+
+
             FQW fqw = fqwService.getFqwByName((String) data.get("Theme"));
             if (fqw == null) {
                 fqw = new FQW();
-                fqw.setName((String) data.get("Theme"));
+                fqw.setDecree(decree);
                 fqw.setFeedback((String) data.get("IndividualOpinion"));
                 fqwService.saveFqw(fqw);
 

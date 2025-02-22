@@ -30,6 +30,7 @@ public class UploadDataController {
     private final ProtectionCommissionerService protectionCommissionerService;
     private final ProtocolQuestionService protocolQuestionService;
     private final QuestionService questionService;
+    private final DecreeService decreeService;
 
     @Autowired
     public UploadDataController(StudentService studentService,
@@ -42,7 +43,7 @@ public class UploadDataController {
                                 ProtectionService protectionService,
                                 FQWService fqwService,
                                 ProtocolService protocolService,
-                                ProtectionCommissionerService protectionCommissionerService, ProtocolQuestionService protocolQuestionService, QuestionService questionService) {
+                                ProtectionCommissionerService protectionCommissionerService, ProtocolQuestionService protocolQuestionService, QuestionService questionService, DecreeService decreeService) {
         this.studentService = studentService;
         this.lecturerService = lecturerService;
         this.orientationService = orientationService;
@@ -56,6 +57,7 @@ public class UploadDataController {
         this.protectionCommissionerService = protectionCommissionerService;
         this.protocolQuestionService = protocolQuestionService;
         this.questionService = questionService;
+        this.decreeService = decreeService;
     }
 
     /**
@@ -77,8 +79,11 @@ public class UploadDataController {
         Protection protection = createProtection(orientation, dateOfProtection);
         log.info("Saving Reviewer");
         Reviewer reviewer = createReviewer(request);
+
+        log.info("Saving Decree");
+        Decree decree = createDecree(request);
         log.info("Saving FQW");
-        FQW fqw = createFQW(request, reviewer);
+        FQW fqw = createFQW(request, reviewer, decree);
 
         log.info("Saving Commissioner 1");
         Commissioner commissioner1 = createCommissioner(request, "1");
@@ -303,6 +308,23 @@ public class UploadDataController {
         return reviewer;
     }
 
+    private Decree createDecree(Map<String, String> request) {
+        Decree decree = decreeService.findDecreeByThemeAndNumberOfDecreeAndStudNum(Long.parseLong(request.get("studNum")), request.get("themeName"), request.get("numberOfDecree"));
+        if (decree == null) {
+            decree = new Decree();
+            Long id = decreeService.getMaxId();
+            if (id != null) {decree.setId(id+1);}
+            Long studNum = Long.parseLong(request.get("studNum"));
+            String theme = request.get("themeName");
+            String numberOfDecree = request.get("numberOfDecree");
+            if (theme != null) {decree.setTheme(theme);}
+            if (numberOfDecree != null) {decree.setNumberOfDecree(numberOfDecree);}
+            if (studNum != null) {decree.setStudNum(studNum);}
+            decreeService.saveDecree(decree);
+        }
+        return decree;
+    }
+
 
     private Department createDepartment(Map<String, String> request) {
         Department department = departmentService.findDepartmentByName(request.get("departmentName"));
@@ -348,7 +370,7 @@ public class UploadDataController {
     }
 
 
-    private FQW createFQW(Map<String, String> request, Reviewer reviewer) {
+    private FQW createFQW(Map<String, String> request, Reviewer reviewer, Decree decree) {
         FQW fqw = fqwService.findByName(request.get("themeName"));
         if (fqw == null) {
             fqw = new FQW();
@@ -356,10 +378,10 @@ public class UploadDataController {
             if (id != null) {fqw.setId(id+1);}
             String themeName = request.get("themeName");
             if (themeName != null) {
-                fqw.setName(themeName);
+                fqw.setDecree(decree);
             } else {
                 log.warn("Theme name cannot be null");
-                fqw.setName("");
+                fqw.setDecree(null);
             }
             String uniquenessStr = request.get("uniqueness");
             if (uniquenessStr != null) {

@@ -54,7 +54,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             " ( (sl.lecturer.id IN :lecturerIds) OR (-1 IN :lecturerIds ) ) AND " +
             " ( (sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes) ) AND " +
             " ( (sl.student.department.code IN :departmentCodes ) OR (-1 IN :departmentCodes ) ) AND " +
-            " ( (sl.student.fqw.id IN :themes) OR ( -1 IN :themes ) ) AND " +
+            " ( (sl.student.fqw.decree.id IN :themes) OR ( -1 IN :themes ) ) AND " +
             " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
             " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
             " ORDER BY sl.lecturer.name")

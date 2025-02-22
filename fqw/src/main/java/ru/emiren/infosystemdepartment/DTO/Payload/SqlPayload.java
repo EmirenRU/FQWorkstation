@@ -18,4 +18,5 @@ public class SqlPayload {
     private Long studNum;
     private String citizenship;
     private String theme;
+    private String numberOfDecree;
 }
