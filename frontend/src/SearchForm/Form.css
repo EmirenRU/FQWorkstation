@@ -19,8 +19,21 @@ main{
 }
 
 .bs-deselect-all{
-	background-color: #494949!important;
+	background-color: #727272!important;
 	color: #fff!important;
+}
+
+.bs-actionsbox .btn-group button {
+     width: unset
+}
+
+.btn-group, .btn-group-vertical {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex
+;
+    vertical-align: middle;
+    flex-direction: column;
 }
 
 .form-body {

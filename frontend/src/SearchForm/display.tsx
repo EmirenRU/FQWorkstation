@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from '../context';
 import { downloadExcel } from "react-export-table-to-excel";
 import "./display.css"
-import { getTableInfo} from '../api/getData';
+import {getFakeInfo, getTableInfo} from '../api/getData';
 //import { getTableInfo } from '../api/getData';
 
 export const ToggleDisplayAndSaveState =({signal,setReady}) => {
@@ -22,6 +22,7 @@ export const ToggleDisplayAndSaveState =({signal,setReady}) => {
         try {
             console.log("In try section of fetch data")
             const result = await getTableInfo(formData, setParsedData);
+
             console.log("Parsed", parsedData);
             setSortedData(result)
             createTableBody(result)
@@ -145,7 +146,7 @@ export const ToggleDisplayAndSaveState =({signal,setReady}) => {
                                 <td className="td-table student_citizenship">{value.citizenship}</td>
                                 <td className="td-table fqw_name">{value.theme}</td>
                             </tr>
-                        ))} 
+                        ))}
                     </tbody>
                 </table>
                 <div className="download">
