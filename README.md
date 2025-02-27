@@ -1,5 +1,10 @@
 # FQWorkstation
 
+## Branches
+
+- Main : Monolith architecture (Thymeleaf and HTML templates). Needs some correcting to match up to the features from microservices branch
+- Microservices : React + Spring (REST) and modules separation
+
 ## Requirements
 
 - Apache Maven
