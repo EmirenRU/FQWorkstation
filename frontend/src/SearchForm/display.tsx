@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useFormContext } from '../context';
 import { downloadExcel } from "react-export-table-to-excel";
 import "./display.css"
-import {getFakeInfo, getTableInfo} from '../api/getData';
+import {getFakeInfo} from '../api/getData';
 //import { getTableInfo } from '../api/getData';
+interface ToggleDisplayAndSaveStateProps {
+    signal: string;
+    setReady: React.Dispatch<React.SetStateAction<string>>;
+}
 
-export const ToggleDisplayAndSaveState =({signal,setReady}) => {
+// Apply the types to the component
+export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ signal, setReady }) => {
     console.log("recevide signal ", signal);
     ///changed
     const header = ["ФИО Преподавателя", "Ученная степень", "Должность", "Кафедра", "ФИО Студента", "Студ.Номер", "Гражданство", "Тема"];
@@ -15,14 +20,15 @@ export const ToggleDisplayAndSaveState =({signal,setReady}) => {
     const [sortedData, setSortedData] = useState<Array<DTO>>([])
     const [tableBody, setTableBody] = useState<(string | number | boolean)[][]>([])
     const [sortDirection, setSortDirection] = useState(false);
-    const [parsedData, setParsedData] = useState([]);
+    const [parsedData, setParsedData] = useState<Array<DTO>>([]);
     const [error, setError] = useState<string | null>(null);
 
     async function fetchData() {
         try {
             console.log("In try section of fetch data")
-            const result = await getTableInfo(formData, setParsedData);
-
+            //const result = await getTableInfo(formData);
+            const result = await getFakeInfo(formData);
+            setParsedData(result);
             console.log("Parsed", parsedData);
             setSortedData(result)
             createTableBody(result)

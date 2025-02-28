@@ -9,10 +9,10 @@ export const SearchForm = () => {
     const [signal, setReady] = useState("none")
 
     function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-        setReady(signal =>("none"))
+        setReady("none")
         event.preventDefault();
         console.log("Submitted Data:", formData);
-        setReady(signal =>("display"))
+        setReady("display")
         console.log("Ready ?", signal);
     }
 

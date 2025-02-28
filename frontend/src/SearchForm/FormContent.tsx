@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { LoadSaved } from "./Load";
 
 
@@ -5,9 +6,13 @@ function jsonToData(data: string): object {
     return JSON.parse(data);
 }
 
+interface ToggleDisplayAndSaveStateProps {
+    signal: string;
+    setReady: React.Dispatch<React.SetStateAction<string>>;
+}
 
 
-export const FormContent = ({signal,setReady}) =>  {
+export const FormContent: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}) =>  {
 
     const locData = () => {
         const data = localStorage.getItem('Restore data');

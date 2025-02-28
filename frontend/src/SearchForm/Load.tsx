@@ -1,8 +1,14 @@
-import  { useState, useEffect} from 'react';
+import  { useState, useEffect, FC} from 'react';
 import { saveInputs } from './Save';
 
 import { useFormContext } from '../context';
-import { getFakeSelectorData, getSelectors } from "../api/getData.tsx";
+import { getFakeSelectorData } from "../api/getData.tsx";
+
+declare global {
+    interface JQuery {
+        selectpicker: (method?: string | object) => JQuery;
+    }
+}
 
 
 function jsonToData(data: string): object {
@@ -38,8 +44,17 @@ interface DepartmentProps {
   themeName: string;
   themeValue: string;
   }
-export const  LoadSaved = ({signal,setReady}) =>  {
 
+  interface ToggleDisplayAndSaveStateProps {
+    signal: string;
+    setReady: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}) =>  {
+
+    console.log(signal)
+    console.log(setReady)
+    
     const [orientationData, setOrientationData] = useState<string[]>([]);
     const [themesData, setThemesData] = useState<string[]>([]);
     const [departmentData, setDepartmentData] = useState<string[]>([]);
@@ -264,7 +279,12 @@ export const  LoadSaved = ({signal,setReady}) =>  {
             </div>
             <div className="selector-patch">
                 <label className="selection-param">Кафедра
-                    <select name="department"  className="selectpicker" multiple onChange={handleInputChange} id="department" value={departmentData} data-actions-box="true" data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
+
+                    <select name="department"  className="selectpicker"
+                     multiple onChange={handleInputChange} id="department"
+                      value={departmentData} data-actions-box="true"
+                       data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
+                        
                         {selectorsStatus ? (
                             Departments.map((init) => (
                                 <option key={crypto.randomUUID()} value={init.departmentValue}>

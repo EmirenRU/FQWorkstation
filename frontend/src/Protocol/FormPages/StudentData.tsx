@@ -18,7 +18,7 @@ type StudentFormProps = StudentFieldsData &{
     updateFields: (fields: Partial<StudentFieldsData>) => void
 }
 
-export function StudentData({ studName, studNum, citizenship, loe, classifier, orientationCode, orientationName, dateOfProtection, updateFields }: StudentFormProps) {
+export function StudentData({ studName, studNum, citizenship, loe, classifier, orientationCode, orientationName,  updateFields }: StudentFormProps) {
 
     const [formattedDateForInput, setDate] = useState("");
 

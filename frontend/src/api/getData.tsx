@@ -1,4 +1,4 @@
-export function getTableInfo (data, set) {
+export function getTableInfo (data: object) {
 
     console.log("get data with following pattern", data)
 
@@ -15,7 +15,8 @@ export function getTableInfo (data, set) {
 }
 
 
-export function getFakeInfo(data, set){
+export function getFakeInfo(data: object){
+    console.log("Debug", data)
     return import('./data.json') // Adjust the path to your local JSON file
     .then(localData => {
         return localData.default; // Return the local JSON data

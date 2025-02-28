@@ -4,7 +4,8 @@ export function formHash(file: Blob): Promise<string>{
     return new Promise(function (resolve, reject) {
         const reader = new FileReader();
 
-        reader.onload = function (event) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        reader.onload = function (_event) {
             try {
 
                 const arrayBuffer = reader.result as ArrayBuffer;
@@ -49,7 +50,7 @@ export async function checkFileAvailability(id: string) {
     }
 }
 
-async function downloadFile(options) {
+async function downloadFile(options: string) {
     try {
         const response = await fetch("/protocol-api/api/protocol/download_file/" + options, { method: "GET" });
 
