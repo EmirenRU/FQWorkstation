@@ -6,6 +6,9 @@
 	justify-content: space-between;
 	background: rgb(86, 86, 88);
 	background: radial-gradient(circle, rgba(86, 86, 88, 1) 44%, rgba(54, 54, 55, 1) 84%, rgba(78, 79, 80, 1) 96%, rgba(87, 91, 94, 1) 97%);
+	-webkit-box-shadow: 0px 0px 20px 0px rgba(34, 60, 80, 1);
+-moz-box-shadow: 0px 0px 20px 0px rgba(34, 60, 80, 1);
+box-shadow: 0px 0px 20px 0px rgba(34, 60, 80, 1);
 	/*background-color: rgb(50, 53, 54);*/
 }
 
