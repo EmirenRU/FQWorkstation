@@ -13,7 +13,7 @@
     </parent>
     <groupId>ru.emiren</groupId>
     <artifactId>protocol</artifactId>
-    <version>0.0.1</version>
+    <version>0.9.0</version>
     <packaging>jar</packaging>
     <name>info-system-department</name>
     <description>info-system-department</description>

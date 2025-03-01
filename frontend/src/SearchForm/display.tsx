@@ -26,8 +26,8 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
     async function fetchData() {
         try {
             console.log("In try section of fetch data")
-            //const result = await getTableInfo(formData);
-            const result = await getFakeInfo(formData);
+            const result = await getTableInfo(formData);
+            // const result = await getFakeInfo(formData);
             setParsedData(result);
             console.log("Parsed", parsedData);
             setSortedData(result)

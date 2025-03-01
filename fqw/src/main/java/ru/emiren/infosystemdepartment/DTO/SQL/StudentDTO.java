@@ -2,10 +2,6 @@ package ru.emiren.infosystemdepartment.DTO.SQL;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.emiren.infosystemdepartment.Model.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder

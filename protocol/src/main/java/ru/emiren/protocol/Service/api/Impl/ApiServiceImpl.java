@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.protocol.Controller.ProtocolController;
@@ -39,6 +40,7 @@ import java.util.concurrent.CompletableFuture;
 public class ApiServiceImpl implements ApiService {
     private final DownloadService downloadService;
     private final WordService wordService;
+    private final RestTemplate restTemplate;
 
     @Getter
     @AllArgsConstructor
@@ -72,15 +74,16 @@ public class ApiServiceImpl implements ApiService {
 
     @Autowired
     ApiServiceImpl(
-                   FileService fileService,
-                   DownloadService downloadService,
-                   WordService wordService,
-                   DateFormat dateFormat,
-                   ResourceLoader resourceLoader){
+            FileService fileService,
+            DownloadService downloadService,
+            WordService wordService,
+            DateFormat dateFormat,
+            ResourceLoader resourceLoader, RestTemplate restTemplate){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
         this.dateFormat = dateFormat;
+        this.restTemplate = restTemplate;
     }
 
     /**
