@@ -16,7 +16,7 @@ create_database() {
     fi
 }
 
-create_database "info-system-department"
-create_database "data-support"
+create_database "fqworkstation"
+create_database "support"
 
 echo "Database initialization complete."
