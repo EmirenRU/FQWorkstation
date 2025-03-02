@@ -40,7 +40,7 @@ export function getFakeSelectorData( ) {
 }
 
 
-export function getSelectors( ){
+export function getSelectors(){
     const getOptions = {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },

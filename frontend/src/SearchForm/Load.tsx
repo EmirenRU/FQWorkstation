@@ -2,7 +2,8 @@ import  { useState, useEffect, FC} from 'react';
 import { saveInputs } from './Save';
 
 import { useFormContext } from '../context';
-import { getFakeSelectorData } from "../api/getData.tsx";
+// import { getFakeSelectorData } from "../api/getData.tsx";
+import { getSelectors } from "../api/getData.tsx";
 
 declare global {
     interface JQuery {
@@ -86,30 +87,31 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
     async function fetchSelectorData() {
         try {
             console.log("In try section of fetch data");
-            const result = await getFakeSelectorData();
+            // const result = await getFakeSelectorData();
+            const result = await getSelectors();
             console.log("Parsed", result); // Log the result to verify its structure
             
             if (result && result.department && result.orientation && result.student && result.theme) {
  {
-                    const DepartmentData: Array<DepartmentProps> = result.department.map((obj) => ({
-                        departmentValue: obj.value,
-                        departmentName: obj.name,
-                    }));
+                     const DepartmentData: Array<DepartmentProps> = result.department.map((obj: { value: string; name: string; }) => ({
+                         departmentValue: obj.value,
+                         departmentName: obj.name,
+                     }));
 
-                    const OrientationData: Array<OrientationProps> = result.orientation.map((obj) => ({
-                        orientation: obj.value,
-                        orientationName: obj.name,
-                    }))
+                     const OrientationData: Array<OrientationProps> = result.orientation.map((obj: { value: string; name: string; }) => ({
+                         orientation: obj.value,
+                         orientationName: obj.name,
+                     }))
 
-                    const TeachersData: Array<TeachersProps> = result.student.map((obj) => ({
-                        studentName: obj.name,
-                        studentValue: obj.value
-                    }))
+                     const TeachersData: Array<TeachersProps> = result.student.map((obj: { value: string; name: string; }) => ({
+                         studentName: obj.name,
+                         studentValue: obj.value
+                     }))
 
-                    const ThemesData: Array<ThemeProps> = result.theme.map((obj) => ({
-                        themeName: obj.name,
-                        themeValue: obj.value
-                    }))
+                     const ThemesData: Array<ThemeProps> = result.theme.map((obj: { value: string; name: string; }) => ({
+                         themeName: obj.name,
+                         themeValue: obj.value
+                     }))
 
                     setDepartments( DepartmentData);
                     setOrientations(OrientationData);

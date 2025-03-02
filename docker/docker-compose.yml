@@ -5,7 +5,7 @@ services:
     build:
       context:  ../db
     environment:
-      - POSTGRES_DB=info-system-department,data-support
+      - POSTGRES_DB=fqworkstation,support
       - POSTGRES_USER=temp
       - POSTGRES_PASSWORD=temp
     ports:
@@ -51,8 +51,8 @@ services:
       - ../support/src/main/resources:/app/resources/
     environment:
       - SPRING_SUPPORT_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/support
-      - SPRING_DATASOURCE_USERNAME=temp
-      - SPRING_DATASOURCE_PASSWORD=temp
+      - SPRING_SUPPORT_DATASOURCE_USERNAME=temp
+      - SPRING_SUPPORT_DATASOURCE_PASSWORD=temp
       - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
       - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
 
@@ -66,6 +66,10 @@ services:
       context:
         ../frontend
     ports:
-      - 443:443
+      - "80:80"
+    links:
+      - fqw
+      - support
+      - protocol
 volumes:
   db-data:
