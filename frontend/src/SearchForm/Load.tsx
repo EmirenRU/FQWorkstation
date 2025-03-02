@@ -217,7 +217,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
     
         switch (name) {
             case 'orientation':
-                setOrientationData(selectedValues); // Update state directly
+                setOrientationData(selectedValues); 
                 saveInputs(name, selectedValues);
                 break;
             case 'department':
