@@ -2,8 +2,8 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useFormContext } from '../context';
 import { downloadExcel } from "react-export-table-to-excel";
 import "./display.css"
-import {getFakeInfo} from '../api/getData';
-//import { getTableInfo } from '../api/getData';
+// import {getFakeInfo} from '../api/getData';
+import { getTableInfo } from '../api/getData';
 interface ToggleDisplayAndSaveStateProps {
     signal: string;
     setReady: React.Dispatch<React.SetStateAction<string>>;

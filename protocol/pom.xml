@@ -15,7 +15,7 @@
     <artifactId>protocol</artifactId>
     <version>0.9.0</version>
     <packaging>jar</packaging>
-    <name>info-system-department</name>
+    <name>protocol</name>
     <description>info-system-department</description>
 
     <scm>

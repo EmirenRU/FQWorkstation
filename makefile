@@ -10,9 +10,9 @@ start-nginx:
 else ifeq ($(OS),Windows_NT)
 
 react-install:
-    cd frontend ; npm install
+	cd frontend ; npm install
 react:
-    cd frontend ; npm run dev
+	cd frontend ; npm run dev
 compose:
 	cd docker ; docker-compose up --build
 build:

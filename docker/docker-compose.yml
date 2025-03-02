@@ -16,15 +16,14 @@ services:
   fqw:
     build: ../fqw
     ports:
-      - "13130:13130"
+      - "13131:13131"
     depends_on:
       - db
     volumes:
       - ../fqw/src/main/resources:/app/resources/
 
     environment:
-      - SPRING_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/info-system-department
-      - SPRING_SECOND_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/data-support
+      - SPRING_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/fqworkstation
       - SPRING_DATASOURCE_USERNAME=temp
       - SPRING_DATASOURCE_PASSWORD=temp
       - SPRING_SECOND_DATASOURCE_USERNAME=temp
@@ -35,24 +34,38 @@ services:
       - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
       - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
       - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
-      - SERVER_PORT=13130
+      - SERVER_PORT=13131
+  protocol:
+    build: ../protocol
+    ports:
+      - "13134:13134"
+    volumes:
+      - ../protocol/src/main/resources:/app/resources/
+  support:
+    build: ../support
+    ports:
+      - "13133:13133"
+    depends_on:
+      - db
+    volumes:
+      - ../support/src/main/resources:/app/resources/
+    environment:
+      - SPRING_SUPPORT_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/support
+      - SPRING_DATASOURCE_USERNAME=temp
+      - SPRING_DATASOURCE_PASSWORD=temp
+      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
+      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
 
   hub:
     build: ../hub
     ports:
-      - "13132:13132"
-    depends_on:
-      - fqw
+      - "13136:13136"
+
   nginx:
     build:
       context:
-        ../config
+        ../frontend
     ports:
-      - 80:80
-    environment:
-      - SERVER_PORT=13132
-    depends_on:
-      - hub
-      - fqw
+      - 443:443
 volumes:
   db-data:

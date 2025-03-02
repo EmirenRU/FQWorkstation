@@ -1,5 +1,11 @@
 HELP.md
-target/
+fqw/logs
+fqw/target
+protocol/target
+hub/target
+support/target
+auth/target
+email/target
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -36,5 +42,11 @@ build/
 logs/
 frontend/node_modules/
 
-### Docker ###
+### ENVS ###
 docker/.env
+frontend/.env
+
+### React ###
+frontend/dist
+frontend/node_modules
+frontend/package-lock.json
