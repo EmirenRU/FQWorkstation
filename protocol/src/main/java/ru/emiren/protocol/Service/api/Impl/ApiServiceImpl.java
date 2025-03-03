@@ -2,29 +2,21 @@ package ru.emiren.protocol.Service.api.Impl;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import ru.emiren.protocol.Controller.ProtocolController;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
-import ru.emiren.protocol.Service.Deserialization.DeserializationService;
 import ru.emiren.protocol.Service.File.FileService;
 import ru.emiren.protocol.Service.Word.WordService;
 import ru.emiren.protocol.Service.api.ApiService;
@@ -33,7 +25,6 @@ import ru.emiren.protocol.Service.Download.DownloadService;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j

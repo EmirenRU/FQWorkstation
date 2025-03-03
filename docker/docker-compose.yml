@@ -55,7 +55,7 @@ services:
       - SPRING_SUPPORT_DATASOURCE_PASSWORD=temp
       - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
       - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
-
+      - SERVER_FQW_URL="http://localhost:13131"
   hub:
     build: ../hub
     ports:

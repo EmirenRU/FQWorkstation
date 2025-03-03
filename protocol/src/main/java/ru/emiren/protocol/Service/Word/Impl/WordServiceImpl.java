@@ -5,6 +5,7 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
@@ -27,7 +28,8 @@ import java.util.regex.Pattern;
 @Slf4j
 public class WordServiceImpl implements WordService {
 
-    private final String sqlLocation = "http://localhost:13131";
+    @Value("server.fqw.url")
+    private String sqlLocation;
 
     private final RestTemplate restTemplate;
     private InputStream inputStream;
