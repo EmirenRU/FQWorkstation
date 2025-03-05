@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class WordServiceImpl implements WordService {
 
-    @Value("server.fqw.url")
+    @Value("${server.fqw.url}")
     private String sqlLocation;
 
     private final RestTemplate restTemplate;
@@ -38,6 +38,8 @@ public class WordServiceImpl implements WordService {
 
     @Autowired
     public WordServiceImpl(ResourceLoader resourceLoader, RestTemplate restTemplate) {
+        log.info("Loading Word Service");
+        log.info("FQW Location: {}", sqlLocation);
         this.restTemplate = restTemplate;
     }
 
