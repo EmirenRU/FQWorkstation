@@ -180,9 +180,9 @@ public class ApiServiceImpl implements ApiService {
                 NiceXWPFDocument processedDocument;
                 if (template != null) {
                     File templateFile = new File(System.getProperty("java.io.tmpdir"), template.getOriginalFilename());
-                    processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is), templateFile);
+                    processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()), templateFile);
                 } else {
-                    processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is));
+                    processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()));
                 }
 
                 log.info("Document generated successfully for file ID: {}", fileId);

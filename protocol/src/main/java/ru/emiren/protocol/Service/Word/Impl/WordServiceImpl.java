@@ -3,6 +3,10 @@ package ru.emiren.protocol.Service.Word.Impl;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.emiren.protocol.Service.Word.WordService;
@@ -52,22 +57,45 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public List<List<String>> getListOfDataFromFile(InputStream file) {
+    public List<List<String>> getListOfDataFromFile(InputStream file, String fileName) {
         List<List<String>> data = List.of();
-        NiceXWPFDocument document;
-
-        if (data == null) {
-            data = new ArrayList<>();
+        String ext = getFileExtension(fileName);
+        if (ext != null) {
+            if (ext.equalsIgnoreCase("xlsx") || ext.equalsIgnoreCase("xls")) {
+                data = processExcelFile(file);
+            } else if (ext.equalsIgnoreCase("docx") || ext.equalsIgnoreCase("doc")) {
+                data = processWordFile(file);
+            } else {
+                log.error("Unsupported file format");
+            }
         }
+        return data;
+    }
 
-        if (!data.isEmpty()) {
-            for (List<String> row : data)
-                row.clear();
-            data.clear();
+    private String getFileExtension(String fileName){
+        if (!fileName.isEmpty()){
+            return StringUtils.getFilenameExtension(fileName);
         }
+        return null;
+    }
 
-        try {
-            document = new NiceXWPFDocument(file);
+    private List<List<String>> processWordFile(InputStream file){
+        List<List<String>> data = List.of();
+        try (XSSFWorkbook workbook = new XSSFWorkbook(file)){
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                XSSFSheet sheet = workbook.getSheetAt(i);
+                data = processSheet(sheet);
+            }
+        } catch (IOException ex){
+            log.error(ex.getMessage());
+        }
+        log.info("data: {}", data);
+        return data;
+    }
+
+    private List<List<String>> processExcelFile(InputStream file){
+        List<List<String>> data = List.of();
+        try (NiceXWPFDocument document = new NiceXWPFDocument(file)){
             List<XWPFTable> tables = document.getTables();
 
             log.info("The number of tables in file {} is {}",
@@ -85,7 +113,25 @@ public class WordServiceImpl implements WordService {
         return data;
     }
 
+    private List<List<String>> processSheet(XSSFSheet sheet){
+        Row header = sheet.getRow(0);
+        header.forEach(cell -> {log.info("Header: {}", cell.toString());});
 
+        // Starting implementation of Excel Handler
+        // TODO to finish
+        List<List<String>> data = new ArrayList<>();
+        for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+            Row row = sheet.getRow(i);
+            List<String> rowData = new ArrayList<>();
+            for (Cell cell : row) {
+                rowData.add(cell.getStringCellValue());
+            }
+            log.info("Row with index {} : {}", i , rowData);
+            data.add(rowData);
+        }
+
+        return null;
+    }
 
     /**
      *
@@ -95,8 +141,10 @@ public class WordServiceImpl implements WordService {
         XWPFTable t = tables.getFirst();
         XWPFTableRow headers = t.getRow(0);
 
-        headers.getTableCells().stream().forEach(cell -> {log.info("Header: {}", cell.getText());});
+        headers.getTableCells().forEach(cell -> {log.info("Header: {}", cell.getText());});
 
+        // I don't remember what he is doing :(. Only remember that it contains all rows, but why is there so much maps, I simply do not know
+        // Outer map is for Orientation Code; Inner Map is for Program, And list is for structured data
         Map<String, Map<String, List<Map<String, String>>>> map = new HashMap<>();
         String orientation = "";
         String program = "";
