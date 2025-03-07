@@ -13,10 +13,9 @@
     </parent>
     <groupId>ru.emiren</groupId>
     <artifactId>auth</artifactId>
-    <version>0.0.1</version>
     <packaging>jar</packaging>
-    <name>info-system-department</name>
-    <description>info-system-department</description>
+    <name>auth</name>
+    <description>Authentication</description>
 
     <scm>
         <connection>scm:git:git:@github.com:gatling/gatling-maven-plugin.git</connection>

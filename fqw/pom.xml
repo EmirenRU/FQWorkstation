@@ -15,7 +15,7 @@
     <artifactId>fqw</artifactId>
     <version>1.0.0</version>
 	<packaging>jar</packaging>
-    <name>info-system-department</name>
+    <name>fqworkstation</name>
     <description>info-system-department</description>
 
     <scm>

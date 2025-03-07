@@ -15,7 +15,7 @@
     <artifactId>support</artifactId>
     <version>0.5.0</version>
     <packaging>jar</packaging>
-    <name>info-system-department</name>
+    <name>support</name>
     <description>info-system-department</description>
 
     <scm>
