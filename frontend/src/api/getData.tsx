@@ -49,7 +49,7 @@ export function getSelectors(){
         .then(response => response.json())
         .catch(error => {
             console.error('Failed to load local JSON:', error);
-            throw error; // Re-throw the error for the caller to handle
+            throw error;
         });
     console.log("get data with following pattern", response)
     return response.then(body => body)

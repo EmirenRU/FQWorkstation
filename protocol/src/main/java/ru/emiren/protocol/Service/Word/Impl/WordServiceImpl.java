@@ -85,6 +85,8 @@ public class WordServiceImpl implements WordService {
         return data;
     }
 
+
+
     /**
      *
      * @param tables
@@ -234,25 +236,43 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public NiceXWPFDocument generateWordDocument(List<List<String>> data) {
-        NiceXWPFDocument document = null;
-        this.classPathResource = new ClassPathResource("template_copy.docx");
-        log.info("data size: {}", String.valueOf(data.getFirst().size()));
-        File temp_file = null;
-        try {
-            log.info("Trying to get input stream from template.docx");
-            inputStream = classPathResource.getInputStream();
-            temp_file = File.createTempFile("template", ".docx");
+    public NiceXWPFDocument generateWordDocument(List<List<String>> data, File fileTemplate) {
+        log.info("data size: {}", data.get(0).size());
+        return generateDocument(data, fileTemplate);
+    }
 
-            try (FileOutputStream outputStream = new FileOutputStream(temp_file)) {
+    @Override
+    public NiceXWPFDocument generateWordDocument(List<List<String>> data) {
+        log.info("data size: {}", data.get(0).size());
+        File tempFile = createTempFileFromClassPathResource("template_copy.docx");
+        if (tempFile == null) {
+            return null;
+        }
+        return generateDocument(data, tempFile);
+    }
+
+    private File createTempFileFromClassPathResource(String resourcePath) {
+        ClassPathResource classPathResource = new ClassPathResource(resourcePath);
+        File tempFile = null;
+        try (InputStream inputStream = classPathResource.getInputStream()) {
+            tempFile = File.createTempFile("template", ".docx");
+            try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
                 FileCopyUtils.copy(inputStream, outputStream);
             }
-            log.info(temp_file.toString());
-            log.info("Ended trying to get input stream from template.docx");
+            log.info("Temporary file created: {}", tempFile);
+        } catch (IOException e) {
+            log.warn("Failed to create temporary file from resource: {}", e.getMessage());
+        }
+        return tempFile;
+    }
 
+    private NiceXWPFDocument generateDocument(List<List<String>> data, File fileTemplate) {
+        NiceXWPFDocument document = null;
+
+        try {
             List<NiceXWPFDocument> documents = new ArrayList<>();
 
-            for (int i = 0; i < data.size()-1; i++) {
+            for (int i = 0; i < data.size() - 1; i++) {
                 List<String> arr = data.get(i);
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
@@ -264,29 +284,25 @@ public class WordServiceImpl implements WordService {
                 } catch (Exception e) {
                     log.warn("Async Exception: {}", e.getMessage());
                 }
-                NiceXWPFDocument tempDoc = XWPFTemplate.compile(temp_file,
-                                                                Configure.createDefault())
-                                                        .render(dataMap)
-                                                        .getXWPFDocument();
+                NiceXWPFDocument tempDoc = XWPFTemplate.compile(fileTemplate, Configure.createDefault())
+                        .render(dataMap)
+                        .getXWPFDocument();
 
-                if (i < data.size()) {
-                    XWPFParagraph paragraph = tempDoc.createParagraph();
-                    XWPFRun run = paragraph.createRun();
-                    if (i != data.size() - 2) {
-                        run.addBreak(BreakType.PAGE);
-                    }
-                }
+                addPageBreak(tempDoc, i, data.size());
                 documents.add(tempDoc);
             }
 
-            document = documents.getLast();
-            documents.removeLast();
-            document = document.merge(documents, document.getParagraphArray(0).getRuns().getFirst());
+            document = documents.get(documents.size() - 1);
+            documents.remove(documents.size() - 1);
+            document = document.merge(documents, document.getParagraphArray(0).getRuns().get(0));
 
-            log.info("closing the documents list");
-            for (NiceXWPFDocument doc : documents) { doc.close(); } // Stream.map does not provide without try_catch
+            log.info("Closing the documents list");
+            for (NiceXWPFDocument doc : documents) {
+                doc.close();
+            }
             log.info("Done closing the documents list");
-            boolean flag = Files.deleteIfExists(Path.of(temp_file.getPath()));
+
+            boolean flag = Files.deleteIfExists(Path.of(fileTemplate.getPath()));
             log.info("Have deleted the temp_file? {}", flag);
             return document;
         } catch (Exception e) {
@@ -294,6 +310,16 @@ public class WordServiceImpl implements WordService {
         }
         return null;
     }
+
+    private void addPageBreak(NiceXWPFDocument tempDoc, int currentIndex, int totalSize) {
+        XWPFParagraph paragraph = tempDoc.createParagraph();
+        XWPFRun run = paragraph.createRun();
+        if (currentIndex != totalSize - 2) {
+            run.addBreak(BreakType.PAGE);
+        }
+    }
+
+
 
     private Map<String, Object> getStringObjectMap(List<String> arr) {
         log.info("started processing data for id {}", arr.get(0));

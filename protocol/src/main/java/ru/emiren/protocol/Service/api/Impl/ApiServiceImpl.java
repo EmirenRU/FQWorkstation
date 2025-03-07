@@ -3,21 +3,19 @@ package ru.emiren.protocol.Service.api.Impl;
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
-import ru.emiren.protocol.Service.File.FileService;
 import ru.emiren.protocol.Service.Word.WordService;
 import ru.emiren.protocol.Service.api.ApiService;
 import ru.emiren.protocol.Service.Download.DownloadService;
@@ -31,69 +29,37 @@ import java.util.*;
 public class ApiServiceImpl implements ApiService {
     private final DownloadService downloadService;
     private final WordService wordService;
-    private final RestTemplate restTemplate;
-
-    @Getter
-    @AllArgsConstructor
-    public enum FileData {
-        FQW("fqw"),
-        GOV("gos"),
-        REV("rev"),
-        COM("com"),
-        PRO("pro");
-        private final String data;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public enum FileTypes {
-        Excel(".xlsx"),
-        Word(".doc"),
-        PDF(".pdf"),
-        DOCX(".docx");
-        private final String extension;
-    }
-
-
-    private final Map<String, Map<String, List<FileHeader>>> fileMap = initFileMap();
 
     private final DateFormat dateFormat;
+    private ClassPathResource classPathResource;
 
-    List<List<String>> data;
+    private List<List<String>> data;
 
-    FileHolder fileHolder = new FileHolder();
+    private FileHolder fileHolder = new FileHolder();
+    private static byte[] bytes;
 
     @Autowired
     ApiServiceImpl(
-            FileService fileService,
+            @Qualifier("defaultTemplateResource") ClassPathResource loader,
             DownloadService downloadService,
             WordService wordService,
             DateFormat dateFormat,
-            ResourceLoader resourceLoader, RestTemplate restTemplate){
+            RestTemplate restTemplate){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
         this.dateFormat = dateFormat;
-        this.restTemplate = restTemplate;
-    }
+        this.classPathResource = loader;
 
-    /**
-     * Don't mind it
-     * @return a dictionary with file extensions
-     */
-    private Map<String, Map<String, List<FileHeader>>> initFileMap() {
-        Map<String, Map<String, List<FileHeader>>> map = new HashMap<>();
-        Arrays.stream(FileData.values()).forEach(fileData -> {
-            Map<String, List<FileHeader>> typeMap = new HashMap<>();
-            if (fileData == FileData.PRO) {
-                typeMap.put(FileTypes.PDF.getExtension(), new ArrayList<>());
-            } else {
-                typeMap.put(FileTypes.Word.getExtension(), new ArrayList<>());
-                typeMap.put(FileTypes.Excel.getExtension(), new ArrayList<>());
-            }
-            map.put(fileData.getData(), typeMap);
-        });
-        return map;
+        try (InputStream is = classPathResource.getInputStream();
+        ByteArrayOutputStream tempBaos = new ByteArrayOutputStream()){
+            FileCopyUtils.copy(is, tempBaos);
+            log.info("Successful copied into baos");
+            bytes = tempBaos.toByteArray();
+        } catch (IOException e) {
+
+            log.warn(e.getMessage());
+        }
     }
 
     /**
@@ -117,43 +83,35 @@ public class ApiServiceImpl implements ApiService {
      */
     @Override
     public ResponseEntity<String> handleFileUpload(MultipartFile file, String fileId) {
-        log.info("{}", file.getName());
-        Map<String, String> headers = new HashMap<>();
-        log.info("Received file upload with ID: {}", fileId);
+        return handleFileUploadInternal(file, null, fileId);
+    }
 
-        if (!fileHolder.containsDocument(fileId)) {
-            try (InputStream is = file.getInputStream();
-                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                log.info("Processing file: {}", file.getOriginalFilename());
+    @Override
+    public ResponseEntity<String> handleFileUploadWithTemplate(MultipartFile file, MultipartFile template, String fileId) {
+        return handleFileUploadInternal(file, template, fileId);
+    }
 
-                NiceXWPFDocument processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is));
 
-                log.info("Document generated successfully for file ID: {}", fileId);
-                processedDocument.write(baos);
-                byte[] docBytes = baos.toByteArray();
-
-                fileHolder.storeDocument(fileId, docBytes);
-
-                headers.put("status", "200");
-                headers.put("id", fileId);
-                PoitlIOUtils.closeQuietly(processedDocument);
-
-                return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
-            } catch (IOException ex) {
-                log.error("Error processing file upload: {}", "Something went wrong");
-                headers.put("status", "500");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
+    /**
+     * A handler for downloading template file
+     * @param hashId a hash of file
+     * @param response HttpServletResponse entity to send data to a client
+     * @return a ResponseEntity that contains header and template in body to a client
+     */
+    @Override
+    public ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response) {
+        if (fileHolder.containsDocument(hashId)) {
+            if (fileHolder.getTemplate(hashId) != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bytes);
             }
-        } else {
-            headers.put("status", "200");
-            headers.put("id", fileId);
-            return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(hashId);
     }
 
     /**
      * Check if file is ready by id
-     *
      * @param id hashed file as ID
      * @return a ResponseEntity with a status of readiness
      */
@@ -206,6 +164,48 @@ public class ApiServiceImpl implements ApiService {
             }
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    private ResponseEntity<String> handleFileUploadInternal(MultipartFile file, MultipartFile template, String fileId) {
+        log.info("{}", file.getName());
+        Map<String, String> headers = new HashMap<>();
+        log.info("Received file upload with ID: {}", fileId);
+
+        if (!fileHolder.containsDocument(fileId)) {
+            try (InputStream is = file.getInputStream();
+                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+                log.info("Processing file: {}", file.getOriginalFilename());
+
+                NiceXWPFDocument processedDocument;
+                if (template != null) {
+                    File templateFile = new File(System.getProperty("java.io.tmpdir"), template.getOriginalFilename());
+                    processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is), templateFile);
+                } else {
+                    processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is));
+                }
+
+                log.info("Document generated successfully for file ID: {}", fileId);
+                processedDocument.write(baos);
+                byte[] docBytes = baos.toByteArray();
+
+                fileHolder.storeDocument(fileId, docBytes);
+
+                headers.put("status", "200");
+                headers.put("id", fileId);
+                PoitlIOUtils.closeQuietly(processedDocument);
+
+                return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
+            } catch (IOException ex) {
+                log.error("Error processing file upload: {}", "Something went wrong");
+                headers.put("status", "500");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
+            }
+        } else {
+            headers.put("status", "200");
+            headers.put("id", fileId);
+            return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
+        }
     }
 
     private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
