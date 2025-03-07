@@ -21,6 +21,11 @@ public class FileHolder {
         return doc != null ? doc.getDocument() : null;
     }
 
+    public byte[] getTemplate(String id) {
+        DocumentHolder doc = holder.get(id);
+        return doc != null ? doc.getTemplate() : null;
+    }
+
     public DocumentHolder removeDocument(String id) {
         return holder.remove(id);
     }

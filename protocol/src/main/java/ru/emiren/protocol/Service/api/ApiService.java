@@ -8,8 +8,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.io.IOException;
 
 public interface ApiService {
-    public String downloadProtocols(HttpServletResponse response) throws IOException;
-    public ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId);
-    public ResponseEntity<?> checkFileAvailability(String id);
-    public ResponseEntity<String> downloadFile(String id, HttpServletResponse response);
+    String downloadProtocols(HttpServletResponse response) throws IOException;
+
+    ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId);
+    ResponseEntity<?> handleFileUploadWithTemplate(MultipartFile file, MultipartFile template, String fileId);
+
+    ResponseEntity<?> checkFileAvailability(String id);
+
+    ResponseEntity<String> downloadFile(String id, HttpServletResponse response);
+    ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response);
 }

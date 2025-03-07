@@ -34,6 +34,23 @@ public class RestProtocolController {
         return apiService.handleFileUpload(file, fileId);
     }
 
+    @PostMapping("/upload_file_with_template")
+    public ResponseEntity<?> handleFileUploadWithTemplate(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("template") MultipartFile template,
+            @RequestParam("id") String fileId){
+        log.info("In handleFileUploadWithTemplate");
+        log.info("The protocol file size and name are: {}; {}", file.getSize(), file.getName());
+        log.info("The template file size and name are: {}; {}", template.getSize(), template.getName());
+        return apiService.handleFileUploadWithTemplate(file, template, fileId);
+    }
+
+    @PostMapping("/download-template/{id}")
+    public ResponseEntity<?> downloadTemplate(@PathVariable("id") String hashId, HttpServletResponse response) {
+        log.info("In Download Template with hashId: {}", hashId);
+        return apiService.downloadTemplate(hashId, response);
+    }
+
     /**
      * returns a download status of file with ID
      * @param id a hash ID of a file

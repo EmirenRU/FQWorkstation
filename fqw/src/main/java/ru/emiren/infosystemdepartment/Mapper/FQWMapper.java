@@ -32,8 +32,8 @@ public class FQWMapper {
     public static ThemeSelector mapToSelector(FQWDTO fqwdto){
         return ThemeSelector
                 .builder()
-                .value(fqwdto.getId().toString())
-                .name(fqwdto.getName())
+                .value(fqwdto.getDecree().getId().toString())
+                .name(fqwdto.getDecree().getTheme())
                 .build();
     }
 }

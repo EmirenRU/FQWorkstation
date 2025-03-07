@@ -8,4 +8,4 @@ RUN mkdir -p /logs
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY mime.types /etc/nginx/mime.types
 COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 443
+EXPOSE 3000

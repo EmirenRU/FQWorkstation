@@ -5,14 +5,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   server: {
     proxy: {
-
       "/fqw-api": {
         target: "http://localhost:13131",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/fqw-api/, ''),
       },
       "/support-api": {
-        target: "http://localhost:13133", // Backend service 2
+        target: "http://localhost:13133",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/support-api/, ''),
       },
@@ -30,6 +29,11 @@ export default defineConfig({
         target: "http://localhost:13135",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/auth-api/, ''),
+      },
+      "/hub-api": {
+        target: "http://localhost:13136",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/hub-api/, ''),
       },
     },
   },
