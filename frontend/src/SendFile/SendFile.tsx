@@ -63,9 +63,38 @@ export const SendFile = () => {
         }
     }, [file]); // Dependency array ensures this runs only when `file` changes
 
+    const files : string[] = [
+        "template.xlsx",
+        "template_1.docx",
+        "template_2.docx"
+    ];
+
+    const handleDownload = (__filename : string) => {
+        console.log(__filename)
+        const link : HTMLAnchorElement = document.createElement("a");
+        // try to hide (/src/assets/templates)
+        link.href = `/src/assets/templates/${__filename}`;
+        link.download = __filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+
     return (
         <main>
+
             <div className="container">
+                <div>
+                    <h2>Download Files</h2>
+                    <ul>
+                        {files.map((file) => (
+                            <li key={file}>
+                                <button onClick={() => handleDownload(file)}>Download {file}</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
                 <div className="send__file__container">
 
                     <div className=" send__file__section " >

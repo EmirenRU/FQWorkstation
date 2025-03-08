@@ -4,6 +4,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -60,10 +61,13 @@ public class WordServiceImpl implements WordService {
     public List<List<String>> getListOfDataFromFile(InputStream file, String fileName) {
         List<List<String>> data = List.of();
         String ext = getFileExtension(fileName);
+        log.info("Extension: {}", ext);
         if (ext != null) {
             if (ext.equalsIgnoreCase("xlsx") || ext.equalsIgnoreCase("xls")) {
+                log.info("Loading XLSX Data");
                 data = processExcelFile(file);
             } else if (ext.equalsIgnoreCase("docx") || ext.equalsIgnoreCase("doc")) {
+                log.info("Loading DOCX Data");
                 data = processWordFile(file);
             } else {
                 log.error("Unsupported file format");
@@ -80,20 +84,6 @@ public class WordServiceImpl implements WordService {
     }
 
     private List<List<String>> processWordFile(InputStream file){
-        List<List<String>> data = List.of();
-        try (XSSFWorkbook workbook = new XSSFWorkbook(file)){
-            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-                XSSFSheet sheet = workbook.getSheetAt(i);
-                data = processSheet(sheet);
-            }
-        } catch (IOException ex){
-            log.error(ex.getMessage());
-        }
-        log.info("data: {}", data);
-        return data;
-    }
-
-    private List<List<String>> processExcelFile(InputStream file){
         List<List<String>> data = List.of();
         try (NiceXWPFDocument document = new NiceXWPFDocument(file)){
             List<XWPFTable> tables = document.getTables();
@@ -113,25 +103,87 @@ public class WordServiceImpl implements WordService {
         return data;
     }
 
+    private List<List<String>> processExcelFile(InputStream file){
+        List<List<String>> data = List.of();
+        try (XSSFWorkbook workbook = new XSSFWorkbook(file)){
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                XSSFSheet sheet = workbook.getSheetAt(i);
+                log.info("Processing Sheet {} with name {}", i, sheet.getSheetName());
+                data = processSheet(sheet);
+            }
+        } catch (IOException ex){
+            log.error(ex.getMessage());
+        }
+        log.info("data: {}", data);
+        return data;
+
+    }
+
     private List<List<String>> processSheet(XSSFSheet sheet){
         Row header = sheet.getRow(0);
         header.forEach(cell -> {log.info("Header: {}", cell.toString());});
 
-        // Starting implementation of Excel Handler
         // TODO to finish
-        List<List<String>> data = new ArrayList<>();
+        List<Map<String, String>> mapList = new ArrayList<>();
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
-            List<String> rowData = new ArrayList<>();
-            for (Cell cell : row) {
-                rowData.add(cell.getStringCellValue());
+            Map<String, String> rowData = new HashMap<>();
+            for (int j = 0; j < row.getLastCellNum(); j++) {
+                Cell cell = row.getCell(j);
+                if (cell != null){
+                    if (cell.getCellType() == CellType.STRING) {
+                        rowData.putIfAbsent(header.getCell(j).getStringCellValue(), cell.getStringCellValue());
+                    } else if (cell.getCellType() == CellType.NUMERIC) {
+                        rowData.putIfAbsent(header.getCell(j).getStringCellValue(), String.valueOf(cell.getNumericCellValue()));
+                    } else if (cell.getCellType() == CellType.BLANK) {
+                        rowData.putIfAbsent(header.getCell(j).getStringCellValue(), "?");
+                    }
+                } else {
+                    rowData.putIfAbsent(header.getCell(j).getStringCellValue(), "?");
+                }
             }
             log.info("Row with index {} : {}", i , rowData);
+            mapList.add(rowData);
+        }
+
+
+
+        return processData(mapList);
+    }
+
+    private List<List<String>> processData(List<Map<String, String>> mapList) {
+        List<List<String>> data = new ArrayList<>();
+
+        for (Map<String, String> map : mapList) {
+            List<String> rowData = new ArrayList<>(Collections.nCopies(42, "?"));
+
+            rowData.set(0, map.getOrDefault("ID", "?"));
+            rowData.set(1, map.getOrDefault("FullName", "?"));
+            rowData.set(2, map.getOrDefault("StudNum", "?"));
+            rowData.set(3, map.getOrDefault("Theme", "?"));
+            rowData.set(4, map.getOrDefault("SuData", "?"));
+            rowData.set(5, map.getOrDefault("SuName", "?"));
+            rowData.set(11, map.getOrDefault("Questioner1", "?"));
+            rowData.set(12, map.getOrDefault("Question1", "?"));
+            rowData.set(13, map.getOrDefault("Questioner2", "?"));
+            rowData.set(14, map.getOrDefault("Question2", "?"));
+            rowData.set(15, map.getOrDefault("Questioner3", "?"));
+            rowData.set(16, map.getOrDefault("Question3", "?"));
+            rowData.set(20, map.getOrDefault("IndividualOpinion", "?"));
+            rowData.set(24, map.getOrDefault("Language", "?"));
+            rowData.set(29, map.getOrDefault("Department", "?"));
+            rowData.set(30, map.getOrDefault("Orientation", "?"));
+            rowData.set(21, map.getOrDefault("Score", "?"));
+            rowData.set(31, map.getOrDefault("Citizenship", "?"));
+            rowData.set(32, map.getOrDefault("Program", "?"));
+            rowData.set(33, map.getOrDefault("NumberOfDecree", "?"));
+
             data.add(rowData);
         }
 
-        return null;
+        return data;
     }
+
 
     /**
      *
@@ -244,7 +296,7 @@ public class WordServiceImpl implements WordService {
 
             }
         }
-        log.info("Endede processing data");
+        log.info("Ended processing data");
         return data;
     }
 
@@ -294,6 +346,7 @@ public class WordServiceImpl implements WordService {
         log.info("data size: {}", data.get(0).size());
         File tempFile = createTempFileFromClassPathResource("template_copy.docx");
         if (tempFile == null) {
+            log.info("Generate File is null");
             return null;
         }
         return generateDocument(data, tempFile);
@@ -370,13 +423,17 @@ public class WordServiceImpl implements WordService {
 
 
     private Map<String, Object> getStringObjectMap(List<String> arr) {
-        log.info("started processing data for id {}", arr.get(0));
+        log.info("started processing data for id {}; {}", arr.get(0), arr);
         Map<String, Object> dataMap = new HashMap<>();
 
-        Long studNumber = Long.valueOf(arr.get(2));
-        dataMap.put("ID", arr.get(0).isEmpty() ? "?" : arr.get(0));
+        Long studNumber = (long) Double.parseDouble(arr.get(2));
+//        log.info("studNumber: {}", studNumber);
+        dataMap.put("ID", arr.get(0).isEmpty() ? "?" : (int) Float.parseFloat(arr.get(0)));
+//        log.info("ID: {}", dataMap.get("ID"));
         dataMap.put("FullName", checkArrayBeforeInserting(arr, 1));
+
         dataMap.put("StudNum", studNumber);
+
         dataMap.put("Theme", checkArrayBeforeInserting(arr, 3));
         dataMap.put("SuData", checkArrayBeforeInserting(arr, 4));
         dataMap.put("SuName", checkArrayBeforeInserting(arr, 5));
@@ -392,14 +449,15 @@ public class WordServiceImpl implements WordService {
 
         dataMap.putIfAbsent("Department", "?");
         dataMap.putIfAbsent("Orientation", "?");
-        log.info("Before transfering REST GET method");
+        log.info("Before transferring REST GET method");
         Map<String, String> map = new HashMap<>();
         String departmentName = "?";
         String orientationCodeWithName = "?";
+
+
         try {
-            log.info("After transfering REST GET method");
-            map = (Map<String, String>) restTemplate.getForObject(sqlLocation + "/api/v1/get-department-and-orientation/" + studNumber,
-                    Map.class);
+            log.info("After transferring REST GET method");
+            map = (Map<String, String>) restTemplate.getForObject(sqlLocation + "/api/v1/get-department-and-orientation/" + studNumber, Map.class);
             departmentName = map.get("Department");
             orientationCodeWithName = map.get("Orientation");
             log.info("After transfering REST GET method");
@@ -409,14 +467,21 @@ public class WordServiceImpl implements WordService {
         log.info("DeparmentName and orientationCodeWithName: {}; {}", departmentName, orientationCodeWithName);
         if (departmentName != null && !departmentName.equals("?")) {
             dataMap.put("Department", departmentName);
+        } else if (arr.size() > 29 && !arr.get(29).equals("?")) {
+              dataMap.put("Department", arr.get(29));
         } else {
             dataMap.put("Department", "?");
         }
+        log.info("Department is {}", dataMap.get("Department"));
+
         if (orientationCodeWithName != null && !orientationCodeWithName.equals("?")) {
             dataMap.put("Orientation", orientationCodeWithName);
+        } else if (arr.size() > 30 && !arr.get(30).equals("?")) {
+            dataMap.put("Orientation", arr.get(30));
         } else {
             dataMap.put("Orientation", "?");
         }
+        log.info("Department is {}", dataMap.get("Orientation"));
 
         dataMap.put("Answer1", "?");
         dataMap.put("Answer2", "?");
@@ -424,7 +489,7 @@ public class WordServiceImpl implements WordService {
         String score = checkArrayBeforeInserting(arr, 21);
         log.info("score: {}", score );
         if (score != null && !score.contains("?")) {
-            long scoreNumber = Long.parseLong(score.substring(0, 3).trim()); // First 3 numbers, if it will not happen, fix it
+            long scoreNumber = (long) Double.parseDouble(score.substring(0, 3).trim()); // First 3 numbers, if it will not happen, fix it
             log.info("scoreNumber: {}", scoreNumber);
             if (scoreNumber < 51L){
                 dataMap.put("Estimation", "Плохо");

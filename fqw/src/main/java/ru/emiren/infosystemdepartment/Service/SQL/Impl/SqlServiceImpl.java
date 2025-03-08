@@ -347,10 +347,6 @@ public class SqlServiceImpl implements SqlService {
             model.addAttribute(params.get(5), lecturerService.createDummyLecturer());
             return lecturerTemplate;
         }
-        // TODO make one or ALL
-        // todo or suggestion: EXCEL API to SAVE Object to Repository
-        // TODO api for android client
-
         return lecturerTemplate;
     }
 
@@ -367,20 +363,11 @@ public class SqlServiceImpl implements SqlService {
 
     @Override
     public SelectorSqlPayload receiveSelectors() {
-        /*
-        List<LecturerDTO> lecturerDTOS;
-        List<OrientationDTO> orientationDTOS;
-        List<DepartmentDTO> departmentDTOS;
-        List<FQWDTO> fqwdtos;
-         */
-
-        SelectorSqlPayload selectorSqlPayload = new SelectorSqlPayload(
+        return new SelectorSqlPayload(
                 departmentDTOS.stream().map(DepartmentMapper::mapToSelector).toList(),
                 orientationDTOS.stream().map(OrientationMapper::mapToSelector).toList(),
                 lecturerDTOS.stream().map(LecturerMapper::mapToSelector).toList(),
                 fqwdtos.stream().map(FQWMapper::mapToSelector).toList());
-
-        return selectorSqlPayload;
     }
 
     @Override

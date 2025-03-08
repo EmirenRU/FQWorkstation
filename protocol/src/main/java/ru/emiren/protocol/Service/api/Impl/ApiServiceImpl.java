@@ -186,16 +186,20 @@ public class ApiServiceImpl implements ApiService {
                 }
 
                 log.info("Document generated successfully for file ID: {}", fileId);
-                processedDocument.write(baos);
-                byte[] docBytes = baos.toByteArray();
+                if (processedDocument != null) {
+                    log.info("Processed document is not null");
+                    processedDocument.write(baos);
+                    byte[] docBytes = baos.toByteArray();
+                    fileHolder.storeDocument(fileId, docBytes);
+                    headers.put("status", "200");
+                    headers.put("id", fileId);
+                    PoitlIOUtils.closeQuietly(processedDocument);
 
-                fileHolder.storeDocument(fileId, docBytes);
-
-                headers.put("status", "200");
-                headers.put("id", fileId);
-                PoitlIOUtils.closeQuietly(processedDocument);
-
-                return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
+                    return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
+                } else {
+                    log.warn("Processed document is null");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(fileId);
+                }
             } catch (IOException ex) {
                 log.error("Error processing file upload: {}", "Something went wrong");
                 headers.put("status", "500");
