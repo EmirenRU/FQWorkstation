@@ -10,6 +10,12 @@ email/target
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+docker-build.7z
+docker-build/frontend/*
+docker-build/support/target
+docker-build/protocol/target
+docker-build/fqw/target
+
 
 ### STS ###
 .apt_generated

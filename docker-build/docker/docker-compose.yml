@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  db:
+    build:
+      context:  ../db
+    environment:
+      - POSTGRES_DB=fqworkstation,support
+      - POSTGRES_USER=temp
+      - POSTGRES_PASSWORD=temp
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ../db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+  fqw:
+    build: ../fqw
+    ports:
+      - "13131:13131"
+    depends_on:
+      - db
+    volumes:
+      - ../fqw/src/main/resources:/app/resources/
+
+    environment:
+      - SPRING_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/fqworkstation
+      - SPRING_DATASOURCE_USERNAME=temp
+      - SPRING_DATASOURCE_PASSWORD=temp
+      - SPRING_SECOND_DATASOURCE_USERNAME=temp
+      - SPRING_SECOND_DATASOURCE_PASSWORD=temp
+#      TEMPLATE_FILE_PATH: /app/template.docx
+      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
+      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
+      - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
+      - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
+      - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
+      - SERVER_PORT=13131
+  protocol:
+    build: ../protocol
+    ports:
+      - "13134:13134"
+    volumes:
+      - ../protocol/src/main/resources:/app/resources/
+  support:
+    build: ../support
+    ports:
+      - "13133:13133"
+    depends_on:
+      - db
+    volumes:
+      - ../support/src/main/resources:/app/resources/
+    environment:
+      - SPRING_SUPPORT_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/support
+      - SPRING_SUPPORT_DATASOURCE_USERNAME=temp
+      - SPRING_SUPPORT_DATASOURCE_PASSWORD=temp
+      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
+      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
+      - SERVER_FQW_URL="http://localhost:13131"
+  hub:
+    build: ../hub
+    ports:
+      - "13136:13136"
+
+  nginx:
+    build:
+      context:
+        ../frontend
+    ports:
+      - "80:80"
+    links:
+      - fqw
+      - support
+      - protocol
+volumes:
+  db-data:
