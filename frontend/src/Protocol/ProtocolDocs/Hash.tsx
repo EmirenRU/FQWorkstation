@@ -71,3 +71,41 @@ async function downloadFile(options: string) {
         console.error('There was a problem with the fetch operation:', error);
     }
 }
+
+export const handleUpload = async (fileToUpload: File) => {
+        if (fileToUpload) {
+            console.log('Uploading file...');
+
+            const formData = new FormData();
+            try {
+                const hashId = await formHash(fileToUpload); // Compute the file hash
+
+                console.log(typeof hashId);
+
+                formData.append('file', fileToUpload);
+                formData.append('id', hashId);
+
+                console.log("Hash is", hashId);
+
+                const settings = {
+                    method: 'POST',
+                    body: formData,
+                }
+            
+                try {
+                    const response = await fetch('/protocol-api/api/protocol/upload_file', settings);
+                    if (response.status === 200) {
+                        alert("Successful");
+                        await checkFileAvailability(hashId);
+                    } else {
+                        alert("Error uploading file");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("Error uploading file");
+                }
+            } catch (error) {
+                console.log("Something went wrong", error);
+            }
+        }
+    };

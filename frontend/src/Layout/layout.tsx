@@ -4,8 +4,8 @@ import { Header } from "./Header";
 import { FAQ } from "../FAQ/FAQ";
 import { Support } from "../Support/Support";
 import { Lecturers } from "../Lecturers/Lecturers";
-import { Protocol } from "../Protocol/Protocol";
-import { SendFile } from "../SendFile/SendFile";
+import { Protocol } from "../Protocol/ProtocolForm/Protocol";
+import { SendFile } from "../Protocol/ProtocolDocs/SendFile";
 
 export const PageLayout = () => {
     return (
