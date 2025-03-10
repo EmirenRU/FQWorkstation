@@ -7,17 +7,18 @@ import { downloadTableTemplate } from "../../api/dowloadApi";
 
 export const SendFile = () => {
     const [file, setFile] = useState<File | null>(null);
-    const [template, setTemplate] = useState<boolean | null>(null);
+    const [template, setTemplate] = useState<boolean >(false);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, obj:string) => {
         if(obj === 'template'){
-            setTemplate(true);
+            setTemplate(t => true);
         } else{
-            setTemplate(null);
+            setTemplate(t=>false);
         }
         if (e.target.files) {
             setFile(e.target.files[0]); 
         }
+        console.log(template);
     };
 
 
@@ -63,7 +64,7 @@ export const SendFile = () => {
                                     <span className="input__file-button-text">Шаблон протокола</span>
                                 </button>
 
-                                
+                                <div style={{display: "flex", flexDirection:"column"}}>   
                         <input
                             id="file-input"
                             style={{ display: 'none' }}
@@ -77,14 +78,15 @@ export const SendFile = () => {
                             </span>
                             <span className="input__file-button-text">Выберите файл шаблона</span>
                         </label>
-                        {file && (
+                        {(template && file !== null ) && (
                             <section>
                                 File details:
-                                <ul style={{ listStyle: "none" }}>
+                                <ul style={{ listStyle: "none", fontSize: "10px" }}>
                                     <li>Name: {file.name}</li>
                                 </ul>
                             </section>
                         )}
+                    </div>   
 
 
 <label htmlFor="file-input-table" className="input__file-button" onClick={() => handleDownload("table-templates")} style={{ maxWidth: "220px", marginRight: "2%" }}>
@@ -95,7 +97,7 @@ export const SendFile = () => {
                                 </label>
 
                     
-
+                        <div style={{display: "flex"}}>
                         <input
                             id="file-input"
                             style={{ display: 'none' }}
@@ -109,14 +111,16 @@ export const SendFile = () => {
                             </span>
                             <span className="input__file-button-text">Файл на обработку</span>
                         </label>
-                        {file && (
+                        {(file && !template) && (
                             <section>
                                 File details:
-                                <ul style={{ listStyle: "none" }}>
+                                <ul style={{ listStyle: "none", fontSize: "10px" }}>
                                     <li>Name: {file.name}</li>
                                 </ul>
                             </section>
                         )}
+</div>
+                    
 
                             </div>
 
