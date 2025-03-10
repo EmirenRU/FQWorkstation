@@ -1,6 +1,7 @@
 import { sha256 } from 'js-sha256';
+import { downloadFile } from '../../api/dowloadApi';
 
-export function formHash(file: Blob): Promise<string>{
+export function formHash(file: Blob): Promise<string> {
     return new Promise(function (resolve, reject) {
         const reader = new FileReader();
 
@@ -30,6 +31,9 @@ export function formHash(file: Blob): Promise<string>{
 
 
 export async function checkFileAvailability(id: string) {
+    // Для кадого случая свой id на нужные документы -- само значение id можно изменить в SendFile (строка 83, строка 52)
+    //protocol-template
+    //table-templates
     let isAvailable = false;
     const settings = {
         method: "POST",
@@ -44,35 +48,18 @@ export async function checkFileAvailability(id: string) {
             isAvailable = true;
             await downloadFile(id);
         } else {
-
+            alert("Retrying to fetch file")
             await new Promise(r => setTimeout(r, 3000));
         }
     }
 }
 
-async function downloadFile(options: string) {
-    try {
-        const response = await fetch("/protocol-api/api/protocol/download_file/" + options, { method: "GET" });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
 
-        const blob = await response.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = objectUrl;
-        link.download = 'protocols.docx';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(objectUrl);
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-    }
-}
+export const handleUpload = async (fileToUpload: File, obj: boolean | null) => {
 
-export const handleUpload = async (fileToUpload: File) => {
+    //file case
+    if (obj === null) {
         if (fileToUpload) {
             console.log('Uploading file...');
 
@@ -91,7 +78,7 @@ export const handleUpload = async (fileToUpload: File) => {
                     method: 'POST',
                     body: formData,
                 }
-            
+
                 try {
                     const response = await fetch('/protocol-api/api/protocol/upload_file', settings);
                     if (response.status === 200) {
@@ -108,4 +95,48 @@ export const handleUpload = async (fileToUpload: File) => {
                 console.log("Something went wrong", error);
             }
         }
-    };
+    }
+
+    //upload template
+    else {
+
+        if (fileToUpload) {
+            console.log('Uploading file...');
+
+            const formData = new FormData();
+            try {
+                const hashId = await formHash(fileToUpload); // Compute the file hash
+
+                console.log(typeof hashId);
+
+                formData.append('file', fileToUpload);
+                formData.append('id', hashId);
+
+                console.log("Hash is", hashId);
+
+                const settings = {
+                    method: 'POST',
+                    body: formData,
+                }
+
+                try {
+                    const response = await fetch('/protocol-api/api/protocol/upload_template', settings);
+                    if (response.status === 200) {
+                        alert("Successfully updated template");
+                        //   await checkFileAvailability(hashId);
+                    } else {
+                        alert("Error uploading file");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("Error uploading file");
+                }
+            } catch (error) {
+                console.log("Something went wrong", error);
+            }
+        }
+
+    }
+};
+
+
