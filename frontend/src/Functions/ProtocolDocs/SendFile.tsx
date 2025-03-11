@@ -139,17 +139,17 @@ export const SendFile = () => {
                 <h3>Доступные файлы для загрузки</h3>
                 <ul style={{ listStyle: "none", padding: 0 }}>
                     <li>
-                        <a href="/public/template.xlsx" className="file-link" download>
+                        <a href="/template.xlsx" className="file-link" download>
                             Шаблон 1 (Excel файл)
                         </a>
                     </li>
                     <li>
-                        <a href="/public/template_1.docx" className="file-link" download>
+                        <a href="/template_1.docx" className="file-link" download>
                             Шаблон 2 (Word файл)
                         </a>
                     </li>
                     <li>
-                        <a href="/public/template_2.docx" className="file-link" download>
+                        <a href="/template_2.docx" className="file-link" download>
                             Шаблон 3 (Word файл)
                         </a>
                     </li>
