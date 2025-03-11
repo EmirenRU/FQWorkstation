@@ -13,8 +13,10 @@ public class FileHolder {
     private ConcurrentHashMap<String, DocumentHolder> holder = new ConcurrentHashMap<>();
 
     public void storeDocument(String id, byte[] document) {
-        holder.put(id, new DocumentHolder(document));
+        holder.put(id, new DocumentHolder(document, null));
     }
+    public void storeDocument(String id, byte[] document, byte[] template) { holder.put(id, new DocumentHolder(document, template)); }
+
 
     public byte[] getDocument(String id) {
         DocumentHolder doc = holder.get(id);

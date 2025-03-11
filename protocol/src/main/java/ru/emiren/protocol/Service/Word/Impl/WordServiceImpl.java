@@ -403,8 +403,6 @@ public class WordServiceImpl implements WordService {
             }
             log.info("Done closing the documents list");
 
-            boolean flag = Files.deleteIfExists(Path.of(fileTemplate.getPath()));
-            log.info("Have deleted the temp_file? {}", flag);
             return document;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());

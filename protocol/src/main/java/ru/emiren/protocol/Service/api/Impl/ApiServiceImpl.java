@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
@@ -102,6 +103,7 @@ public class ApiServiceImpl implements ApiService {
     public ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response) {
         if (hashId != null){
             if (fileHolder.containsDocument(hashId)) {
+                log.info("File holder: {}", fileHolder.getTemplate(hashId));
                 if (fileHolder.getTemplate(hashId) != null) {
                     return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
                 } else {
@@ -180,10 +182,14 @@ public class ApiServiceImpl implements ApiService {
                 log.info("Processing file: {}", file.getOriginalFilename());
 
                 NiceXWPFDocument processedDocument;
+                byte[] templateBytes = null;
                 if (template != null) {
-                    File templateFile = new File(System.getProperty("java.io.tmpdir"), Objects.requireNonNull(template.getOriginalFilename()));
+                    File templateFile = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString() + "_" + Objects.requireNonNull(template.getOriginalFilename()));
                     template.transferTo(templateFile);
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()), templateFile);
+                    try (InputStream i = new FileInputStream(templateFile)) {
+                        templateBytes = StreamUtils.copyToByteArray(i);
+                    }
                 } else {
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()));
                 }
@@ -193,7 +199,11 @@ public class ApiServiceImpl implements ApiService {
                     log.info("Processed document is not null");
                     processedDocument.write(baos);
                     byte[] docBytes = baos.toByteArray();
-                    fileHolder.storeDocument(fileId, docBytes);
+                    if (templateBytes != null) {
+                        fileHolder.storeDocument(fileId, docBytes, templateBytes);
+                    } else {
+                        fileHolder.storeDocument(fileId, docBytes);
+                    }
                     headers.put("status", "200");
                     headers.put("id", fileId);
                     PoitlIOUtils.closeQuietly(processedDocument);
@@ -204,7 +214,7 @@ public class ApiServiceImpl implements ApiService {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(fileId);
                 }
             } catch (IOException ex) {
-                log.error("Error processing file upload: {}", "Something went wrong");
+                log.error("Error processing file upload: {}", ex.getMessage());
                 headers.put("status", "500");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
             }
