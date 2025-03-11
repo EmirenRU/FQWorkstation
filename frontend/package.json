@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "clean": "rimraf dist node_modules",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -42,6 +43,7 @@
     "vite": "^6.1.0"
   },
   "optionalDependencies": {
+    "rimraf": "^6.0.1",
     "@rollup/rollup-linux-x64-gnu": "*"
   }
 }

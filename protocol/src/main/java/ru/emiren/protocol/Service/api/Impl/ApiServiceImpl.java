@@ -100,14 +100,16 @@ public class ApiServiceImpl implements ApiService {
      */
     @Override
     public ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response) {
-        if (fileHolder.containsDocument(hashId)) {
-            if (fileHolder.getTemplate(hashId) != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bytes);
+        if (hashId != null){
+            if (fileHolder.containsDocument(hashId)) {
+                if (fileHolder.getTemplate(hashId) != null) {
+                    return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(bytes);
+                }
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(hashId);
+        return ResponseEntity.status(HttpStatus.OK).body(bytes);
     }
 
     /**
@@ -179,7 +181,8 @@ public class ApiServiceImpl implements ApiService {
 
                 NiceXWPFDocument processedDocument;
                 if (template != null) {
-                    File templateFile = new File(System.getProperty("java.io.tmpdir"), template.getOriginalFilename());
+                    File templateFile = new File(System.getProperty("java.io.tmpdir"), Objects.requireNonNull(template.getOriginalFilename()));
+                    template.transferTo(templateFile);
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()), templateFile);
                 } else {
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()));

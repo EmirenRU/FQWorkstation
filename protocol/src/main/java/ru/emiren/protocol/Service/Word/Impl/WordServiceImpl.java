@@ -512,7 +512,7 @@ public class WordServiceImpl implements WordService {
     public CompletableFuture<Void> saveDataAsync(Map<String, Object> dataMap) {
         String studentNumber = String.valueOf(dataMap.get("StudNum"));
 
-        log.info("Tring to ", studentNumber);
+        log.info("Tring to save data with studentNumber: ", studentNumber);
         ResponseEntity<?> responseEntity = restTemplate.postForEntity(sqlLocation + "/api/v1/save-data", dataMap, ResponseEntity.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             log.info("Saving the dataMap with student number {} is {}", studentNumber, responseEntity.getBody());
