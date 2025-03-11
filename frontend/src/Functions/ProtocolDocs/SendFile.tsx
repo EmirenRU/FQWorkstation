@@ -4,11 +4,15 @@ import uploadSvg from './upload.svg';
 import downloadSvg from './download.png';
 import { handleUpload } from "./Hash";
 import { downloadTableTemplate } from "../../api/dowloadApi";
+import NProgress from 'react-nprogress';
+import 'react-nprogress/nprogress.css'
 
 export const SendFile = () => {
     const [file, setFile] = useState<File | null>(null);
     const [template, setTemplate] = useState<File | null >(null);
     const [id, setId] = useState(String);
+    // const [loading, setLoading] = useState<boolean>(false);
+    // const [progress, setProgress] = useState<number>(0);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, object:string) => {
         if (e.target.files) {
@@ -30,14 +34,15 @@ export const SendFile = () => {
         }
     };
 
-
     useEffect(() => {
         if (file) {
+            NProgress.start();
             handleUpload(file, template, setId);
+            NProgress.done();
             setFile(null);
         }
     }, [file, template]); // Dependency array ensures this runs only when `file` changes
-    
+
     const handleDownload = (id: string) => {
         downloadTableTemplate(id);
     }
