@@ -87,7 +87,11 @@ $ cd docker ; docker-compose up --build
 
 ## Module Structure
 
--
+- fqw: The Core. It keeps the data of FQW and do SQL transactions. 
+- protocol: Proceeding the files (Decrees and Tables) and generates protocol (get data from FQW and sends data to keep in system)
+- support: The module for supporting customers' tickets (not finished: hub, processing, connecting to "email") 
+- email: The module allows to proceed the incoming messages to the client. 
+- auth: The module for authentication (α version)
 
 
 ## Frontend Structure
