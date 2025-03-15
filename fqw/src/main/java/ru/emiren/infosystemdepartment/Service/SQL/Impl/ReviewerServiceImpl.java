@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.ReviewerDTO;
 import ru.emiren.infosystemdepartment.Mapper.ReviewerMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Reviewer;
@@ -22,6 +23,7 @@ public class ReviewerServiceImpl implements ReviewerService {
     }
 
     @Override
+    @Transactional
     public Reviewer saveReviewer(Reviewer reviewer) {
         return reviewerRepository.save(reviewer);
     }

@@ -20,7 +20,7 @@ public class Question {
     private String questioner;
     private String question;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "protocol_id")
     private List<ProtocolQuestion> protocolQuestion = new ArrayList<>();
 }

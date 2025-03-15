@@ -38,8 +38,6 @@ public class WordServiceImpl implements WordService {
     private String sqlLocation;
 
     private final RestTemplate restTemplate;
-    private InputStream inputStream;
-    private ClassPathResource classPathResource;
     private Pattern pattern = Pattern.compile("[\\d]{2}[.][\\d]{2}[.][\\d]{2}");
 
     @Autowired
@@ -403,8 +401,6 @@ public class WordServiceImpl implements WordService {
             }
             log.info("Done closing the documents list");
 
-            boolean flag = Files.deleteIfExists(Path.of(fileTemplate.getPath()));
-            log.info("Have deleted the temp_file? {}", flag);
             return document;
         } catch (Exception e) {
             log.warn("WordService: {}", e.getMessage());
@@ -512,7 +508,7 @@ public class WordServiceImpl implements WordService {
     public CompletableFuture<Void> saveDataAsync(Map<String, Object> dataMap) {
         String studentNumber = String.valueOf(dataMap.get("StudNum"));
 
-        log.info("Tring to ", studentNumber);
+        log.info("Tring to save data with studentNumber: ", studentNumber);
         ResponseEntity<?> responseEntity = restTemplate.postForEntity(sqlLocation + "/api/v1/save-data", dataMap, ResponseEntity.class);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             log.info("Saving the dataMap with student number {} is {}", studentNumber, responseEntity.getBody());

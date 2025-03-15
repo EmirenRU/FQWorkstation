@@ -1,6 +1,6 @@
-export async function downloadFile(options: string) {
+export async function downloadFile(id: string) {
     try {
-        const response = await fetch("/protocol-api/api/protocol/download_file/" + options, { method: "GET" });
+        const response = await fetch("/protocol-api/api/protocol/download_file/" + id, { method: "GET" });
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -21,12 +21,16 @@ export async function downloadFile(options: string) {
 }
 
 
-export async function downloadTableTemplate(options: string) {
+export async function downloadTableTemplate(id: string) {
     try {
-        const response = await fetch("/protocol-api/api/protocol/download_template/" + options, { method: "GET" });
+        console.log("Downloading template with ID:", id);
+
+        const url = id ? `/protocol-api/api/protocol/download_template/${id}` : "/protocol-api/api/protocol/download_template";
+
+        const response = await fetch(url, { method: id ? "POST" : "GET" });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
         }
 
         const blob = await response.blob();

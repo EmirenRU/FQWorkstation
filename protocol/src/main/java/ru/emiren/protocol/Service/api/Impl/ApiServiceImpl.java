@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
 import ru.emiren.protocol.Service.Word.WordService;
@@ -43,8 +43,7 @@ public class ApiServiceImpl implements ApiService {
             @Qualifier("defaultTemplateResource") ClassPathResource loader,
             DownloadService downloadService,
             WordService wordService,
-            DateFormat dateFormat,
-            RestTemplate restTemplate){
+            DateFormat dateFormat){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
@@ -100,14 +99,17 @@ public class ApiServiceImpl implements ApiService {
      */
     @Override
     public ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response) {
-        if (fileHolder.containsDocument(hashId)) {
-            if (fileHolder.getTemplate(hashId) != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bytes);
+        if (hashId != null){
+            if (fileHolder.containsDocument(hashId)) {
+                log.info("File holder: {}", hashId);
+                if (fileHolder.getTemplate(hashId) != null) {
+                    return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(bytes);
+                }
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(hashId);
+        return ResponseEntity.status(HttpStatus.OK).body(bytes);
     }
 
     /**
@@ -178,9 +180,14 @@ public class ApiServiceImpl implements ApiService {
                 log.info("Processing file: {}", file.getOriginalFilename());
 
                 NiceXWPFDocument processedDocument;
+                byte[] templateBytes = null;
                 if (template != null) {
-                    File templateFile = new File(System.getProperty("java.io.tmpdir"), template.getOriginalFilename());
+                    File templateFile = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString() + "_" + Objects.requireNonNull(template.getOriginalFilename()));
+                    template.transferTo(templateFile);
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()), templateFile);
+                    try (InputStream i = new FileInputStream(templateFile)) {
+                        templateBytes = StreamUtils.copyToByteArray(i);
+                    }
                 } else {
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()));
                 }
@@ -190,7 +197,11 @@ public class ApiServiceImpl implements ApiService {
                     log.info("Processed document is not null");
                     processedDocument.write(baos);
                     byte[] docBytes = baos.toByteArray();
-                    fileHolder.storeDocument(fileId, docBytes);
+                    if (templateBytes != null) {
+                        fileHolder.storeDocument(fileId, docBytes, templateBytes);
+                    } else {
+                        fileHolder.storeDocument(fileId, docBytes);
+                    }
                     headers.put("status", "200");
                     headers.put("id", fileId);
                     PoitlIOUtils.closeQuietly(processedDocument);
@@ -201,7 +212,7 @@ public class ApiServiceImpl implements ApiService {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(fileId);
                 }
             } catch (IOException ex) {
-                log.error("Error processing file upload: {}", "Something went wrong");
+                log.error("Error processing file upload: {}", ex.getMessage());
                 headers.put("status", "500");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
             }

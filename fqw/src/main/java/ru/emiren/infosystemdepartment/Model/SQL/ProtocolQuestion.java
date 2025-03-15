@@ -18,11 +18,10 @@ public class ProtocolQuestion {
 
     @ManyToOne
     @JoinColumn(name = "protocol_id", referencedColumnName = "id")
-    @JsonBackReference
+
     private Protocol protocol;
 
     @ManyToOne
     @JoinColumn(name = "question_id", referencedColumnName = "id")
-    @JsonBackReference
     private Question question;
 }

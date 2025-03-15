@@ -81,7 +81,7 @@ public class ApplicationProgrammingInterfaceController {
 
     @GetMapping("/js/receive/download-table")
     public ResponseEntity<String> receiveDownloadTable() {
-        return apiService.returnJsFile("donwload_table.js");
+        return apiService.returnJsFile("download_table.js");
     }
 
     @PostMapping("/v1/save-data")

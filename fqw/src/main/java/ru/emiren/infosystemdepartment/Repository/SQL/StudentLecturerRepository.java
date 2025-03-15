@@ -44,8 +44,8 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             "WHERE sl.student.stud_num = :studNum AND :leName = sl.lecturer.name")
     Optional<StudentLecturers> findByStudentNumber(Long studNum, String leName);
 
-    @Query("SELECT sl FROM StudentLecturers sl JOIN Student st ON st.stud_num = sl.student.stud_num " +
-            "JOIN Lecturer l ON l.id = sl.lecturer.id WHERE sl.student.stud_num = :studNum AND sl.lecturer.name = :name")
+    @Query("SELECT sl FROM StudentLecturers sl " +
+            "WHERE sl.student.stud_num = :studNum AND sl.lecturer.name = :name")
     Optional<StudentLecturers> findByStudentNumberAndLecturerName(Long studNum, String name);
 
     @Query("SELECT sl FROM StudentLecturers sl " +

@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Mapper.FQWMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Decree;
@@ -10,6 +11,7 @@ import ru.emiren.infosystemdepartment.Repository.SQL.FQWRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.DecreeService;
 import ru.emiren.infosystemdepartment.Service.SQL.FQWService;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -30,13 +32,18 @@ public class FQWServiceImpl implements FQWService {
 
     @Override
     public List<FQWDTO> getAllFQW() {
-        return fqwRepository.findAll()
-                .stream()
-                .map(FQWMapper::mapToFQWDTO)
-                .toList();
+        try {
+            return fqwRepository.findAll()
+                    .stream()
+                    .map(FQWMapper::mapToFQWDTO)
+                    .toList();
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
+    @Transactional
     public FQW saveFqw(FQW fqw) {
         return fqwRepository.save(fqw);
     }

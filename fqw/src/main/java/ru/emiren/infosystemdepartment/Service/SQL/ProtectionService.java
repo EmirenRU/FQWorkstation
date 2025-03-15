@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionDTO;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Protection;
@@ -10,6 +11,7 @@ public interface ProtectionService {
     List<ProtectionDTO> getAllProtections();
     Integer getDateWithSpecificStudent(StudentLecturersDTO studentLecturersDTO, List<ProtectionDTO> protections);
     void deleteProtection(Protection protection);
+    @Transactional
     Protection saveProtection(Protection protection);
     Protection getProtectionById(Long id);
     ProtectionDTO getProtectionDTOById(Long id);

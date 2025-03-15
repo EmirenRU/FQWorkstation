@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.DepartmentDTO;
 import ru.emiren.infosystemdepartment.Mapper.DepartmentMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Department;
@@ -30,6 +31,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public Department saveDepartment(Department department) {
         return departmentRepository.save(department);
     }

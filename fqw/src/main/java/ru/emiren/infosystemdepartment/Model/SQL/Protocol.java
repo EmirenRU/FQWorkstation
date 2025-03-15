@@ -8,7 +8,6 @@ import java.util.List;
 
 @Entity
 @Builder
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -33,7 +32,7 @@ public class Protocol {
     private Integer grade; // оценка
     private String language;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")
     List<ProtocolQuestion> questions = new ArrayList<>();
 

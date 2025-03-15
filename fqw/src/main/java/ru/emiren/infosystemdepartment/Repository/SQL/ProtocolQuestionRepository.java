@@ -10,8 +10,11 @@ import java.util.Optional;
 @Repository
 public interface ProtocolQuestionRepository extends JpaRepository<ProtocolQuestion, Long> {
 
-    @Query("SELECT pq FROM protocol_question pq WHERE pq.protocol.student.stud_num = :studNum AND pq.question.question = :question")
-    Optional<ProtocolQuestion> findByQuestionAndStudNum(String question, Long studNum);
+    @Query("SELECT pq FROM protocol_question pq " +
+            "WHERE pq.protocol.student.stud_num = :studNum " +
+            "AND pq.question.question = :question " +
+            "AND pq.question.questioner = :questioner")
+    Optional<ProtocolQuestion> findByQuestionAndStudNum(String question, Long studNum, String questioner);
 
     @Query("SELECT MAX(pq.id) FROM protocol_question pq")
     Long getMaxId();

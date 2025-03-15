@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionDTO;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Mapper.ProtectionMapper;
@@ -44,6 +45,7 @@ public class ProtectionServiceImpl implements ProtectionService {
     }
 
     @Override
+    @Transactional
     public Protection saveProtection(Protection protection) {
         return protectionRepository.save(protection);
     }

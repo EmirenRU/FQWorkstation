@@ -22,8 +22,8 @@ public class ProtocolQuestionServiceImpl implements ProtocolQuestionService {
     }
 
     @Override
-    public ProtocolQuestion findByQuestionAndProtocolStudent(String question, Long studNum) {
-        return protocolQuestionRepository.findByQuestionAndStudNum(question, studNum).orElse(null);
+    public ProtocolQuestion findByQuestionAndProtocolStudent(String question, Long studNum, String questioner) {
+        return protocolQuestionRepository.findByQuestionAndStudNum(question, studNum, questioner).orElse(null);
     }
 
     @Override

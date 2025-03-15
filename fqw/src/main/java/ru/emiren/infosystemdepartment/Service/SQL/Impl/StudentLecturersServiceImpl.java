@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Mapper.StudentLecturersMapper;
@@ -21,8 +22,8 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
         this.studentLecturerRepository = studentLecturerRepository;
     }
 
-
     @Override
+    @Transactional
     public StudentLecturers saveStudentLecturers(StudentLecturers studentLecturersDTO) {
         return studentLecturerRepository.save(studentLecturersDTO);
     }

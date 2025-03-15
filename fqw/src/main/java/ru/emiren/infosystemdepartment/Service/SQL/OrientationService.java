@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 
@@ -8,6 +9,7 @@ import java.util.List;
 public interface OrientationService {
     List<OrientationDTO> getAllOrientations();
     void deleteOrientation(Orientation orientation);
+    @Transactional
     Orientation saveOrientation(Orientation orientation);
     Orientation getOrientation(String code);
     OrientationDTO getOrientationDTO(String code);

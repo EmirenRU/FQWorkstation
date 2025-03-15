@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Student;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 public interface StudentService {
 
+    @Transactional
     Student saveStudent(Student studentDTO);
     List<StudentDTO> findAllStudent();
     List<Student> findAllStudentById(Long id);

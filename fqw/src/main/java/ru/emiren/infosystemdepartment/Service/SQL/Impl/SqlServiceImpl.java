@@ -420,6 +420,7 @@ public class SqlServiceImpl implements SqlService {
                 code = orientationParse.substring(0, 8);
                 name = orientationParse.substring(9).trim();
             }
+            Long studNum = (!data.get("StudNum").toString().equals("?")) ? Long.valueOf(data.get("StudNum").toString()) : 0l;
             log.info("1");
             Orientation orientation = code.equals("?") ? null : orientationService.getOrientation(code);
             if (orientation == null) {
@@ -436,7 +437,7 @@ public class SqlServiceImpl implements SqlService {
                 decree = new Decree();
                 decree.setTheme((String) data.get("Theme"));
                 decree.setNumberOfDecree((String) data.get("NumberOfDecree"));
-                decree.setStudNum((Long) data.get("StudNum"));
+                decree.setStudNum(studNum);
                 decreeService.saveDecree(decree);
             }
 
@@ -452,7 +453,7 @@ public class SqlServiceImpl implements SqlService {
 
             log.info("3");
 
-            Long studNum = (!data.get("StudNum").toString().equals("?")) ? Long.valueOf(data.get("StudNum").toString()) : 0l;
+
             Student student = studentService.findStudentByStudNum(studNum);
             if (student == null) {
                 student = new Student();
@@ -513,7 +514,15 @@ public class SqlServiceImpl implements SqlService {
                 protocol.setStudent(student);
                 protocol.setFqw(fqw);
                 protocol.setHeadOfTheFQW(lecturer.getName());
-                protocol.setGrade(data.get("Score").equals("?") ? -1 : Integer.parseInt(data.get("Score").toString().substring(0, 3).trim()));
+                int scoreNum;
+                String scoreDouble = data.get("Score").toString().substring(0, 3).trim(); // [0; 100]
+                if (scoreDouble.contains(".")){
+                    String score = scoreDouble.substring(0, scoreDouble.indexOf("."));
+                    scoreNum = Integer.parseInt(score);
+                } else {
+                    scoreNum = -1;
+                }
+                protocol.setGrade(scoreNum);
                 protocol.setLanguage((String) data.get("Language"));
                 protocolService.saveProtocol(protocol);
             }
@@ -555,7 +564,7 @@ public class SqlServiceImpl implements SqlService {
 
 
 
-            ProtocolQuestion pq1 = protocolQuestionService.findByQuestionAndProtocolStudent(question1.getQuestion(), protocol.getStudent().getStud_num());
+            ProtocolQuestion pq1 = protocolQuestionService.findByQuestionAndProtocolStudent(question1.getQuestion(), protocol.getStudent().getStud_num(), question1.getQuestioner());
             id = protocolQuestionService.getMaxId();
             if (id == null) { id = 0l; }
             if (pq1 == null) {
@@ -569,7 +578,7 @@ public class SqlServiceImpl implements SqlService {
                 protocolQuestionService.saveProtocolQuestion(pq1);
             }
 
-            ProtocolQuestion pq2 = protocolQuestionService.findByQuestionAndProtocolStudent(question2.getQuestion(), protocol.getStudent().getStud_num());
+            ProtocolQuestion pq2 = protocolQuestionService.findByQuestionAndProtocolStudent(question2.getQuestion(), protocol.getStudent().getStud_num(), question2.getQuestioner());
             if (pq2 == null) {
                 pq2 = new ProtocolQuestion();
                 id++;
@@ -581,7 +590,7 @@ public class SqlServiceImpl implements SqlService {
                 protocolQuestionService.saveProtocolQuestion(pq2);
             }
 
-            ProtocolQuestion pq3 = protocolQuestionService.findByQuestionAndProtocolStudent(question3.getQuestion(), protocol.getStudent().getStud_num());
+            ProtocolQuestion pq3 = protocolQuestionService.findByQuestionAndProtocolStudent(question3.getQuestion(), protocol.getStudent().getStud_num(), question3.getQuestioner());
             if (pq3 == null) {
                 pq3 = new ProtocolQuestion();
                 id++;
