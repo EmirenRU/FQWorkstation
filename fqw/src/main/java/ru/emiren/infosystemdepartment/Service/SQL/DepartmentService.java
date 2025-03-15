@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.DepartmentDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Department;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 public interface DepartmentService {
     List<DepartmentDTO> getAllDepartments();
+    @Transactional
     Department saveDepartment(Department department);
     void deleteDepartment(Department department);
     Department    getDepartmentById(Long id);

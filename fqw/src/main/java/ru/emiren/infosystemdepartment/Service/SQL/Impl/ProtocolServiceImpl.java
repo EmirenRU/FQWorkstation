@@ -1,5 +1,7 @@
 package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +17,13 @@ import java.util.List;
 public class ProtocolServiceImpl implements ProtocolService {
     private ProtocolRepository protocolRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
-    public ProtocolServiceImpl(ProtocolRepository protocolRepository) {
+    public ProtocolServiceImpl(ProtocolRepository protocolRepository, EntityManager entityManager) {
         this.protocolRepository = protocolRepository;
+        this.entityManager = entityManager;
     }
 
     @Override

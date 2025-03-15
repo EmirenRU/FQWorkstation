@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Orientation;
 import ru.emiren.infosystemdepartment.Repository.SQL.OrientationRepository;
@@ -33,6 +34,7 @@ public class OrientationServiceImpl implements OrientationService {
     }
 
     @Override
+    @Transactional
     public Orientation saveOrientation(Orientation orientation) {
         return orientationRepository.save(orientation);
     }

@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
 @Builder
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -31,7 +29,7 @@ public class Lecturer {
     @JoinColumn(name="department", referencedColumnName = "code")
     private Department department;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "student_id")
     @JsonManagedReference
     private List<StudentLecturers> students = new ArrayList<>();

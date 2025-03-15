@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.Model.SQL.Decree;
 import ru.emiren.infosystemdepartment.Repository.SQL.DecreeRepository;
 import ru.emiren.infosystemdepartment.Service.SQL.DecreeService;
@@ -21,6 +22,7 @@ public class DecreeServiceImpl implements DecreeService {
     }
 
     @Override
+    @Transactional
     public Decree saveDecree(Decree decree) {
         return decreeRepository.save(decree);
     }

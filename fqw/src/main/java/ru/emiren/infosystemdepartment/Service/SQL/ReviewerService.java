@@ -1,11 +1,13 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.ReviewerDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Reviewer;
 
 import java.util.List;
 
 public interface ReviewerService {
+    @Transactional
     Reviewer saveReviewer(Reviewer reviewer);
     void deleteReviewer(Reviewer reviewer);
     List<ReviewerDTO> getAllReviewer();

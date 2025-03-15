@@ -10,10 +10,10 @@ import java.util.List;
 
 @Entity
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Student {
 
     @Id
@@ -38,7 +38,7 @@ public class Student {
     @JoinColumn(name = "department_code", referencedColumnName = "code")
     private Department department;             // Кафедра
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "lecturer_id")
     @JsonManagedReference
     private List<StudentLecturers> lecturers = new ArrayList<>();

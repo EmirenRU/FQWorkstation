@@ -555,7 +555,7 @@ public class SqlServiceImpl implements SqlService {
 
 
 
-            ProtocolQuestion pq1 = protocolQuestionService.findByQuestionAndProtocolStudent(question1.getQuestion(), protocol.getStudent().getStud_num());
+            ProtocolQuestion pq1 = protocolQuestionService.findByQuestionAndProtocolStudent(question1.getQuestion(), protocol.getStudent().getStud_num(), question1.getQuestioner());
             id = protocolQuestionService.getMaxId();
             if (id == null) { id = 0l; }
             if (pq1 == null) {
@@ -569,7 +569,7 @@ public class SqlServiceImpl implements SqlService {
                 protocolQuestionService.saveProtocolQuestion(pq1);
             }
 
-            ProtocolQuestion pq2 = protocolQuestionService.findByQuestionAndProtocolStudent(question2.getQuestion(), protocol.getStudent().getStud_num());
+            ProtocolQuestion pq2 = protocolQuestionService.findByQuestionAndProtocolStudent(question2.getQuestion(), protocol.getStudent().getStud_num(), question2.getQuestioner());
             if (pq2 == null) {
                 pq2 = new ProtocolQuestion();
                 id++;
@@ -581,7 +581,7 @@ public class SqlServiceImpl implements SqlService {
                 protocolQuestionService.saveProtocolQuestion(pq2);
             }
 
-            ProtocolQuestion pq3 = protocolQuestionService.findByQuestionAndProtocolStudent(question3.getQuestion(), protocol.getStudent().getStud_num());
+            ProtocolQuestion pq3 = protocolQuestionService.findByQuestionAndProtocolStudent(question3.getQuestion(), protocol.getStudent().getStud_num(), question3.getQuestioner());
             if (pq3 == null) {
                 pq3 = new ProtocolQuestion();
                 id++;

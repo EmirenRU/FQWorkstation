@@ -3,6 +3,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.CommissionerDTO;
 import ru.emiren.infosystemdepartment.Mapper.CommissionerMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Commissioner;
@@ -23,6 +24,7 @@ public class CommissionerServiceImpl implements CommissionerService {
     }
 
     @Override
+    @Transactional
     public Commissioner saveCommissioner(Commissioner commissioner) {
         return commissionerRepository.save(commissioner);
     }

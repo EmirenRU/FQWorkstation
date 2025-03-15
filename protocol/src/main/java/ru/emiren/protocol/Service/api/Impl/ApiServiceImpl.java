@@ -103,7 +103,7 @@ public class ApiServiceImpl implements ApiService {
     public ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response) {
         if (hashId != null){
             if (fileHolder.containsDocument(hashId)) {
-                log.info("File holder: {}", fileHolder.getTemplate(hashId));
+                log.info("File holder: {}", hashId);
                 if (fileHolder.getTemplate(hashId) != null) {
                     return ResponseEntity.status(HttpStatus.OK).body(fileHolder.getTemplate(hashId));
                 } else {

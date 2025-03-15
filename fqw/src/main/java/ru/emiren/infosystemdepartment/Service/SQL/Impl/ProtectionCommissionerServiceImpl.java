@@ -2,6 +2,7 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.ProtectionCommissionerDTO;
 import ru.emiren.infosystemdepartment.Mapper.CommissionerMapper;
 import ru.emiren.infosystemdepartment.Mapper.ProtectionCommissionerMapper;
@@ -24,6 +25,7 @@ public class ProtectionCommissionerServiceImpl implements ProtectionCommissioner
     }
 
     @Override
+    @Transactional
     public ProtectionCommissioner saveProtectionCommissioner(ProtectionCommissioner pc) {
         return protectionCommissionerRepository.save(pc);
     }
@@ -67,5 +69,10 @@ public class ProtectionCommissionerServiceImpl implements ProtectionCommissioner
     @Override
     public Long getMaxId() {
         return protectionCommissionerRepository.getMaxId();
+    }
+
+    @Override
+    public ProtectionCommissioner findByProtectionAndCommissioner(Long protectionId, Long commissionerId) {
+        return protectionCommissionerRepository.findByIdsOfProtectionAndCommissioner(protectionId, commissionerId).orElse(null);
     }
 }

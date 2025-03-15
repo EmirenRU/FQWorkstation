@@ -4,6 +4,8 @@ import ru.emiren.infosystemdepartment.DTO.Payload.Selector.ThemeSelector;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 
+import java.util.Objects;
+
 public class FQWMapper {
     public static FQW mapToFQW(FQWDTO fqwdto){
         return FQW.builder()
@@ -20,7 +22,8 @@ public class FQWMapper {
     public static FQWDTO mapToFQWDTO(FQW fqw){
         return FQWDTO.builder()
                 .id(fqw.getId())
-                .decree(DecreeMapper.mapToDecreeDTO(fqw.getDecree()))
+
+                .decree(DecreeMapper.mapToDecreeDTO(Objects.requireNonNull(fqw.getDecree())))
                 .classifier(fqw.getClassifier())
                 .uniqueness(fqw.getUniqueness())
                 .feedback(fqw.getFeedback())

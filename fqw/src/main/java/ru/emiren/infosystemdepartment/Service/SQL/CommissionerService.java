@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.CommissionerDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.Commissioner;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 public interface CommissionerService {
 
+    @Transactional
     Commissioner saveCommissioner(Commissioner commissioner);
     void deleteCommissioner(Commissioner commissioner);
     List<CommissionerDTO> getAllCommissioners();

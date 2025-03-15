@@ -38,8 +38,6 @@ public class WordServiceImpl implements WordService {
     private String sqlLocation;
 
     private final RestTemplate restTemplate;
-    private InputStream inputStream;
-    private ClassPathResource classPathResource;
     private Pattern pattern = Pattern.compile("[\\d]{2}[.][\\d]{2}[.][\\d]{2}");
 
     @Autowired

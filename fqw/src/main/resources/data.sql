@@ -237,7 +237,7 @@ Values(1, 'Адебайо Ридвануллахи Айофе', 1032205020, 'Н�
       (88, 'Яковлев Артём Александрович', 1132223463, 'РОССИЯ', 88, '02.04.02', '01', 'Магистратура', 'ПИ+ПР' ),
       (89, 'Яхёев Азизжон Азим угли', 1132223472, 'УЗБЕКИСТАН', 89, '02.04.02', '01', 'Магистратура', 'ПИ' );
 
-INSERT INTO student_lecturers (student_id, lecturer_id, isconsultant, isscientificsupervisor) VALUES
+INSERT INTO studentlecturers (student_id, lecturer_id, isconsultant, isscientificsupervisor) VALUES
                                                                                                   (1, 6, FALSE, TRUE),
                                                                                                   (2, 12, FALSE, TRUE),
                                                                                                   (3, 19, FALSE, TRUE),
