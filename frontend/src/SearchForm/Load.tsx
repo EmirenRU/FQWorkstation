@@ -73,7 +73,9 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
     //
 
 
-
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+    });
 
     interface DataItem {
         name: string;

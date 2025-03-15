@@ -21,6 +21,23 @@ type StudentFormProps = StudentFieldsData &{
 export function StudentData({ studName, studNum, citizenship, loe, classifier, orientationCode, orientationName, dateOfProtection,  updateFields }: StudentFormProps) {
 
 
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDateString = e.target.value; // Get the new date string from the input
+
+        
+        // Check if the date string is not empty
+        if (newDateString) {
+            const newDate = new Date(newDateString);
+            const formatedDateString = newDate.toISOString().split('T')[0];
+            console.log(formatedDateString);
+            // Check if the date is valid
+            if (!isNaN(newDate.getTime())) {
+                updateFields({ dateOfProtection: formatedDateString });
+            } else {
+                console.error("Invalid date");
+            }
+        }
+    };
 
     return (
         <FormWrapper title="Студент">
@@ -46,9 +63,8 @@ export function StudentData({ studName, studNum, citizenship, loe, classifier, o
             <input className="form-input" name="orientationName" type="text" id="6-field" required value={orientationName} onChange={e => updateFields({ orientationName: e.target.value })} />
 
             <label className="form-label">Дата защиты</label>
-            <input className="form-input" name="dateOfProtection" type="text" pattern="\b(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(\d{4})\b" id="7-field" required value={dateOfProtection} onChange={e => updateFields({ dateOfProtection: e.target.value })} />
+            <input className="form-input" name="dateOfProtection" type="date" id="7-field" required value={dateOfProtection} onChange={handleDateChange} />
         </FormWrapper>
     );
 }
 // type="date" data-date-format="DD MM YYYY" id="7-field"
-
