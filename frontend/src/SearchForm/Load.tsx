@@ -304,9 +304,9 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
                 <label className="selection-param">Годы работ
                     <div className="selection-param__years flex">
                         <span className="selection-param__years__text">с</span>
-                        <input type="text" name="from" id="from" className="val" value={fromData} onChange={handleYearsChange} />
+                        <input type="number" name="from" id="from" className="val" value={fromData} onChange={handleYearsChange} />
                         <span className="selection-param__years__text"> до</span>
-                        <input type="text" name="to" id="to" className="val" value={tillData} onChange={handleYearsChange} />
+                        <input type="number" name="to" id="to" className="val" value={tillData} onChange={handleYearsChange} />
                     </div>
                 </label>
             </div>

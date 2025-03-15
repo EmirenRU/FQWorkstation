@@ -5,7 +5,7 @@ type FQWFieldsData = {
     uniqueness: string,
     feedback: string,
     volume: string,
-    
+    numberOfDecree: string
 }
 
 type FQWFormProps = FQWFieldsData &{
@@ -13,7 +13,7 @@ type FQWFormProps = FQWFieldsData &{
     updateFields: (fields: Partial<FQWFieldsData>) => void
 }
 
-export function FQWData({themeName, uniqueness, feedback, volume,  updateFields}: FQWFormProps) {
+export function FQWData({themeName, uniqueness, feedback, volume, numberOfDecree, updateFields}: FQWFormProps) {
 
     
 
@@ -25,13 +25,17 @@ export function FQWData({themeName, uniqueness, feedback, volume,  updateFields}
 
         <input className="form-input" name="themeName" type="text" id="0-field" value={themeName} required onChange={e => updateFields ({themeName: e.target.value})}/>
 
+        <label className="form-label">Номер приказа </label>
+
+        <input className="form-input" name="numberOfDecree" type="text" id="1-field" value={numberOfDecree} required onChange={e => updateFields ({numberOfDecree: e.target.value})}/>
+
         <label className="form-label">Оригинальность</label>
-        <input className="form-input" name="uniqueness" pattern="\d*" type="text" id="1-field" required value={uniqueness} onChange={e => updateFields ({uniqueness: e.target.value})}/>
+        <input className="form-input" name="uniqueness" pattern="\d*" type="text" id="2-field" required value={uniqueness} onChange={e => updateFields ({uniqueness: e.target.value})}/>
 
         <label className="form-label">Отзыв</label>
-        <input className="form-input" name="feedback" type="text" id="2-field" required value={feedback} onChange={e => updateFields ({feedback: e.target.value})} />
+        <input className="form-input" name="feedback" type="text" id="3-field" required value={feedback} onChange={e => updateFields ({feedback: e.target.value})} />
 
         <label className="form-label">Объем работы</label>
-        <input className="form-input" name="volume" type="text" id="3-field" required value={ volume} onChange={e => updateFields ({ volume: e.target.value})}/>
+        <input className="form-input" name="volume" type="text" id="4-field" required value={ volume} onChange={e => updateFields ({ volume: e.target.value})}/>
     </FormWrapper>
 }

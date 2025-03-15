@@ -24,6 +24,7 @@ type FormData ={
     isScientificSupervisor: boolean,
     isConsultant: boolean,
     themeName: string,
+    numberOfDecree:string,
     uniqueness: string,
     feedback: string,
     volume: string,
@@ -46,6 +47,7 @@ type FormData ={
     question1: string,
     question2: string,
     question3: string,
+
 }
 
 const INITIALDATA:FormData = {
@@ -64,6 +66,7 @@ const INITIALDATA:FormData = {
     isScientificSupervisor: false,
     isConsultant: false,
     themeName: "",
+    numberOfDecree: "",
     uniqueness: "",
     feedback: "",
     volume: "",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { FormWrapper } from "../FormWrapper/FormWrapper";
 
 type StudentFieldsData = {
@@ -18,30 +18,12 @@ type StudentFormProps = StudentFieldsData &{
     updateFields: (fields: Partial<StudentFieldsData>) => void
 }
 
-export function StudentData({ studName, studNum, citizenship, loe, classifier, orientationCode, orientationName,  updateFields }: StudentFormProps) {
+export function StudentData({ studName, studNum, citizenship, loe, classifier, orientationCode, orientationName, dateOfProtection,  updateFields }: StudentFormProps) {
 
-    const [formattedDateForInput, setDate] = useState("");
 
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newDateString = e.target.value; // Get the new date string from the input
-        setDate(newDateString); // Update the state with the new date string
-        
-        // Check if the date string is not empty
-        if (newDateString) {
-            const newDate = new Date(newDateString);
-            const formatedDateString = newDate.toISOString().split('T')[0];
-            console.log(formatedDateString);
-            // Check if the date is valid
-            if (!isNaN(newDate.getTime())) {
-                updateFields({ dateOfProtection: formatedDateString });
-            } else {
-                console.error("Invalid date");
-            }
-        }
-    };
 
     return (
-        <FormWrapper title="Student info">
+        <FormWrapper title="Студент">
             <label className="form-label">ФИО студента</label>
             <input className="form-input" name="studName" type="text" id="0-field" value={studName} required onChange={e => updateFields({ studName: e.target.value })} />
 
@@ -57,15 +39,16 @@ export function StudentData({ studName, studNum, citizenship, loe, classifier, o
             <label className="form-label">Классификатор</label>
             <input className="form-input" name="classifier" type="text" id="4-field" required value={classifier} onChange={e => updateFields({ classifier: e.target.value })} />
 
-            <label className="form-label">Код</label>
+            <label className="form-label">Код направления</label>
             <input className="form-input" name="orientationCode" pattern="\d{2}.\d{2}.\d{2}" type="text" id="5-field" required value={orientationCode} onChange={e => updateFields({ orientationCode: e.target.value })} />
 
-            <label className="form-label">Наименование</label>
+            <label className="form-label">Наименование направления</label>
             <input className="form-input" name="orientationName" type="text" id="6-field" required value={orientationName} onChange={e => updateFields({ orientationName: e.target.value })} />
 
-            <label className="form-label">Дата</label>
-            <input className="form-input" name="dateOfProtection" type="date" id="7-field" required value={formattedDateForInput} onChange={handleDateChange} />
+            <label className="form-label">Дата защиты</label>
+            <input className="form-input" name="dateOfProtection" type="text" pattern="\b(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(\d{4})\b" id="7-field" required value={dateOfProtection} onChange={e => updateFields({ dateOfProtection: e.target.value })} />
         </FormWrapper>
     );
 }
 // type="date" data-date-format="DD MM YYYY" id="7-field"
+

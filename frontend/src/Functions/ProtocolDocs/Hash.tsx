@@ -57,7 +57,6 @@ export async function checkFileAvailability(id: string) {
 
 
 export const handleUpload = (fileToUpload: File|null , template:File | null) => {
-        //null case 
         alert("in upload section")
         console.log("F ==",fileToUpload,"  TMP ==", template )
         if (fileToUpload) {
@@ -70,48 +69,47 @@ export const handleUpload = (fileToUpload: File|null , template:File | null) => 
     };
 
 
-    async function endpointWork(file: File, code: string){
-    console.log('Uploading file...');
-
-    const formData = new FormData();
-    try {
-        const hashId = await formHash(file); // Compute the file hash
-
-        console.log(typeof hashId);
-
-        formData.append('file', file);
-        formData.append('id', hashId);
-
-        console.log("Hash is", hashId);
-
-        const settings = {
-            method: 'POST',
-            body: formData,
-        }
-
-        let response;
+    async function endpointWork(file: File, code: string) {
+        console.log('Uploading file...');
     
+        const formData = new FormData();
         try {
-
-            if(code === "file")
-             response = await fetch('/protocol-api/api/protocol/upload_file', settings);
-            else
-            response = await fetch('/protocol-api/api/protocol/upload_template', settings);
-            if (response.status === 200 && code === "file") {
-                alert("Successful");
-               await checkFileAvailability(hashId);
-            }
-            if (response.status === 200 && code !== "file") {
-                alert("Successful template update");
-            }
-            else {
+            const hashId = await formHash(file); 
+    
+            formData.append('file', file);
+            formData.append('id', hashId);
+    
+            console.log("Hash is", hashId);
+    
+            const settings = {
+                method: 'POST',
+                body: formData,
+            };
+    
+            let response;
+    
+            try {
+                if (code === "file") {
+                    response = await fetch('/protocol-api/api/protocol/upload_file', settings);
+                } else {
+                    response = await fetch('/protocol-api/api/protocol/upload_file_with_template', settings);
+                }
+    
+                if (response.ok) { 
+                    alert(code === "file" ? "Successful" : "Successful template update");
+                    if (code === "file") {
+                        await checkFileAvailability(hashId);
+                    }
+                } else {
+                    const errorText = await response.text(); 
+                    alert(`Error uploading file: ${errorText}`);
+                }
+            } catch (error) {
+                console.error("Error during fetch:", error);
                 alert("Error uploading file");
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("Error uploading file");
+            console.log("Something went wrong", error);
+            alert("Error processing file");
         }
-    } catch (error) {
-        console.log("Something went wrong", error);
     }
-}

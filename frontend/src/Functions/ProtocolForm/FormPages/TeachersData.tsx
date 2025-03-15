@@ -26,7 +26,7 @@ export function TeachersData({lecturersName, academicPosition, position, departm
     };
 
 
-    return <FormWrapper title="Teacher details">
+    return <FormWrapper title="Преподаватель">
 
         <label className="form-label">ФИО преподавателя</label>
 
