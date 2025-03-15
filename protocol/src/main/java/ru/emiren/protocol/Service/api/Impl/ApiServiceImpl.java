@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
 import ru.emiren.protocol.Service.Word.WordService;
@@ -44,8 +43,7 @@ public class ApiServiceImpl implements ApiService {
             @Qualifier("defaultTemplateResource") ClassPathResource loader,
             DownloadService downloadService,
             WordService wordService,
-            DateFormat dateFormat,
-            RestTemplate restTemplate){
+            DateFormat dateFormat){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
