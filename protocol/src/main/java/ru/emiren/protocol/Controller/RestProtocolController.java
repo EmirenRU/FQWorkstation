@@ -57,6 +57,12 @@ public class RestProtocolController {
         return apiService.downloadTemplate(null, response);
     }
 
+    @GetMapping("/download_excel_with_data")
+    public ResponseEntity<?> downloadExcelWithData(HttpServletResponse response) {
+        log.info("In Download Excel with hashId");
+        return apiService.downloadExcelWithFQW(response);
+    }
+
     /**
      * returns a download status of file with ID
      * @param id a hash ID of a file

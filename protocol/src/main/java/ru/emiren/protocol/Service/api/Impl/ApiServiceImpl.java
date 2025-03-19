@@ -2,8 +2,11 @@ package ru.emiren.protocol.Service.api.Impl;
 
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
@@ -11,16 +14,23 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import ru.emiren.protocol.DTO.TableData;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
+import ru.emiren.protocol.Service.Excel.ExcelService;
 import ru.emiren.protocol.Service.Word.WordService;
 import ru.emiren.protocol.Service.api.ApiService;
 import ru.emiren.protocol.Service.Download.DownloadService;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -31,19 +41,23 @@ public class ApiServiceImpl implements ApiService {
     private final WordService wordService;
 
     private final DateFormat dateFormat;
+    private final RestTemplate restTemplate;
+    private final Gson gson;
+    private final ExcelService excelService;
     private ClassPathResource classPathResource;
 
     private List<List<String>> data;
 
     private FileHolder fileHolder = new FileHolder();
     private static byte[] bytes;
+    private static byte[] fileBytes;
 
     @Autowired
     ApiServiceImpl(
             @Qualifier("defaultTemplateResource") ClassPathResource loader,
             DownloadService downloadService,
             WordService wordService,
-            DateFormat dateFormat){
+            DateFormat dateFormat, RestTemplate restTemplate, Gson gson, ExcelService excelService){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
@@ -59,6 +73,10 @@ public class ApiServiceImpl implements ApiService {
 
             log.warn(e.getMessage());
         }
+        this.restTemplate = restTemplate;
+        this.gson = gson;
+        this.excelService = excelService;
+        updateFileBytes();
     }
 
     /**
@@ -110,6 +128,40 @@ public class ApiServiceImpl implements ApiService {
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(bytes);
+    }
+
+    @Override
+    public ResponseEntity<?> downloadExcelWithFQW(HttpServletResponse response) {
+        if (fileBytes != null){
+            return ResponseEntity.status(HttpStatus.OK).body(fileBytes);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
+
+    @Scheduled(cron = "0 0 * * * *")
+    @Override
+    public void updateFileBytes(){
+
+        List<TableData> res = List.of();
+        try {
+            String fqwLocation = "http://localhost:13131/api/v2/get-data-for-excel";
+            ResponseEntity<String> resp = restTemplate.getForEntity(fqwLocation, String.class);
+            Type listType = new TypeToken<ArrayList<TableData>>() {}.getType();
+            res = gson.fromJson(resp.getBody(), listType);
+        } catch (ResourceAccessException e){
+            log.error(e.getMessage());
+        } catch (RestClientException e) {
+            log.error(e.getMessage());
+        }
+
+        if (res!=null && !res.isEmpty()){
+            XSSFWorkbook result = excelService.generateExcelFile(res);
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+                result.write(baos);
+                fileBytes = baos.toByteArray();
+            } catch( IOException e){ log.error(e.getMessage()); }
+        }
     }
 
     /**

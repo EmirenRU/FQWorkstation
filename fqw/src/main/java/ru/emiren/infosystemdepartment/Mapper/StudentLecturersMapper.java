@@ -1,9 +1,13 @@
 package ru.emiren.infosystemdepartment.Mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.StudentLecturers;
 
+import java.util.List;
+
+@Slf4j
 public class StudentLecturersMapper {
     public static StudentLecturers mapToStudentLecturers(StudentLecturersDTO studentLecturersDTO){
         return StudentLecturers.builder()
@@ -27,7 +31,7 @@ public class StudentLecturersMapper {
     }
 
     public static SqlPayload mapToSqlPayload(StudentLecturers sl) {
-        return SqlPayload.builder()
+        SqlPayload.SqlPayloadBuilder builder = SqlPayload.builder()
                 .id(sl.getId())
                 .academicDegree(sl.getLecturer().getAcademicDegree())
                 .theme(sl.getStudent().getFqw().getDecree().getTheme())
@@ -35,9 +39,17 @@ public class StudentLecturersMapper {
                 .fullStudentName(sl.getStudent().getName())
                 .position(sl.getLecturer().getPosition())
                 .studNum(sl.getStudent().getStud_num())
-                .citizenship(sl.getStudent().getCitizenship())
-                .department(sl.getLecturer().getDepartment().getName())
-                .build();
+                .citizenship(sl.getStudent().getCitizenship());
+
+        if (sl.getLecturer().getDepartment() != null) {
+            builder.department(sl.getLecturer().getDepartment().getName());
+        }
+
+        if (sl.getStudent().getFqw().getDecree() != null) {
+            builder.numberOfDecree(sl.getStudent().getFqw().getDecree().getNumberOfDecree());
+        }
+
+        return builder.build();
     }
 
 }

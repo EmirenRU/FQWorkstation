@@ -3,6 +3,7 @@ package ru.emiren.infosystemdepartment.Service.SQL;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.ui.Model;
 import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
 
@@ -21,6 +22,10 @@ public interface SqlService {
     String createLectureForm(Model model, String year, HttpServletRequest request);
     String getLecturers(HttpServletRequest request,
                                Model model);
+
+    @Scheduled(cron = "0 */10 * * * *")
+    void updateSqlDataPayload();
+
     String getDetailPage(HttpServletRequest request, Model model, String id);
     String getDepartmentNameByStudentNumber(Long studNumber);
     String getOrientationCodeWithNameByStudentNumber(Long studNumber);
@@ -30,4 +35,6 @@ public interface SqlService {
     void refreshData();
 
     SelectorSqlPayload receiveSelectors();
+
+    ResponseEntity<String> getAllDataAsPayload();
 }

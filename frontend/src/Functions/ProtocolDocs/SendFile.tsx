@@ -4,7 +4,7 @@ import uploadSvg from './upload.svg';
 import downloadSvg from './download.png';
 import xlsxIcon from './xlsx_icon.svg.png'
 import docxIcon from './docx_icon.svg.png'
-import { handleUpload } from "./Hash";
+import { handleUpload, getDataFile } from "./Hash";
 import { downloadTableTemplate } from "../../api/dowloadApi";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css'
@@ -49,10 +49,13 @@ export const SendFile = () => {
         }
     }, [file, template]); // Dependency array ensures this runs only when `file` changes
 
-    const handleDownload = (id: string) => {
+    const handleTemplateDownload = (id: string) => {
         downloadTableTemplate(id);
     }
 
+    const handleFileDownload = () => {
+        getDataFile();
+    }
 
 
     function uploadDocs() {
@@ -79,7 +82,7 @@ export const SendFile = () => {
                                     </p>
                                 </div>
                                 <div className="upload-download__container">
-                                    <button onClick={() => handleDownload(id)} className="input__file-button" style={{ maxWidth: "220px", marginRight: "2%" }}>
+                                    <button onClick={() => handleTemplateDownload(id)} className="input__file-button" style={{ maxWidth: "220px", marginRight: "2%" }}>
                                 <span className="input__file-icon-wrapper">
                                     <img className="input__file-icon" src={downloadSvg} alt="Download шаблон протокола" width="25" />
                                 </span>
@@ -102,11 +105,11 @@ export const SendFile = () => {
                                         </label>
                                     </div>
 
-                                    <label htmlFor="file-input-table" className="input__file-button" onClick={() => handleDownload(id)} style={{ maxWidth: "220px", marginRight: "2%" }}>
+                                    <label htmlFor="file-input-table" className="input__file-button" onClick={() => handleFileDownload()} style={{ maxWidth: "220px", marginRight: "2%" }}>
                                 <span className="input__file-icon-wrapper">
                                     <img className="input__file-icon" src={downloadSvg} alt="Word файл" width="25" />
                                 </span>
-                                        <span className="input__file-button-text">Шаблоны таблиц</span>
+                                        <span className="input__file-button-text">Шаблон таблицы</span>
                                     </label>
 
                                     <div style={{ display: "flex" }}>

@@ -29,6 +29,28 @@ export function formHash(file: Blob): Promise<string>{
     });
 }
 
+export async function getDataFile() {
+    try {
+        const response = await fetch("/protocol-api/api/protocol/download_excel_with_data", { method: "GET" });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = 'template.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+}
+
 
 export async function checkFileAvailability(id: string) {
     // Для кадого случая свой id на нужные документы -- само значение id можно изменить в SendFile (строка 83, строка 52)

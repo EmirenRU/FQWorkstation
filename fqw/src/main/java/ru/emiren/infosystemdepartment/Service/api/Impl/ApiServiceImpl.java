@@ -1,15 +1,10 @@
 package ru.emiren.infosystemdepartment.Service.api.Impl;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.lingala.zip4j.model.FileHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +12,11 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
-import ru.emiren.infosystemdepartment.DTO.SQL.OrientationDTO;
+import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.Service.SQL.SqlService;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
-import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -58,6 +50,11 @@ public class ApiServiceImpl implements ApiService {
             return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
         }
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(gson.toJson(payload)));
+    }
+
+    @Override
+    public ResponseEntity<String> getAllDataFromTable() {
+        return sqlService.getAllDataAsPayload();
     }
 
     /**

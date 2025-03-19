@@ -89,6 +89,11 @@ public class ApplicationProgrammingInterfaceController {
         return sqlService.saveDataFromProtocol(data);
     }
 
+    @GetMapping("/v2/get-data-for-excel")
+    public ResponseEntity<String> getDataForExcel(HttpServletRequest request) {
+        log.info("getDataForExcel data {}", request.getRemoteHost());
+        return apiService.getAllDataFromTable();
+    }
 
     /**
      * Handler for selectors in /sql/lecturers

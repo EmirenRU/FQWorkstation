@@ -154,7 +154,7 @@ public class WordServiceImpl implements WordService {
         List<List<String>> data = new ArrayList<>();
 
         for (Map<String, String> map : mapList) {
-            List<String> rowData = new ArrayList<>(Collections.nCopies(42, "?"));
+            List<String> rowData = new ArrayList<>(Collections.nCopies(42, " "));
 
             rowData.set(0, map.getOrDefault("ID", "?"));
             rowData.set(1, map.getOrDefault("FullName", "?"));
@@ -174,7 +174,7 @@ public class WordServiceImpl implements WordService {
             rowData.set(30, map.getOrDefault("Orientation", "?"));
             rowData.set(21, map.getOrDefault("Score", "?"));
             rowData.set(31, map.getOrDefault("Citizenship", "?"));
-            rowData.set(32, map.getOrDefault("Program", "?"));
+            rowData.set(32, map.getOrDefault("Program", " "));
             rowData.set(33, map.getOrDefault("NumberOfDecree", "?"));
 
             data.add(rowData);
@@ -301,7 +301,7 @@ public class WordServiceImpl implements WordService {
 
     private void insertAtIndex(List<String> list, int index, String value){
         while (list.size() <= index) {
-            list.add("?");
+            list.add(" ");
         }
         list.set(index, value);
     }
@@ -394,9 +394,9 @@ public class WordServiceImpl implements WordService {
             }
 
 
-            document = documents.get(documents.size() - 1);
-            documents.remove(documents.size() - 1);
-            document = document.merge(documents, document.getParagraphArray(0).getRuns().get(0));
+            document = documents.getLast();
+            documents.removeLast();
+            document = document.merge(documents, document.getParagraphArray(0).getRuns().getFirst());
 
             log.info("Closing the documents list");
             for (NiceXWPFDocument doc : documents) {
@@ -427,7 +427,7 @@ public class WordServiceImpl implements WordService {
 
         Long studNumber = (long) Double.parseDouble(arr.get(2));
 //        log.info("studNumber: {}", studNumber);
-        dataMap.put("ID", arr.get(0).isEmpty() ? "?" : (int) Float.parseFloat(arr.get(0)));
+        dataMap.put("ID", arr.get(0).isEmpty() ? " " : (int) Float.parseFloat(arr.get(0)));
 //        log.info("ID: {}", dataMap.get("ID"));
         dataMap.put("FullName", checkArrayBeforeInserting(arr, 1));
 
@@ -442,12 +442,11 @@ public class WordServiceImpl implements WordService {
         dataMap.put("Question2", checkArrayBeforeInserting(arr, 14));
         dataMap.put("Questioner3", checkArrayBeforeInserting(arr, 15));
         dataMap.put("Question3", checkArrayBeforeInserting(arr, 16));
-        dataMap.put("Score", checkArrayBeforeInserting(arr, 21));
         dataMap.put("IndividualOpinion", checkArrayBeforeInserting(arr, 20));
         dataMap.put("Language", checkArrayBeforeInserting(arr, 24));
 
-        dataMap.putIfAbsent("Department", "?");
-        dataMap.putIfAbsent("Orientation", "?");
+        dataMap.putIfAbsent("Department", " ");
+        dataMap.putIfAbsent("Orientation", " ");
         log.info("Before transferring REST GET method");
         Map<String, String> map = new HashMap<>();
         String departmentName = "?";
@@ -470,7 +469,7 @@ public class WordServiceImpl implements WordService {
         } else if (arr.size() > 29 && !arr.get(29).equals("?")) {
               dataMap.put("Department", arr.get(29));
         } else {
-            dataMap.put("Department", "?");
+            dataMap.put("Department", " ");
         }
         log.info("Department is {}", dataMap.get("Department"));
 
@@ -479,33 +478,50 @@ public class WordServiceImpl implements WordService {
         } else if (arr.size() > 30 && !arr.get(30).equals("?")) {
             dataMap.put("Orientation", arr.get(30));
         } else {
-            dataMap.put("Orientation", "?");
+            dataMap.put("Orientation", " ");
         }
         log.info("Orientation is {}", dataMap.get("Orientation"));
 
-        if (arr.get(32) != null && !arr.get(32).isEmpty()){
+        if (arr.size() >= 32 && arr.get(32) != null && !arr.get(32).isEmpty()){
             dataMap.put("Program", arr.get(32));
         }
-        dataMap.put("Answer1", "?");
-        dataMap.put("Answer2", "?");
-        dataMap.put("Answer3", "?");
+        dataMap.put("Answer1", " ");
+        dataMap.put("Answer2", " ");
+        dataMap.put("Answer3", " ");
         String score = checkArrayBeforeInserting(arr, 21);
+
+        String finalScore = "";
+        long scoreNumber;
         log.info("score: {}", score );
-        if (score != null && !score.contains("?")) {
-            long scoreNumber = (long) Double.parseDouble(score.substring(0, 3).trim()); // First 3 numbers, if it will not happen, fix it
+        if (score != null && !score.contains("?") && !score.contains(" ") ) {
+            scoreNumber = (long) Double.parseDouble(score.substring(0, 3).trim()); // First 3 numbers, if it will not happen, fix it
+
             log.info("scoreNumber: {}", scoreNumber);
             if (scoreNumber < 51L){
+                finalScore = scoreNumber + "|E|Плохо";
                 dataMap.put("Estimation", "Плохо");
             } else if (scoreNumber < 69L){
+                finalScore = scoreNumber + "|D|Удовлетворительно";
                 dataMap.put("Estimation", "Удовлетворительно");
+            } else if (scoreNumber < 85L){
+                finalScore = scoreNumber + "|C|Хорошо";
+                dataMap.put("Estimation", "Хорошо");
             } else {
+                if (scoreNumber < 95){
+                    finalScore = scoreNumber + "|B|Отлично";
+                } else {
+                    finalScore = scoreNumber + "|A|Отлично";
+                }
                 dataMap.put("Estimation", "Отлично");
             }
         } else {
-            dataMap.put("Estimation", "?");
+            dataMap.put("Estimation", " ");
         }
+
+        dataMap.put("Score", finalScore);
+
         log.info("Ended processing score: {}", score);
-        dataMap.put("IndividualOpinion", "?");
+        dataMap.put("IndividualOpinion", " ");
 
         return dataMap;
     }
@@ -526,7 +542,8 @@ public class WordServiceImpl implements WordService {
 
     private String checkArrayBeforeInserting(List<String> arr, int index) {
         if (index < arr.size()) {
-            return arr.get(index).isEmpty() ? "?" : arr.get(index);
+            if (arr.get(index).equals("?")) { return " "; }
+            return arr.get(index).isEmpty() ? " " : arr.get(index);
         } else {
             log.warn("Index {} is out of bounds for array: {}", index, arr);
             return "?";

@@ -42,10 +42,12 @@ public class SqlServiceImpl implements SqlService {
     private final FQWService fqwService;
     private final DecreeService decreeService;
     private final Gson gson;
-    List<LecturerDTO> lecturerDTOS;
-    List<OrientationDTO> orientationDTOS;
-    List<DepartmentDTO> departmentDTOS;
-    List<FQWDTO> fqwdtos;
+    private List<LecturerDTO> lecturerDTOS;
+    private List<OrientationDTO> orientationDTOS;
+    private List<DepartmentDTO> departmentDTOS;
+    private List<FQWDTO> fqwdtos;
+    private List<SqlPayload> sqlDataPayload;
+
 
     DateTimeFormatter dateTimeFormatter;
     private static final String lecturerTemplate = "lecturer";
@@ -87,6 +89,7 @@ public class SqlServiceImpl implements SqlService {
         this.questionService = questionService;
         this.protocolService = protocolService;
         this.gson = gson;
+        updateSqlDataPayload();
     }
 
 
@@ -368,6 +371,19 @@ public class SqlServiceImpl implements SqlService {
                 orientationDTOS.stream().map(OrientationMapper::mapToSelector).toList(),
                 lecturerDTOS.stream().map(LecturerMapper::mapToSelector).toList(),
                 fqwdtos.stream().map(FQWMapper::mapToSelector).toList());
+    }
+
+    @Override
+    public ResponseEntity<String> getAllDataAsPayload() {
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(sqlDataPayload));
+    }
+
+    @Scheduled(cron = "0 */10 * * * *")
+    @Override
+    @Async
+    public void updateSqlDataPayload(){
+        log.info("Updating SQL data payload...");
+         sqlDataPayload = studentLecturersService.getAllStudentLecturers();
     }
 
     @Override

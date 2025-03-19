@@ -16,4 +16,6 @@ public interface ApiService {
     ResponseEntity<String> returnJsFile(String s);
 
     CompletableFuture<ResponseEntity<String>> receiveSelectorPayload(HttpServletRequest request);
+
+    ResponseEntity<String> getAllDataFromTable();
 }

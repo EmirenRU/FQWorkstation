@@ -1,6 +1,8 @@
 package ru.emiren.protocol.Service.Excel.Impl;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import ru.emiren.protocol.DTO.TableData;
 import ru.emiren.protocol.Service.Excel.ExcelService;
 
 import java.io.IOException;
@@ -73,8 +76,48 @@ public class ExcelServiceImpl implements ExcelService {
         return "redirect:/functions";
     }
 
+    @Override
+    public XSSFWorkbook generateExcelFile(List<TableData> res) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("FQW");
 
+        Row header = createHeader(sheet);
 
+        for (int i = 0; i < res.size(); i++) {
+            Row row = setDataInRow(sheet, i+1, res.get(i));
+        }
+
+        return workbook;
+    }
+
+    private Row setDataInRow(XSSFSheet sheet, int i, TableData tableData) {
+
+        Row row = sheet.createRow(i);
+        row.createCell(0, CellType.NUMERIC).setCellValue(tableData.getId());
+        row.createCell(1, CellType.STRING).setCellValue(tableData.getFullStudentName());
+        row.createCell(2, CellType.STRING).setCellValue(tableData.getTheme());
+        row.createCell(3, CellType.NUMERIC).setCellValue(tableData.getStudNum());
+        row.createCell(4, CellType.STRING).setCellValue(tableData.getFullLecturerName());
+        row.createCell(5, CellType.STRING).setCellValue(tableData.getPosition() + ", " + tableData.getAcademicDegree());
+        row.createCell(6, CellType.STRING).setCellValue(tableData.getDepartment());
+        row.createCell(7, CellType.STRING).setCellValue(tableData.getNumberOfDecree());
+        row.createCell(8, CellType.STRING).setCellValue(tableData.getCitizenship());
+        return row;
+    }
+
+    private Row createHeader(XSSFSheet sheet) {
+        Row row = sheet.createRow(0);
+        row.createCell(0, CellType.STRING).setCellValue("ID");
+        row.createCell(1, CellType.STRING).setCellValue("FullName");
+        row.createCell(2, CellType.STRING).setCellValue("Theme");
+        row.createCell(3, CellType.STRING).setCellValue("StudNum");
+        row.createCell(4, CellType.STRING).setCellValue("SuName");
+        row.createCell(5, CellType.STRING).setCellValue("SuData");
+        row.createCell(6, CellType.STRING).setCellValue("Department");
+        row.createCell(7, CellType.STRING).setCellValue("NumberOfDecree");
+        row.createCell(8, CellType.STRING).setCellValue("Citizenship");
+        return row;
+    }
 
 
     private Map<String, String> addDepartmentsToMapFromSheet(XSSFSheet s) {
