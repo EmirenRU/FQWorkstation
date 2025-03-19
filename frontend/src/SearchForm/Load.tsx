@@ -19,7 +19,6 @@ function jsonToData(data: string): object {
 function getLocalData(name: string) {
     const data = localStorage.getItem(name);
     return data ? jsonToData(data) : [];
-    
 }
 
 interface DepartmentProps {
@@ -119,6 +118,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
                     setOrientations(OrientationData);
                     setTeachersData(TeachersData);
                     seThemes(ThemesData)
+                    console.log("Parsed Data :", Departments, Orientations, Themes)
                 }
             } else {
                 console.error("Invalid data structure received from getFakeSelectorData");

@@ -20,6 +20,7 @@
     "bootstrap-select": "^1.13.18",
     "debounce": "^2.2.0",
     "js-sha256": "^0.11.0",
+    "npm": "^11.1.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.8",
     "react-dom": "^18.2.0",

@@ -126,10 +126,11 @@ public class WordServiceImpl implements WordService {
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             Map<String, String> rowData = new HashMap<>();
-            for (int j = 0; j < row.getLastCellNum(); j++) {
+            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
                 Cell cell = row.getCell(j);
                 if (cell != null){
                     if (cell.getCellType() == CellType.STRING) {
+                        log.info("Data is {}", cell.getStringCellValue());
                         rowData.putIfAbsent(header.getCell(j).getStringCellValue(), cell.getStringCellValue());
                     } else if (cell.getCellType() == CellType.NUMERIC) {
                         rowData.putIfAbsent(header.getCell(j).getStringCellValue(), String.valueOf(cell.getNumericCellValue()));
@@ -367,11 +368,12 @@ public class WordServiceImpl implements WordService {
 
     private NiceXWPFDocument generateDocument(List<List<String>> data, File fileTemplate) {
         NiceXWPFDocument document = null;
+        log.info("Size of array is {}", data.get(0).size());
 
         try {
             List<NiceXWPFDocument> documents = new ArrayList<>();
 
-            for (int i = 0; i < data.size() - 1; i++) {
+            for (int i = 0; i < data.size(); i++) {
                 List<String> arr = data.get(i);
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
@@ -390,6 +392,7 @@ public class WordServiceImpl implements WordService {
                 addPageBreak(tempDoc, i, data.size());
                 documents.add(tempDoc);
             }
+
 
             document = documents.get(documents.size() - 1);
             documents.remove(documents.size() - 1);
@@ -456,12 +459,13 @@ public class WordServiceImpl implements WordService {
             map = (Map<String, String>) restTemplate.getForObject(sqlLocation + "/api/v1/get-department-and-orientation/" + studNumber, Map.class);
             departmentName = map.get("Department");
             orientationCodeWithName = map.get("Orientation");
-            log.info("After transfering REST GET method");
+            log.info("After transfering REST GET method with map {}", map);
         } catch (RestClientException e){
             log.warn("RestClientException: {}", e.getMessage());
         }
+
         log.info("DeparmentName and orientationCodeWithName: {}; {}", departmentName, orientationCodeWithName);
-        if (departmentName != null && !departmentName.equals("?")) {
+        if (departmentName != null && !departmentName.equals("?") && !departmentName.isEmpty()) {
             dataMap.put("Department", departmentName);
         } else if (arr.size() > 29 && !arr.get(29).equals("?")) {
               dataMap.put("Department", arr.get(29));
@@ -470,15 +474,18 @@ public class WordServiceImpl implements WordService {
         }
         log.info("Department is {}", dataMap.get("Department"));
 
-        if (orientationCodeWithName != null && !orientationCodeWithName.equals("?")) {
+        if (orientationCodeWithName != null && !orientationCodeWithName.equals("?") && !orientationCodeWithName.isEmpty()) {
             dataMap.put("Orientation", orientationCodeWithName);
         } else if (arr.size() > 30 && !arr.get(30).equals("?")) {
             dataMap.put("Orientation", arr.get(30));
         } else {
             dataMap.put("Orientation", "?");
         }
-        log.info("Department is {}", dataMap.get("Orientation"));
+        log.info("Orientation is {}", dataMap.get("Orientation"));
 
+        if (arr.get(32) != null && !arr.get(32).isEmpty()){
+            dataMap.put("Program", arr.get(32));
+        }
         dataMap.put("Answer1", "?");
         dataMap.put("Answer2", "?");
         dataMap.put("Answer3", "?");
@@ -506,6 +513,7 @@ public class WordServiceImpl implements WordService {
     @Async("asyncTaskExecutor")
     @Override
     public CompletableFuture<Void> saveDataAsync(Map<String, Object> dataMap) {
+        log.info("In saving data");
         String studentNumber = String.valueOf(dataMap.get("StudNum"));
 
         log.info("Tring to save data with studentNumber: ", studentNumber);

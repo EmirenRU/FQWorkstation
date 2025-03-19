@@ -268,7 +268,7 @@ public class SqlServiceImpl implements SqlService {
         }).toList();
 
         log.info("The result is {} empty", res.isEmpty());
-
+        log.info("The result is {}", res);
         log.info("Async getLecturer task has completed");
         return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.OK).body(gson.toJson(payloads)));
     }
