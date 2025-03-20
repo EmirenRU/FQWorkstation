@@ -7,6 +7,7 @@ import io.gatling.javaapi.http.HttpProtocolBuilder;
 
 import java.util.List;
 
+import static io.gatling.javaapi.core.CoreDsl.StringBody;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
@@ -15,19 +16,16 @@ public class SimulationTests extends Simulation {
 
     private final HttpProtocolBuilder httpProtocol = http
             .baseUrl("http://localhost:13131")
-            .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-            .contentTypeHeader("application/x-www-form-urlencoded");
+            .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/json")
+            .contentTypeHeader("application/json");
 
     ScenarioBuilder scenarioBuilder = scenario("Lecturers test")
-            .exec(http("Get Test").get("/sql/lecturers")
+            .exec(http("Get Test").get("/api/v2/receive-selectors")
                     .check(status().is(200)) )
             .pause(5)
             .exec(
-                http("Post Test with getting tables").post("/sql/lecturers")
-                        .formParam("orientation", List.of("02.03.02","02.04.02"))
-                        .formParam("department", List.of("1"))
-                        .formParam("from", "2020")
-                        .formParam("to", "2023")
+                http("Post Test with getting tables").post("/api/v1/receive-by-params")
+                        .body(StringBody("{\"orientation\": [], \"department\": [], \"from\": \"2019\", \"till\": \"2025\", \"themes\": []}")).asJson()
                         .check(status().is(200))
             );
     {
