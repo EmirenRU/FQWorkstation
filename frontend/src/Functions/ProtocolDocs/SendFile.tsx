@@ -4,6 +4,7 @@ import uploadSvg from './upload.svg';
 import downloadSvg from './download.png';
 import xlsxIcon from './xlsx_icon.svg.png'
 import docxIcon from './docx_icon.svg.png'
+import closeIcon from './close.btn.png'
 import { handleUpload, getDataFile } from "./Hash";
 import { downloadTableTemplate } from "../../api/dowloadApi";
 import NProgress from 'nprogress';
@@ -57,6 +58,11 @@ export const SendFile = () => {
         getDataFile();
     }
 
+    useEffect(() => {
+        // Update the ready state based on the presence of file or template
+        setReady(file !== null || template !== null);
+    }, [file, template])
+
 
     function uploadDocs() {
         console.log("Sending ", template, "<-TMP File->", file);
@@ -67,13 +73,13 @@ export const SendFile = () => {
     }
 
     return (
-        <main>
-            <div className="container">
-                <div className="send__file__container">
+        <main style={{display: "flex"}}>
+            <div className="container" style={{display: "flex", padding: 0}}>
+                <div className="send__file__container col-xl-10">
                     <div className="send__file__section">
                         <div className="send__file__inside">
                             <div className="send__file-top col-xl-12">
-                                <div className="col-xl-6 text__section">
+                                <div className="col-xl-5 text__section">
                                     <h2 className="send__file__section-description">
                                         Работа с протоколами
                                     </h2>
@@ -95,13 +101,13 @@ export const SendFile = () => {
                                             style={{ display: 'none' }}
                                             type="file"
                                             onChange={e => handleFileChange(e, 'template')}
-                                            accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                            accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                         />
                                         <label htmlFor="template-input" className="input__file-button" style={{ maxWidth: "220px" }}>
                                     <span className="input__file-icon-wrapper">
                                         <img className="input__file-icon" src={uploadSvg} alt="Word файл" width="25" />
                                     </span>
-                                            <span className="input__file-button-text">Выберите файл шаблона</span>
+                                            <span className="input__file-button-text">Выберите шаблон</span>
                                         </label>
                                     </div>
 
@@ -136,10 +142,12 @@ export const SendFile = () => {
                                 <div style={{ display: "flex", justifyContent: "center" }}>
                                     {template && (
                                         <section>
-                                            Template details:
-                                            <ul style={{ listStyle: "none", fontSize: "10px" }}>
+                                            <ul style={{ listStyle: "none", fontSize: "10px", padding: "0" }}>
                                                 <li>
-                                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative", width: "50px" }}>
+                                                <button className="delete__file" onClick={ ()=> {setTemplate(() =>null)}}>
+                                                        <img src={closeIcon} width={"10px"}/>
+                                                    </button>
                                                         {getExtension(template.name)?.toLowerCase() === "docx" ? (
                                                             <img src={docxIcon} style={{ maxWidth: "40px" }} />
                                                         ) : (
@@ -153,10 +161,13 @@ export const SendFile = () => {
                                     )}
                                     {file && (
                                         <section>
-                                            File details:
+
                                             <ul style={{ listStyle: "none", fontSize: "10px" }}>
                                                 <li>
-                                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", position: "relative", width: "50px" }}>
+                                                    <button className="delete__file" onClick={ ()=> {setFile(() =>null)}}>
+                                                        <img src={closeIcon} width={"10px"}/>
+                                                    </button>
                                                         {getExtension(file.name)?.toLowerCase() === "docx" ? (
                                                             <img src={docxIcon} style={{ maxWidth: "40px" }} />
                                                         ) : (
@@ -178,27 +189,37 @@ export const SendFile = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="file-collection">
-                <h3>Доступные файлы для загрузки</h3>
+
+                <div className="file__collection col-xl-2">
+                    <div className="file__collection__inside">
+                <h3 style={{fontSize: "26px", marginBottom: "40%"}} className="send__file__section-description">Доступные файлы</h3>
                 <ul style={{ listStyle: "none", padding: 0 }}>
-                    <li>
-                        <a href="/template.xlsx" className="file-link" download>
-                            Шаблон 1 (Excel файл)
+                    <li style={{marginBottom: "12%"}}>
+                        <a href="/template.xlsx" className="file-link" download style={{display: "flex", flexDirection:"column", alignItems:"center"}}>
+                        <img src={xlsxIcon} style={{ maxWidth: "40px" }} />
+                        <span> Шаблон 1 (Excel файл)</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/template_1.docx" className="file-link" download>
-                            Шаблон 2 (Word файл)
+                    <li style={{marginBottom: "12%"}}>
+                        <a href="/template_1.docx" className="file-link" download style={{display: "flex", flexDirection:"column", alignItems:"center"}}>
+                        <img src={docxIcon} style={{ maxWidth: "40px" }} />
+                        <span>Шаблон 2 (Word файл)</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/template_2.docx" className="file-link" download>
-                            Шаблон 3 (Word файл)
+                    <li style={{marginBottom: "12%"}}>
+                        <div>
+                        <a href="/template_2.docx" className="file-link" download style={{display: "flex", flexDirection:"column", alignItems:"center"}}>
+                        <img src={docxIcon} style={{ maxWidth: "40px" }} />
+                           <span> Шаблон 3 (Word файл)</span>
                         </a>
+                        </div>
                     </li>
                 </ul>
+                </div>
             </div>
+
+            </div>
+
         </main>
 
     );

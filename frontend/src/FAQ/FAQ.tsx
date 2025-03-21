@@ -12,18 +12,19 @@ import img9 from "./Images/9.jpg"
 export const FAQ = () => {
     return(
         <main>
-        <div className="container-fluid instruction-container ">
+        <div className="container instruction-container ">
 
 
 
 
-    <div className=" container-fluid  instruction">
+    <div className=" container-fluid col-xl-12  instruction">
         <div className="container show__container">
-
-        <h1 className="manual__header-main"> Инструкция по использованию сервиса</h1>
+        <div style={{display: "flex"}}>
+        <h1 className="manual__header-main" style={{fontSize:"48px", color: "#1260c7"}}> Инструкция по использованию сервиса</h1>
+        </div>
 
         <div className="text-space">
-        <h3 className="manual__header">
+        <h3 className="manual__header" >
             Добро пожаловать на страницу с инструкцией к сервису FQW Workstation.
             </h3>
 
@@ -38,7 +39,7 @@ export const FAQ = () => {
              </div>
              </div>
 
-             <h3 className="manual__header" id="show"> Просмотр данных ВКР</h3>
+             <h3 className="manual__header" id="show" style={{  color: "#1260c7"}}> Просмотр данных ВКР</h3>
         <div className="container show__container">
              <p className="instruction-text"><strong>1. перейти на главную страницу сервиса</strong></p>
              <Accordion>
@@ -97,7 +98,7 @@ export const FAQ = () => {
 
                 </div>
 
-                <h2 id="export" className="manual__header">Экспорт данных </h2>
+                <h2 id="export" className="manual__header" style={{  color: "#1260c7"}}>Экспорт данных </h2>
                 <div className="container show__container">
                 
                 <p className="instruction-text">
@@ -201,15 +202,13 @@ export const FAQ = () => {
 
                 </div>
     </div>
-    <aside className="aside__menu">
+    <aside className="aside__menu col-xl-2">
             <div className="aside__menu__container">
-                <h3>Navigation</h3>
-            <ul className="aside__link__list">
 
-            <a href="#show">Просмотр</a>
-            <a href="#export">Экспорт данных</a>
 
-            </ul>
+            <a className="aside__nav__link" href="#show" style={{position: "absolute", top: "4%", right:"20%"}}>Просмотр</a>
+            <a className="aside__nav__link" href="#export" style={{position: "absolute", top: "20%", right:"20%"}}>Экспорт данных</a>
+
 
             </div>
         </aside>
