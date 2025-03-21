@@ -104,7 +104,45 @@ $ cd docker ; docker-compose up --build (Windows)
 
 
 ## Frontend Structure
-
+- f/
+    - src/
+      - api/
+          - getData.tsx: Used for Lecturers table and selectors.
+          - downloadApi.tsx: used for downloading template files.
+          - queryClient.tsx: used for form validation on support page.
+          - SelectorData.json: fake selector data for test purposes.
+          - data.json: fake table data for test purposes.
+          - send.tsx: used for sending messages on support page.
+      - assets/ (Images that are used globally)
+      -  button/
+          - button.tsx: Used for support form.
+      - FAQ/
+          - faq.css: stylesheet for manual page.
+          - FAQ.tsx: contains the page logic and structure.
+              - images/: screenshots used for manual page.
+      - FormField/
+          - FormField.tsx: used as building block for support form.
+      - Functions/
+          - ProtocolDocs/
+              - hash.tsx: used for file hash generation and sending files.
+              - sendFile.css: stylesheet for page.
+              - sendFile.tsx: contains logic and structure for page .
+                (the rest files are the image resources for the exact specific page)
+          - ProtocolForm/
+              - FormPages/
+                  - ComissionData.tsx: contains logic and structure for Comission data page.
+                  - FQWdata.tsx: contains logic and structure for FQW data page.
+                  - ProtocolData.tsx: contains logic and structure for Protocol data.
+                  - ReviewerData.tsx: contains logic and structure for Reviewer data page.
+                  - StudentData.tsx: contains logic and structure for Student data page.
+                  - TeachersData.tsx: contains logic and structure for Teacheers data page.
+              - FormWrapper/
+                  - FormWrapper.tsx: wrapper for multistep form.
+              - FormHook/
+                  - FormWrapper.tsx: hook which allows page changing functionality in the form .
+              - protocol.css: stylesheet for page.
+              - protocol.tsx: contains logic and structure for the entire multistep form
+            ( To be continued if Ivan Podlesniy remains alive)
 ## Contributing 
 
 - Emil Yusupov - Backend (Java, Spring Boot, PostgreSQL, JS, Ajax, Thymeleaf) 
