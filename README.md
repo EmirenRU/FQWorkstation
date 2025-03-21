@@ -39,6 +39,11 @@ $ ./launcher.ps1 start
 ``` bash
 $ ./launcher.sh start
 ```
+4. Run React application
+```bash
+$ cd frontend ; npm run dev (Windows)
+$ cd frontent && npm run dev (Linux)
+```
 
 ## Docker
 
@@ -52,7 +57,7 @@ $ make compose
 
 ```
 $ cd docker && docker-compose up --build (Linux)
-$ cd docker ; docker-compose up --build
+$ cd docker ; docker-compose up --build (Windows)
 ```
 
 ## Project's structure 
