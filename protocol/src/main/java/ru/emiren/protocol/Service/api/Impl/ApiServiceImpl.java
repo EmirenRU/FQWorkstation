@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -52,17 +53,20 @@ public class ApiServiceImpl implements ApiService {
     private static byte[] bytes;
     private static byte[] fileBytes;
 
+    private String sqlLocation;
+
     @Autowired
     ApiServiceImpl(
             @Qualifier("defaultTemplateResource") ClassPathResource loader,
             DownloadService downloadService,
             WordService wordService,
-            DateFormat dateFormat, RestTemplate restTemplate, Gson gson, ExcelService excelService){
+            DateFormat dateFormat, RestTemplate restTemplate, Gson gson, ExcelService excelService, String sqlLocation){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
         this.dateFormat = dateFormat;
         this.classPathResource = loader;
+        this.sqlLocation = sqlLocation;
 
         try (InputStream is = classPathResource.getInputStream();
         ByteArrayOutputStream tempBaos = new ByteArrayOutputStream()){
@@ -145,7 +149,8 @@ public class ApiServiceImpl implements ApiService {
 
         List<TableData> res = List.of();
         try {
-            String fqwLocation = "http://localhost:13131/api/v2/get-data-for-excel";
+            String fqwLocation = sqlLocation+"/api/v2/get-data-for-excel";
+            log.info("fqwLocation {}", fqwLocation);
             ResponseEntity<String> resp = restTemplate.getForEntity(fqwLocation, String.class);
             Type listType = new TypeToken<ArrayList<TableData>>() {}.getType();
             res = gson.fromJson(resp.getBody(), listType);
@@ -165,7 +170,7 @@ public class ApiServiceImpl implements ApiService {
     }
 
     /**
-     * Check if file is ready by id
+     * Check if a file is ready by id
      * @param id hashed file as ID
      * @return a ResponseEntity with a status of readiness
      */
@@ -180,7 +185,7 @@ public class ApiServiceImpl implements ApiService {
     }
 
     /**
-     * On call returns a download process of file
+     * On call returns a download process of a file
      *
      * @param id
      * @param response

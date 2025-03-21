@@ -34,14 +34,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public class WordServiceImpl implements WordService {
 
-    @Value("${server.fqw.url}")
     private String sqlLocation;
 
     private final RestTemplate restTemplate;
     private Pattern pattern = Pattern.compile("[\\d]{2}[.][\\d]{2}[.][\\d]{2}");
 
     @Autowired
-    public WordServiceImpl(ResourceLoader resourceLoader, RestTemplate restTemplate) {
+    public WordServiceImpl(ResourceLoader resourceLoader, String sqlLocation, RestTemplate restTemplate) {
+        this.sqlLocation = sqlLocation;
         log.info("Loading Word Service");
         log.info("FQW Location: {}", sqlLocation);
         this.restTemplate = restTemplate;
