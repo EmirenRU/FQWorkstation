@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  nginx:
+    build:
+      context:
+        ../frontend
+    ports:
+      - "80:80"
+    links:
+      - fqw
+      - support
+      - protocol
   db:
     build:
       context:  ../db
@@ -21,14 +31,13 @@ services:
       - db
     volumes:
       - ../fqw/src/main/resources:/app/resources/
-
     environment:
       - SPRING_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/fqworkstation
       - SPRING_DATASOURCE_USERNAME=temp
       - SPRING_DATASOURCE_PASSWORD=temp
       - SPRING_SECOND_DATASOURCE_USERNAME=temp
       - SPRING_SECOND_DATASOURCE_PASSWORD=temp
-#      TEMPLATE_FILE_PATH: /app/template.docx
+      #      TEMPLATE_FILE_PATH: /app/template.docx
       - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
       - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
       - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
@@ -41,6 +50,12 @@ services:
       - "13134:13134"
     volumes:
       - ../protocol/src/main/resources:/app/resources/
+    environment:
+      - SERVER_FQW_URL=http://fqw:13131
+    links:
+      - fqw
+    depends_on:
+      - fqw
   support:
     build: ../support
     ports:
@@ -61,15 +76,6 @@ services:
     ports:
       - "13136:13136"
 
-  nginx:
-    build:
-      context:
-        ../frontend
-    ports:
-      - "80:80"
-    links:
-      - fqw
-      - support
-      - protocol
+
 volumes:
   db-data:
