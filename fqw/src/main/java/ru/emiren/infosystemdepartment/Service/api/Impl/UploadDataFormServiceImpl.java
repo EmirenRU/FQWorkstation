@@ -168,12 +168,14 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         StudentLecturers studentLecturers = studentLecturersService
                 .findStudentLecturersByStudentStudNumAndLecturerName(student.getStud_num(),
                         lecturer.getName());
+
         if (studentLecturers == null) {
             studentLecturers = new StudentLecturers();
             Long id = studentLecturersService.getMaxId();
             if (id != null) { studentLecturers.setId(id+1); }
             studentLecturers.setId(id);
-
+            studentLecturers.setIsConsultant(Boolean.valueOf(request.get("isConsultant")));
+            studentLecturers.setIsScientificSupervisor(Boolean.valueOf(request.get("isScientificSupervisor")));
             studentLecturers.setStudent(student);
             studentLecturers.setLecturer(lecturer);
             log.info("In process of saving StudentLecturers with lecturer's id {} and student's id {}", lecturer.getId(), student.getId());
