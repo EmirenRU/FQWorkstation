@@ -56,7 +56,7 @@ export const SendFile = () => {
 
     useEffect(() => {
         // Update the ready state based on the presence of file or template
-        setReady(file !== null && template !== null);
+        setReady(file !== null );
     }, [file, template])
 
 
