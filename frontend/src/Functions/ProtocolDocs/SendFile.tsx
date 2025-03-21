@@ -44,11 +44,7 @@ export const SendFile = () => {
     }
 
     // const sleep = (ms : number) => new Promise(resolve => setTimeout(resolve, ms));
-    useEffect(() => {
-        if (file) {
-            setReady(true);
-        }
-    }, [file, template]); // Dependency array ensures this runs only when `file` changes
+// Dependency array ensures this runs only when `file` changes
 
     const handleTemplateDownload = (id: string) => {
         downloadTableTemplate(id);
