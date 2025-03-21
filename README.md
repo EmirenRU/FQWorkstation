@@ -59,6 +59,10 @@ $ make compose
 $ cd docker && docker-compose up --build (Linux)
 $ cd docker ; docker-compose up --build (Windows)
 ```
+### By using PowerShell
+- Proceed to the Docker folder
+- To start the application run "docker-start.ps1" as PowerShell script
+- To remove the application from Docker run "docker-remove.ps1" as PowerShell script
 
 ## Project's structure 
 
