@@ -60,7 +60,7 @@ public class ApiServiceImpl implements ApiService {
      * Handles a message from console for CRUD operation
      *
      * @param message
-     * @return a ResponseEntity with status of query
+     * @return a ResponseEntity with status of a query
      */
     @Override
     @Async

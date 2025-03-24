@@ -144,7 +144,7 @@ public class ApiServiceImpl implements ApiService {
         }
     }
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     @Override
     public void updateFileBytes(){
 
@@ -164,6 +164,7 @@ public class ApiServiceImpl implements ApiService {
             XSSFWorkbook result = excelService.generateExcelFile(res);
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream()){
                 result.write(baos);
+                log.info("Writing data into fileBytes");
                 fileBytes = baos.toByteArray();
             } catch( IOException e){ log.error(e.getMessage()); }
         }

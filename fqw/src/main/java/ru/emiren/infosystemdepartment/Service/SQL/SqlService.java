@@ -23,7 +23,7 @@ public interface SqlService {
     String getLecturers(HttpServletRequest request,
                                Model model);
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */2 * * * *")
     void updateSqlDataPayload();
 
     String getDetailPage(HttpServletRequest request, Model model, String id);

@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
@@ -380,7 +378,7 @@ public class SqlServiceImpl implements SqlService {
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(sqlDataPayload));
     }
 
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 */2 * * * *")
     @Override
     @Async
     public void updateSqlDataPayload(){
@@ -488,19 +486,20 @@ public class SqlServiceImpl implements SqlService {
             log.info("4");
 
             String headOfSU = "";
-            String[] suNames = ((String)data.get("SuName")).replaceAll(";", ",").split(",");
+            String[] suNames = ((String)data.get("SuName")).replaceAll(".\n", ".,").replaceAll("\n", "").replaceAll(";", ",").split(",");
             if (suNames.length >= 1) {
                 String[] datOr = ((String) data.get("SuData")).split(";");
                 for (int i = 0; i < suNames.length; i++) {
                     if (i == 0){
                         headOfSU = suNames[i];
                     }
-                    Lecturer lecturer = lecturerService.findByLecturerName(suNames[i]);
+                    Lecturer lecturer = lecturerService.findByLecturerName(suNames[i].trim());
                     if (lecturer == null) {
                         lecturer = new Lecturer();
                         Long id = lecturerService.getMaxId();
                         log.info("id is {}", id);
-                        lecturer.setName(suNames[i]);
+
+                        lecturer.setName(suNames[i].trim());
                         List<String> dat;
                         if (datOr.length > 1) {
                             dat = List.of(String.valueOf(datOr[i]).split(","));
@@ -512,18 +511,25 @@ public class SqlServiceImpl implements SqlService {
                         String pos = "";
                         if (dat.size() == 2) {
                             adPdep = dat.getFirst().trim();
-                            pos = dat.getLast().trim();
+                            pos = dat.getLast().replaceAll(adPdep, ",").trim();
                         } else if (dat.size() == 3) {
+                            log.info("dat: {}", dat.stream().toList());
                             adPdep = dat.getFirst().trim();
-                            pos = dat.get(1) + dat.getLast().trim();
+                            pos = (dat.getLast()).trim();
                         } else if (dat.size() == 1) {
                             adPdep = "";
                             pos = "";
                         }
+
+
                         if (pos != null)
-                            lecturer.setPosition(pos);
+                            lecturer.setPosition(pos.trim());
                         if (adPdep != null)
-                            lecturer.setAcademicDegree(adPdep);
+                            lecturer.setAcademicDegree(adPdep.trim());
+                        if (suNames[i].contains("Консультант") || suNames[i].contains("консультант ")){
+                            lecturer.setName(suNames[i].replace("консультант", "").replace("Консультант ", "").trim());
+                            lecturer.setPosition("Консультант");
+                        }
                         log.info("pre-saving the lecturer: {} {}", lecturer.getName(), lecturer.getPosition());
                         lecturerService.saveLecturer(lecturer);
                     }

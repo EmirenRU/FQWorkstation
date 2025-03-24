@@ -12,7 +12,7 @@ public interface ApiService {
     ResponseEntity<?> handleFileUpload(MultipartFile file, String fileId);
     ResponseEntity<?> handleFileUploadWithTemplate(MultipartFile file, MultipartFile template, String fileId);
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     void updateFileBytes();
 
     ResponseEntity<?> checkFileAvailability(String id);
