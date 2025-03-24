@@ -88,7 +88,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
         try {
             console.log("In try section of fetch data");
             // const result = await getFakeSelectorData();
-            const result = await getFakeSelectorData();
+            const result = await getSelectors();
             console.log("Parsed", result);   
             
             if (result && result.department && result.orientation && result.student && result.theme) {
