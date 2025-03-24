@@ -21,10 +21,8 @@ interface SaveEntry {
 
   const savedData:Array<SaveEntry> = [];
 
-
 export const saveInputs = (name:string, value: object, flag?:string) =>{
-    console.log("flag is",flag)
-    console.log(Object.values( value));
+
     const saveEntry: SaveEntry = {
         name: name,
         value: value
@@ -34,8 +32,6 @@ export const saveInputs = (name:string, value: object, flag?:string) =>{
             const idVal:string = "#" + name;
             const selectedItem= $(idVal).val();
 
-            console.log("Compare values ", (saveEntry)," and ",  selectedItem)
-            //checking if loading state or fresh selection
             if(flag === undefined && typeof selectedItem === "object"){
             saveEntry.value = selectedItem;
 
@@ -50,15 +46,10 @@ export const saveInputs = (name:string, value: object, flag?:string) =>{
         
         savedData.splice(savedData.indexOf(searchSimilar),1);
         savedData.push(saveEntry);
-        console.log('Saved data ', savedData);
+
     }
     const data = dataToJson(savedData);
     console.log('All data ', getLocalData('Restore data'));
     localStorage.setItem('Restore data', data);
-    console.log('DATA STRINIGIFIED :', data);
-    console.log(savedData)
-
-
-
 
 }

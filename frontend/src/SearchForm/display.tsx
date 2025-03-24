@@ -9,7 +9,6 @@ interface ToggleDisplayAndSaveStateProps {
     setReady: React.Dispatch<React.SetStateAction<string>>;
 }
 
-// Apply the types to the component
 export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ signal, setReady }) => {
     console.log("recevide signal ", signal);
     ///changed
@@ -41,23 +40,20 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
         }
     }
 
-    signal === "display" ? fetchData():console.log("not display");
-
-
+    useEffect(() => {
+        if (signal === "display") {
+            fetchData();
+        }
+    }, [signal]);
 
     useEffect(()=>{
         console.log("signal",signal)
-        fetchData()
-
         console.log("loading state", loading);
         console.log("PDL", sortedData.length);
         if(parsedData.length != 0){
             setLoading(false)
         }
     },[])
-
-
-
 
     function handleDownloadExcel() {
         //  createTableBody(sortedData);
@@ -96,10 +92,7 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
             ]);
             setTableBody(tmpBody);
             console.log("TMP BODY IS", tmpBody)
-        }
-    }
-
-
+        }    }
 
 
     const handleSort = (key: keyof DTO) => {
@@ -117,13 +110,13 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
     };
 
     if (error) {
-        return <div>Error: {error}</div>; // Show an error message
+        return <div>Error: {error}</div>; 
     }
     if (signal === "display") {
-        return <div>Loading...</div>; // You can replace this with a spinner or any loading component
+        return <div>Loading...</div>; 
     }
 
-    //changed
+
     return (<>
         {loading ? <span> wait a little  more</span> :
             <div className='container-fluid display-section'>
@@ -142,10 +135,10 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
                     </thead>
                     <tbody>
                         {sortedData.map((value, index) => (
-                            <tr className="tr-table" key={index}> {/* Use index as key, but ideally use a unique identifier */}
+                            <tr className="tr-table" key={index}> 
                                 <td className="td-table lecturer_name">{value.fullLecturerName}</td>
                                 <td className="td-table academic_degree">{value.academicDegree}</td>
-                                <td className="td-table lecturer_position">{value.position}</td> {/* Corrected to use position */}
+                                <td className="td-table lecturer_position">{value.position}</td> 
                                 <td className="td-table department_name">{value.department}</td>
                                 <td className="td-table student_name">{value.fullStudentName}</td>
                                 <td className="td-table stud_num">{value.studNum}</td>
@@ -164,4 +157,3 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
 
 }
 
-//{display ? <span>Amogus</span> : <span>sus</span>}

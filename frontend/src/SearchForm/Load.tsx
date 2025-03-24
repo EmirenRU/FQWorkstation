@@ -1,9 +1,8 @@
 import  { useState, useEffect, FC} from 'react';
 import { saveInputs } from './Save';
-
 import { useFormContext } from '../context';
 // import { getFakeSelectorData } from "../api/getData.tsx";
-import { getSelectors } from "../api/getData.tsx";
+import { getFakeSelectorData, getSelectors } from "../api/getData.tsx";
 
 declare global {
     interface JQuery {
@@ -68,7 +67,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
     const [Departments, setDepartments] = useState < DepartmentProps []>([])
     const [Orientations, setOrientations] = useState<OrientationProps[]>([]);
     const [Teachers, setTeachersData] = useState< TeachersProps []>([])
-    const [Themes, seThemes] = useState< ThemeProps []>([])
+    const [Themes, setThemes] = useState< ThemeProps []>([])
     //
 
 
@@ -89,11 +88,11 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
         try {
             console.log("In try section of fetch data");
             // const result = await getFakeSelectorData();
-            const result = await getSelectors();
-            console.log("Parsed", result); // Log the result to verify its structure
+            const result = await getFakeSelectorData();
+            console.log("Parsed", result);   
             
             if (result && result.department && result.orientation && result.student && result.theme) {
- {
+            {
                      const DepartmentData: Array<DepartmentProps> = result.department.map((obj: { value: string; name: string; }) => ({
                          departmentValue: obj.value,
                          departmentName: obj.name,
@@ -117,7 +116,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
                     setDepartments( DepartmentData);
                     setOrientations(OrientationData);
                     setTeachersData(TeachersData);
-                    seThemes(ThemesData)
+                    setThemes(ThemesData)
                     console.log("Parsed Data :", Departments, Orientations, Themes)
                 }
             } else {
@@ -330,9 +329,6 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
             <div className="selector-patch-2 margin-fix">
                 <label className="selection-param">Науч рук
                     <select name="lecturer" className="selectpicker" onChange={handleInputChange} value={lecturerData} id="lecturer" multiple data-live-search="true" data-actions-box="true" data-select-all-text="Выбрать все" data-deselect-all-text="Снять все">
-                        <option value="-1">
-                            Выберите преподавателя
-                        </option>
                         {selectorsStatus ? (
                             Teachers.map((init) => (
                                 <option key={init.studentName} value={init.studentValue}>

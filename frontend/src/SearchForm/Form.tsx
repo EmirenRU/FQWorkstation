@@ -1,8 +1,9 @@
-import { FormContent } from "./FormContent"
+
 import './Form.css' 
 import { FormEvent, useEffect, useState } from "react";
 import { useFormContext } from "../context";
 import { ToggleDisplayAndSaveState } from "./display";
+import { LoadSaved } from "./Load";
 
 export const SearchForm = () => {
     const { formData } = useFormContext();
@@ -28,7 +29,7 @@ export const SearchForm = () => {
                 <div className="form-space flex">
                     <form method="post" className="form-body" onSubmit={handleSubmit}>
 
-                    <FormContent  signal={signal} setReady={setReady}/>
+                    <LoadSaved  signal={signal} setReady={setReady}/>
                     </form>
 
                 </div>

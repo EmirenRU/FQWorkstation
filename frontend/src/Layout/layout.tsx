@@ -14,10 +14,10 @@ export const PageLayout = () => {
             <Routes>
                 <Route path="/lecturers" Component={Lecturers} />
                 <Route path="/faq" Component={FAQ} />
-                <Route path="/support"  element={<Support  />} />
+                <Route path="/support"  element={<Support/>} />
                 <Route path="/protocol" Component={Protocol} />
                 <Route path = "/sendFile" Component={SendFile}/>
-                <Route path="/" Component={Lecturers} /> {/* По умолчанию отображаем Lecturers */}
+                <Route path="/" Component={Lecturers} /> 
             </Routes>
             <Footer />
         </Router>
