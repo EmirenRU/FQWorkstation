@@ -98,7 +98,9 @@ public class ExcelServiceImpl implements ExcelService {
         row.createCell(2, CellType.STRING).setCellValue(tableData.getTheme());
         row.createCell(3, CellType.NUMERIC).setCellValue(tableData.getStudNum());
         row.createCell(4, CellType.STRING).setCellValue(tableData.getFullLecturerName());
-        row.createCell(5, CellType.STRING).setCellValue(tableData.getPosition() + ", " + tableData.getAcademicDegree());
+        if (!tableData.getPosition().isEmpty() && !tableData.getAcademicDegree().isEmpty()) {
+            row.createCell(5, CellType.STRING).setCellValue(tableData.getPosition() + ", " + tableData.getAcademicDegree());
+        }
         row.createCell(6, CellType.STRING).setCellValue(tableData.getDepartment());
         row.createCell(7, CellType.STRING).setCellValue(tableData.getNumberOfDecree());
         row.createCell(8, CellType.STRING).setCellValue(tableData.getCitizenship());

@@ -2,8 +2,8 @@
 
 ## Branches
 
-- Monolith : (Thymeleaf and HTML templates). Needs some correcting to match up to the features from microservices branch
-- Microservices : React + Spring (REST) and modules separation
+- Monolith: (Thymeleaf and HTML templates). Needs some correcting to match up to the features from microservices branch
+- Microservices: React + Spring (REST) and modules' separation
 
 ## Requirements
 ### The traditional way
@@ -20,7 +20,7 @@
 ### The traditional Way
 1. Install requirements from https://github.com/EmirenRU/FQWorkstation/releases/tag/installer-windows
 
-2. To create a jar you need to
+2. To create a jar, you need to
 
 ```bash
 $ mvn install && mvn package
@@ -70,13 +70,13 @@ $ cd docker ; docker-compose up --build (Windows)
     - main/
       - java/ru.emiren.infosystemdepartment
           - Config: Used for Spring Configuration (like adding another DB to the project or rewriting Spring Framework's properties)
-          - Controller: Main dealers with providing pages to the clients or getting info from them, processing and sending to Services, if it's required.
+          - Controller: Main dealers with providing pages to the clients or getting info from them, processing and sending to Services if it's required.
           - DTO: (Data Transfer Object) is used when you don't want to disturb the DB with moving data from creating to processing.
           - Mapper: Model2DTO or DTO2Object. Simply converter.
           - Model: Spring uses it to create abstract tables into the DB.
-          - Properties: Mappers with properties, if in the project possible to use one property many times it's better to create there than create each time.
-          - Repository: Conversation between App and DB. Get me that, Create object in there or custom queries. (Object)Repository Limited.
-          - Service: Required to not disturb controllers, if the controller will be disturbed with things that it does not need to do, better to place into Service. 
+          - Properties: Mappers with properties, if in the project possible to use one property many times, it's better to create there than create each time.
+          - Repository: Conversation between App and DB. Get me that, Create an object in there or custom queries. (Object)Repository Limited.
+          - Service: Required to not disturb controllers, if the controller is disturbed with things that it does not need to do, better to place into Service. 
           - Util: Additional utilities to the project, by the start it's only for converting date.
           - InfoSystemDepartmentApplication.java: used for starting the Spring-Boot
       - resources
@@ -90,16 +90,16 @@ $ cd docker ; docker-compose up --build (Windows)
 - libs/: additional package that can't be downloaded through maven repository
 - logs/: logs
 - docker/: for creating docker image or sets of images
-- ps1/: Powershell scripts for Windows Installer (needs to automation the process)
+- ps1/: PowerShell scripts for Windows Installer (needs to automation the process)
 - db/: scripts for deploying PostgreSQL in docker
 - docker-build/: folder to create the docker build installer and archive it to .7z
 
 ## Module Structure
 
 - fqw: The Core. It keeps the data of FQW and do SQL transactions. 
-- protocol: Proceeding the files (Decrees and Tables) and generates protocol (get data from FQW and sends data to keep in system)
+- protocol: Processing the files (Decrees and Tables) and generates protocol (get data from FQW and sends data to keep in the system)
 - support: The module for supporting customers' tickets (not finished: hub, processing, connecting to "email") 
-- email: The module allows to proceed the incoming messages to the client. 
+- email: The module allows processing the incoming messages to the client. 
 - auth: The module for authentication (α version)
 
 

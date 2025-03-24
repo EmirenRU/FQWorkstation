@@ -487,44 +487,61 @@ public class SqlServiceImpl implements SqlService {
             }
             log.info("4");
 
-            Lecturer lecturer = lecturerService.findByLecturerName((String) data.get("SuName"));
-            if (lecturer == null) {
-                lecturer = new Lecturer();
-                Long id = lecturerService.getMaxId();
-                log.info("id is {}", id);
-//                if (id != null) {lecturer.setId(id +1);}
-                lecturer.setName((String) data.get("SuName"));
-                List<String> dat = List.of(String.valueOf(data.get("SuData")).split(","));
-                String adPdep = "";
-                String pos = "";
-                if (dat.size() == 2) {
-                    adPdep = dat.getFirst();
-                    pos = dat.getLast();
-                } else if (dat.size() == 3) {
-                    adPdep = dat.getFirst();
-                    pos = dat.get(1) + dat.getLast();
-                } else if (dat.size() == 1) {
-                    adPdep = "";
-                    pos = "";
+            String headOfSU = "";
+            String[] suNames = ((String)data.get("SuName")).replaceAll(";", ",").split(",");
+            if (suNames.length >= 1) {
+                String[] datOr = ((String) data.get("SuData")).split(";");
+                for (int i = 0; i < suNames.length; i++) {
+                    if (i == 0){
+                        headOfSU = suNames[i];
+                    }
+                    Lecturer lecturer = lecturerService.findByLecturerName(suNames[i]);
+                    if (lecturer == null) {
+                        lecturer = new Lecturer();
+                        Long id = lecturerService.getMaxId();
+                        log.info("id is {}", id);
+                        lecturer.setName(suNames[i]);
+                        List<String> dat;
+                        if (datOr.length > 1) {
+                            dat = List.of(String.valueOf(datOr[i]).split(","));
+                        } else {
+                            dat = List.of(String.valueOf(data.get("SuData")).split(","));
+                        }
+                        log.info("dat is {}", dat);
+                        String adPdep = "";
+                        String pos = "";
+                        if (dat.size() == 2) {
+                            adPdep = dat.getFirst().trim();
+                            pos = dat.getLast().trim();
+                        } else if (dat.size() == 3) {
+                            adPdep = dat.getFirst().trim();
+                            pos = dat.get(1) + dat.getLast().trim();
+                        } else if (dat.size() == 1) {
+                            adPdep = "";
+                            pos = "";
+                        }
+                        if (pos != null)
+                            lecturer.setPosition(pos);
+                        if (adPdep != null)
+                            lecturer.setAcademicDegree(adPdep);
+                        log.info("pre-saving the lecturer: {} {}", lecturer.getName(), lecturer.getPosition());
+                        lecturerService.saveLecturer(lecturer);
+                    }
+
+                    StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num(), lecturer.getName());
+                    if (studentLecturers == null) {
+                        studentLecturers = new StudentLecturers();
+                        Long id = studentLecturersService.getMaxId();
+                        if (id != null) {studentLecturers.setId(id +1);}
+                        studentLecturers.setLecturer(lecturer);
+                        studentLecturers.setStudent(student);
+                        studentLecturers.setIsScientificSupervisor(true);
+                        studentLecturersService.saveStudentLecturers(studentLecturers);
+                    }
                 }
-                if (pos != null)
-                    lecturer.setPosition(pos);
-                if (adPdep != null)
-                    lecturer.setAcademicDegree(adPdep);
-                log.info("pre-saving the lecturer: {} {}", lecturer.getName(), lecturer.getPosition());
-                lecturerService.saveLecturer(lecturer);
             }
 
-            StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num(), lecturer.getName());
-            if (studentLecturers == null) {
-                studentLecturers = new StudentLecturers();
-                Long id = studentLecturersService.getMaxId();
-                if (id != null) {studentLecturers.setId(id +1);}
-                studentLecturers.setLecturer(lecturer);
-                studentLecturers.setStudent(student);
-                studentLecturers.setIsScientificSupervisor(true);
-                studentLecturersService.saveStudentLecturers(studentLecturers);
-            }
+
 
 //            student.getLecturers().add(studentLecturers);
 //            lecturer.getStudents().add(studentLecturers);
@@ -541,7 +558,7 @@ public class SqlServiceImpl implements SqlService {
                 if (fqw != null && !fqw.getDecree().getTheme().trim().isEmpty() && fqw.getDecree().getTheme() != null) {
                     protocol.setFqw(fqw);
                 }
-                protocol.setHeadOfTheFQW(lecturer.getName());
+                protocol.setHeadOfTheFQW(headOfSU);
                 int scoreNum;
                 if (data.get("Score") != null && !((String) data.get("Score")).isEmpty()) {
                     String scoreDouble = data.get("Score").toString().substring(0, 3).trim(); // [0; 100]

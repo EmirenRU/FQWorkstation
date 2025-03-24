@@ -41,6 +41,7 @@ public class StudentLecturersMapper {
                 .studNum(sl.getStudent().getStud_num())
                 .citizenship(sl.getStudent().getCitizenship());
 
+
         if (sl.getStudent().getFqw() != null && sl.getStudent().getFqw().getDecree() != null) {
             builder.theme(sl.getStudent().getFqw().getDecree().getTheme());
         }

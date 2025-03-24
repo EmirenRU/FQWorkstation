@@ -64,7 +64,7 @@ public class RestProtocolController {
     }
 
     /**
-     * returns a download status of file with ID
+     * returns a download status of a file with ID
      * @param id a hash ID of a file
      * @return a ResponseEntity with a status
      */
