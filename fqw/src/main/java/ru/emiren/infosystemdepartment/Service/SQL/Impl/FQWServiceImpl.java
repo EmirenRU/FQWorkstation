@@ -43,7 +43,6 @@ public class FQWServiceImpl implements FQWService {
     }
 
     @Override
-    @Transactional
     public FQW saveFqw(FQW fqw) {
         return fqwRepository.save(fqw);
     }

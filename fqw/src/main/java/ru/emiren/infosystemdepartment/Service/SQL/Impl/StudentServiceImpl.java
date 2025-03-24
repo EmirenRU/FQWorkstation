@@ -24,7 +24,6 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    @Transactional
     public Student saveStudent(Student studentDTO) {
         return studentRepository.save(studentDTO);
     }

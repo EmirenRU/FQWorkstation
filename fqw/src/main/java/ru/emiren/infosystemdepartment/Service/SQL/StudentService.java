@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface StudentService {
 
-    @Transactional
     Student saveStudent(Student studentDTO);
     List<StudentDTO> findAllStudent();
     List<Student> findAllStudentById(Long id);

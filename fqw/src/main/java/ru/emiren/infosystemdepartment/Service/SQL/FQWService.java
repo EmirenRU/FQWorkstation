@@ -9,7 +9,6 @@ import java.util.List;
 public interface FQWService {
     List<FQWDTO> getAllFQW();
     void deleteFQW(FQW fqw);
-    @Transactional
     FQW saveFqw(FQW fqw);
     FQW    getFQW(String name);
     FQWDTO getFQWDTO(String name);

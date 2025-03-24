@@ -2,6 +2,7 @@ package ru.emiren.protocol.Service.Word.Impl;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -10,12 +11,10 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import com.deepoove.poi.XWPFTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -24,27 +23,26 @@ import org.springframework.web.client.RestTemplate;
 import ru.emiren.protocol.Service.Word.WordService;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 @Service
 @Slf4j
 public class WordServiceImpl implements WordService {
 
+    private final Gson gson;
     private String sqlLocation;
 
     private final RestTemplate restTemplate;
     private Pattern pattern = Pattern.compile("[\\d]{2}[.][\\d]{2}[.][\\d]{2}");
 
     @Autowired
-    public WordServiceImpl(ResourceLoader resourceLoader, String sqlLocation, RestTemplate restTemplate) {
+    public WordServiceImpl(ResourceLoader resourceLoader, String sqlLocation, RestTemplate restTemplate, Gson gson) {
         this.sqlLocation = sqlLocation;
         log.info("Loading Word Service");
         log.info("FQW Location: {}", sqlLocation);
         this.restTemplate = restTemplate;
+        this.gson = gson;
     }
 
     @Override
@@ -184,6 +182,8 @@ public class WordServiceImpl implements WordService {
     }
 
 
+    private String orientation = "";
+    private String program = "";
     /**
      *
      * @param tables
@@ -193,53 +193,54 @@ public class WordServiceImpl implements WordService {
         XWPFTableRow headers = t.getRow(0);
 
         headers.getTableCells().forEach(cell -> {log.info("Header: {}", cell.getText());});
-
-        // I don't remember what he is doing :(. Only remember that it contains all rows, but why is there so much maps, I simply do not know
-        // Outer map is for Orientation Code; Inner Map is for Program, And list is for structured data
         Map<String, Map<String, List<Map<String, String>>>> map = new HashMap<>();
-        String orientation = "";
-        String program = "";
+
+
         for (int i = 2; i < t.getNumberOfRows(); i++) {
-
             XWPFTableRow row = t.getRow(i);
-            if (row.getTableCells().size() == 1 ) {
+
+            if (row.getTableCells().size() == 1) {
                 String text = row.getTableCells().get(0).getText();
-
                 log.info("Was called with getTableCells.size == 1: {}", text);
-                if (text.contains("«")){
-                    program = text.substring(1, text.length() - 1);
-                    log.info("The program is {}", program);
 
-                    if (!orientation.isEmpty()) {
-                        map.putIfAbsent(orientation, new HashMap<>());
-                        map.get(orientation).putIfAbsent(program, new ArrayList<>());
-                    }
-                } if (pattern.matcher(text).find()) {
+                if (pattern.matcher(text).find()) {
                     orientation = text;
                     log.info("The orientation is {}", orientation);
+                    program = "";
                     map.putIfAbsent(orientation, new HashMap<>());
+                    continue;
+                } else if (text.contains("«")) {
+                    program = text.substring(1, text.length() - 1);
+                    log.info("The program is {}", program);
+                    map.get(orientation).putIfAbsent(program, new ArrayList<>());
+                    continue;
                 }
+
                 if (!orientation.isEmpty() && !program.isEmpty()) {
                     log.info("The orientation and program are {}, {}", orientation, program);
                 }
-//                log.info("Map is {}", map);
+                log.info("Map is {}", map);
             } else {
-                Map<String, String> keys = new HashMap<>();
-                headers.getTableCells().forEach(cells -> keys.putIfAbsent(cells.getText(), ""));
+                if (orientation.isEmpty() || program.isEmpty()) {
+                    log.warn("Skipping data row - orientation or program not set");
+                    continue;
+                }
 
-                int k = 0;
-                for (XWPFTableCell cell : row.getTableCells()) {
-                    String header = headers.getTableCells().get(k).getText();
-                    keys.put(header, cell.getText());
-                    k++;
+                Map<String, String> keys = new HashMap<>();
+                headers.getTableCells().forEach(cell -> keys.put(cell.getText(), ""));
+
+                for (int k = 0; k < row.getTableCells().size(); k++) {
+                    XWPFTableCell cell = row.getTableCells().get(k);
+                    if (k < headers.getTableCells().size()) {
+                        String header = headers.getTableCells().get(k).getText();
+                        keys.put(header, cell.getText());
+                    }
                 }
                 log.info("Keys are {}", keys);
-
-                if (map.containsKey(orientation)) {
-                    map.get(orientation).get(program).add(keys);
-                }
+                map.get(orientation).get(program).add(keys);
             }
         }
+
         log.info("The data map contains: {}", map);
         return processData(map);
     }
@@ -272,15 +273,16 @@ public class WordServiceImpl implements WordService {
          */
         int size = 1;
         log.info("Started processing data");
-        for (Map.Entry<String, Map<String, List<Map<String, String>>>> orientations : dataMap.entrySet()) {
-            List<String> dat = new ArrayList<>(Collections.nCopies(40, "?"));
-            insertAtIndex(dat,0, String.valueOf(size));
+        log.info("dataMap: {}", gson.toJson(dataMap));
 
-            insertAtIndex(dat,30 ,orientations.getKey());
+        for (Map.Entry<String, Map<String, List<Map<String, String>>>> orientations : dataMap.entrySet()) {
             for (Map.Entry<String, List<Map<String, String>>> programs : orientations.getValue().entrySet()) {
-                insertAtIndex(dat,32, programs.getKey());
                 for (Map<String, String> keys : programs.getValue()) {
+                    List<String> dat = new ArrayList<>(Collections.nCopies(42, "?"));
+                    insertAtIndex(dat,30 , orientations.getKey());
+                    insertAtIndex(dat,32, programs.getKey());
 //                    log.info("keys {}, {}, {}, {}, {}, {}", keys.get("Ф.И.О. выпускника"), keys.get("№ студ. билета"), keys.get("Тема ВКР"), keys.get("Ученая степень, должность руководителя ВКР"), keys.get("Руководитель ВКР"), keys.get("Гражданство"));
+                    insertAtIndex(dat,0, String.valueOf(size));
                     if (keys.get("Ф.И.О. выпускника").isEmpty()){ continue; }
                     insertAtIndex(dat,31, keys.get("Гражданство"));
                     insertAtIndex(dat,1, keys.get("Ф.И.О. выпускника"));
@@ -291,10 +293,9 @@ public class WordServiceImpl implements WordService {
                     size++;
                     data.add(dat);
                 }
-
-
             }
         }
+        log.info("dataMap: {}", gson.toJson(data));
         log.info("Ended processing data");
         return data;
     }
@@ -377,9 +378,9 @@ public class WordServiceImpl implements WordService {
                 List<String> arr = data.get(i);
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
-                log.info("The dataMap contains: {}", dataMap);
+//                log.info("The dataMap contains: {}", dataMap);
                 try {
-                    saveDataAsync(new HashMap<>(dataMap));
+                    saveDataAsync(dataMap);
                 } catch (RestClientException e){
                     log.warn("RestClientException: {}", e.getMessage());
                 } catch (Exception e) {
@@ -526,9 +527,9 @@ public class WordServiceImpl implements WordService {
         return dataMap;
     }
 
-    @Async("asyncTaskExecutor")
+//    @Async("asyncTaskExecutor")
     @Override
-    public CompletableFuture<Void> saveDataAsync(Map<String, Object> dataMap) {
+    public void saveDataAsync(Map<String, Object> dataMap) {
         log.info("In saving data");
         String studentNumber = String.valueOf(dataMap.get("StudNum"));
 
@@ -537,7 +538,6 @@ public class WordServiceImpl implements WordService {
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             log.info("Saving the dataMap with student number {} is {}", studentNumber, responseEntity.getBody());
         }
-        return CompletableFuture.completedFuture(null);
     }
 
     private String checkArrayBeforeInserting(List<String> arr, int index) {

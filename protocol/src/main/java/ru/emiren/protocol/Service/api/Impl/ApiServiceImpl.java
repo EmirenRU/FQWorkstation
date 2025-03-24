@@ -74,9 +74,10 @@ public class ApiServiceImpl implements ApiService {
             log.info("Successful copied into baos");
             bytes = tempBaos.toByteArray();
         } catch (IOException e) {
-
             log.warn(e.getMessage());
         }
+
+
         this.restTemplate = restTemplate;
         this.gson = gson;
         this.excelService = excelService;
@@ -147,6 +148,7 @@ public class ApiServiceImpl implements ApiService {
     @Override
     public void updateFileBytes(){
 
+        log.info("Updating fileBytes");
         List<TableData> res = List.of();
         try {
             String fqwLocation = sqlLocation+"/api/v2/get-data-for-excel";
@@ -154,8 +156,6 @@ public class ApiServiceImpl implements ApiService {
             ResponseEntity<String> resp = restTemplate.getForEntity(fqwLocation, String.class);
             Type listType = new TypeToken<ArrayList<TableData>>() {}.getType();
             res = gson.fromJson(resp.getBody(), listType);
-        } catch (ResourceAccessException e){
-            log.error(e.getMessage());
         } catch (RestClientException e) {
             log.error(e.getMessage());
         }

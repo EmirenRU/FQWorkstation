@@ -97,7 +97,7 @@ public class ApplicationProgrammingInterfaceController {
 
     /**
      * Handler for selectors in /sql/lecturers
-     * @param data a json with data from selectors
+     * @param data a JSON with data from selectors
      * @return a Response
      */
     @PostMapping("/v1/receive-by-params")

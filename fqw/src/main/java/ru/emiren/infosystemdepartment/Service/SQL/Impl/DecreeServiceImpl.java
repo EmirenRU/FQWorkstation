@@ -22,7 +22,6 @@ public class DecreeServiceImpl implements DecreeService {
     }
 
     @Override
-    @Transactional
     public Decree saveDecree(Decree decree) {
         return decreeRepository.save(decree);
     }

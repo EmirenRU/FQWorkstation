@@ -2,8 +2,8 @@ package ru.emiren.infosystemdepartment.Service.SQL;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
 

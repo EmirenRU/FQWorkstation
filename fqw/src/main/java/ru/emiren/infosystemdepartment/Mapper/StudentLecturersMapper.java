@@ -34,18 +34,22 @@ public class StudentLecturersMapper {
         SqlPayload.SqlPayloadBuilder builder = SqlPayload.builder()
                 .id(sl.getId())
                 .academicDegree(sl.getLecturer().getAcademicDegree())
-                .theme(sl.getStudent().getFqw().getDecree().getTheme())
+
                 .fullLecturerName(sl.getLecturer().getName())
                 .fullStudentName(sl.getStudent().getName())
                 .position(sl.getLecturer().getPosition())
                 .studNum(sl.getStudent().getStud_num())
                 .citizenship(sl.getStudent().getCitizenship());
 
+        if (sl.getStudent().getFqw() != null && sl.getStudent().getFqw().getDecree() != null) {
+            builder.theme(sl.getStudent().getFqw().getDecree().getTheme());
+        }
+
         if (sl.getLecturer().getDepartment() != null) {
             builder.department(sl.getLecturer().getDepartment().getName());
         }
 
-        if (sl.getStudent().getFqw().getDecree() != null) {
+        if (sl.getStudent().getFqw() != null && sl.getStudent().getFqw().getDecree() != null) {
             builder.numberOfDecree(sl.getStudent().getFqw().getDecree().getNumberOfDecree());
         }
 

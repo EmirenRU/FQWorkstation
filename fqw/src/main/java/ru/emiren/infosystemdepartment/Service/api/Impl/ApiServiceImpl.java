@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.emiren.infosystemdepartment.DTO.Payload.SelectorSqlPayload;
-import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.Service.SQL.SqlService;
 import ru.emiren.infosystemdepartment.Service.api.ApiService;
 
