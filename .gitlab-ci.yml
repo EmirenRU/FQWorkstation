@@ -24,5 +24,4 @@ deploy:
   script:
     - cd docker-build/docker && docker-compose up --build
   only:
-    - main
-
+    - microservices
