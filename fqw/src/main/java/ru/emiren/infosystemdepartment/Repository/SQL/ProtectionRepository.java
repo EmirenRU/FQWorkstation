@@ -16,4 +16,7 @@ public interface ProtectionRepository extends JpaRepository<Protection, Long> {
 
     @Query("SELECT p FROM Protection p WHERE p.orientation.code = :code and p.dateOfProtection = :dateOfProtection")
     Optional<Protection> findByOrientationCodeAndDateOfProtection(String code, Integer dateOfProtection);
+
+    @Query("SELECT p FROM Protection p WHERE p.orientation.code = :code")
+    Protection findByOrientationCode(String code);
 }

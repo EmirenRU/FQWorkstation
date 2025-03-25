@@ -49,16 +49,16 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
     Optional<StudentLecturers> findByStudentNumberAndLecturerName(Long studNum, String name);
 
     @Query("SELECT sl FROM StudentLecturers sl " +
-            "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code " +
+            "JOIN sl.student.orientation.protection p ON p.orientation.code = sl.student.orientation.code JOIN FQW f ON sl.student.fqw.id = f.id    " +
             "WHERE " +
             " ( (sl.lecturer.id IN :lecturerIds) OR (-1 IN :lecturerIds ) ) AND " +
             " ( (sl.student.orientation.code IN :orientationCodes ) OR ('-1' IN :orientationCodes) ) AND " +
-            " ( (sl.student.department.code IN :departmentCodes ) OR (-1 IN :departmentCodes ) ) AND " +
-            " ( (sl.student.fqw.decree.id IN :themes) OR ( -1 IN :themes ) ) AND " +
-            " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
-            " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
+            " ( (sl.student.department.name IS NULL) OR (sl.student.department.code IN :departmentCodes ) OR (-1 IN :departmentCodes ) ) AND " +
+            " ( (sl.student.fqw IS NULL) OR (sl.student.fqw.decree IS NULL) OR (sl.student.fqw.decree.id IN :themes) OR ( -1 IN :themes ) ) AND " +
+            " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) OR  (p.dateOfProtection is NULL) ) AND " +
+            " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) OR (p.dateOfProtection is NULL) ) " +
             " ORDER BY sl.lecturer.name")
-    Optional<List<StudentLecturers>> findAllByIds(List<String> orientationCodes,
+    List<StudentLecturers> findAllByIds(List<String> orientationCodes,
                                                   List<Long> departmentCodes,
                                                   Integer dateFrom,
                                                   Integer dateTo,

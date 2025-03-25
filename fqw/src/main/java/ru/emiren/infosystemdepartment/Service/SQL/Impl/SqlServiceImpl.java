@@ -42,6 +42,7 @@ public class SqlServiceImpl implements SqlService {
     private final FQWService fqwService;
     private final DecreeService decreeService;
     private final Gson gson;
+    private final ProtectionService protectionService;
     private List<LecturerDTO> lecturerDTOS;
     private List<OrientationDTO> orientationDTOS;
     private List<DepartmentDTO> departmentDTOS;
@@ -68,13 +69,13 @@ public class SqlServiceImpl implements SqlService {
                           DepartmentService departmentService,
                           LecturerService lecturerService,
                           OrientationService orientationService,
-                          ProtectionService protectionService,
                           StudentLecturersService studentLecturersService,
                           FQWService fqwService,
                           ProtocolQuestionService protocolQuestionService,
                           QuestionService questionService,
                           ProtocolService protocolService, DecreeService decreeService,
-                          Gson gson){
+                          Gson gson,
+                          ProtectionService protectionService){
         this.studentService             = studentService;
         this.departmentService          = departmentService;
         this.lecturerService            = lecturerService;
@@ -82,6 +83,7 @@ public class SqlServiceImpl implements SqlService {
         this.studentLecturersService    = studentLecturersService;
         this.fqwService                 = fqwService;
         this.decreeService              = decreeService;
+        this.protectionService = protectionService;
 
 
         dateTimeFormatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -221,12 +223,12 @@ public class SqlServiceImpl implements SqlService {
         List<String> themeParams = (List<String>) data.get("themes");
         List<Long> theme = (themeParams != null && !themeParams.isEmpty()) ? themeParams.stream().map(Long::parseLong).toList() : List.of((long) -1);
 
-        String strDateFrom = (String) data.get("from");
-        String strDateTo = (String) data.get("till");
+        String strDateFrom = ((((String) data.get("from")) != null) && !((String) data.get("from")).isEmpty()) ? ((String) data.get("from")) : null;
+        String strDateTo = (((String) data.get("till")) != null && !((String) data.get("till")).isEmpty()) ? ((String) data.get("till")) : null;
 
         log.info("lecturer: {} orientation: {} department: {} theme: {} DateFrom: {} DateTo: {}",
                 lecturerIds,
-                orientationParams,
+                orientationCodes,
                 departmentCode,
                 theme,
                 strDateFrom,
@@ -235,8 +237,10 @@ public class SqlServiceImpl implements SqlService {
         Integer dateFrom = null;
         Integer dateTo = null;
 
-        if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
+        if (strDateFrom != null && !strDateFrom.isEmpty() ){
             dateFrom = Integer.valueOf(strDateFrom);
+        }
+        if (strDateTo != null && !strDateTo.isEmpty() ){
             dateTo   = Integer.valueOf(strDateTo);
         }
 
@@ -429,6 +433,13 @@ public class SqlServiceImpl implements SqlService {
             ? 32    Program
          */
         try {
+            Department department = departmentService.findDepartmentByName((String) data.get("Department"));
+            if (department == null) {
+                department = new Department();
+                department.setName((String) data.get("Department"));
+                departmentService.saveDepartment(department);
+            }
+
             log.info("Data contains: {}", data);
             String code = "?";
             String name = "?";
@@ -481,6 +492,8 @@ public class SqlServiceImpl implements SqlService {
                 if (fqw != null &&!fqw.getDecree().getTheme().isEmpty() && fqw.getDecree().getTheme() != null) {
                     student.setFqw(fqw);
                 }
+                student.setOrientation(orientation);
+                student.setDepartment(department);
                 studentService.saveStudent(student);
             }
             log.info("4");
@@ -527,9 +540,20 @@ public class SqlServiceImpl implements SqlService {
                         if (adPdep != null)
                             lecturer.setAcademicDegree(adPdep.trim());
                         if (suNames[i].contains("Консультант") || suNames[i].contains("консультант ")){
-                            lecturer.setName(suNames[i].replace("консультант", "").replace("Консультант ", "").trim());
-                            lecturer.setPosition("Консультант");
+                            Lecturer found = lecturerService.findByLecturerName(suNames[i].replace("консультант", "").replace("Консультант ", "").trim());
+                            if (found != null) {
+                                if (found.getPosition() != null && found.getPosition().trim().length() > 0 && !found.getPosition().trim().contains("Консультант")) {
+                                    lecturer.setPosition(found.getPosition().trim() + ", консультант");
+                                }
+                            } else {
+                                lecturer.setName(suNames[i].replace("консультант", "").replace("Консультант ", "").trim());
+                                if (lecturer.getPosition() == null || lecturer.getPosition().trim().isEmpty()) {
+                                    lecturer.setPosition("Консультант");
+                                }
+                            }
                         }
+                        lecturer.setDepartment(department);
+
                         log.info("pre-saving the lecturer: {} {}", lecturer.getName(), lecturer.getPosition());
                         lecturerService.saveLecturer(lecturer);
                     }
@@ -552,7 +576,16 @@ public class SqlServiceImpl implements SqlService {
 //            student.getLecturers().add(studentLecturers);
 //            lecturer.getStudents().add(studentLecturers);
 
-            log.info("p");
+            log.info("protection");
+
+            Protection protection = protectionService.findByOrientationCode(orientation.getCode());
+            if (protection == null) {
+                protection = new Protection();
+                protection.setOrientation(orientation);
+                protectionService.saveProtection(protection);
+            }
+
+            log.info("protocol");
 
             Protocol protocol = protocolService.findByStudentNum(student.getStud_num());
             if (protocol == null) {

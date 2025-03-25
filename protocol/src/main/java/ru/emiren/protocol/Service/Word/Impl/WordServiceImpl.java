@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -90,7 +91,21 @@ public class WordServiceImpl implements WordService {
             if (tables.size() == 3) {
                 data = processThreeTables(tables);
             } else if (tables.size() == 2){ // check file_name
+                XWPFWordExtractor extractor = new XWPFWordExtractor(document);
+                String documentText = extractor.getText();
+                String extractedText = "?";
+                int index = documentText.indexOf("Факультет ");
+                if (index != -1) {
+                    extractedText = documentText.substring(index + 10).trim().split("\n")[0];
+                    extractedText = extractedText.substring(0, 1).toUpperCase() + extractedText.substring(1);
+                    log.info("Extracted text: " + extractedText);
+                } else {
+                    log.info("Keyword not found.");
+                }
                 data = processTwoTables(tables);
+                for (List<String> row : data) {
+                    row.set(29, extractedText);
+                }
             }
         } catch (IOException e) {
             log.info("Handle later deserialization");

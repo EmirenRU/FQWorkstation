@@ -20,4 +20,6 @@ public interface ProtectionService {
     Long getMaxId();
 
     Protection findByDateOfProtectionAndOrientationCode(String code, Integer dateOfProtection);
+
+    Protection findByOrientationCode(String code);
 }

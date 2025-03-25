@@ -20,6 +20,7 @@ public class StudentLecturersMapper {
     }
 
     public static StudentLecturersDTO mapToStudentLecturersDTO(StudentLecturers studentLecturers){
+        log.info("StudentLecturersDTO: {}", studentLecturers);
         if (studentLecturers == null) return null;
         return StudentLecturersDTO.builder()
                 .id(studentLecturers.getId())

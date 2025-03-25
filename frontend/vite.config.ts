@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/fqw-api": {
-        target: "http://26.48.128.38:13131",
+        target: "http://localhost:13131",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/fqw-api/, ''),
       },

@@ -120,8 +120,9 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
 
     @Override
     public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes, List<Long> departmentCode, Integer dateFrom, Integer dateTo, List<Long> themes, List<Long> lecturerIds) {
-        return studentLecturerRepository.findAllByIds(orientationCodes, departmentCode, dateFrom, dateTo, themes, lecturerIds).orElse(null)
-                .stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).toList();
+        List<StudentLecturers> sl = studentLecturerRepository.findAllByIds(orientationCodes, departmentCode, dateFrom, dateTo, themes, lecturerIds);
+        log.info("sl: {}", sl);
+        return sl.stream().map(StudentLecturersMapper::mapToStudentLecturersDTO).toList();
     }
 
     @Override

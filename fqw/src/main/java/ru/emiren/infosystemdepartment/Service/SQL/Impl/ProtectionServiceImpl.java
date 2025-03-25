@@ -81,4 +81,9 @@ public class ProtectionServiceImpl implements ProtectionService {
     public Protection findByDateOfProtectionAndOrientationCode(String code, Integer dateOfProtection) {
         return protectionRepository.findByOrientationCodeAndDateOfProtection(code, dateOfProtection).orElse(null);
     }
+
+    @Override
+    public Protection findByOrientationCode(String code) {
+        return protectionRepository.findByOrientationCode(code);
+    }
 }
