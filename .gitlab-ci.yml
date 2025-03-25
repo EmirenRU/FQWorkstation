@@ -1,5 +1,6 @@
 variables:
   DOCKER_DRIVER: overlay
+  DOCKER_HOST: unix:///var/run/docker.sock
 
 stages:
   - build
@@ -21,6 +22,7 @@ deploy:
   stage: deploy
   services:
     - name: docker:dind
+      command: ["--host=unix:///var/run/docker.sock"]
   script:
     - cd docker-build/docker && docker-compose up --build
   only:
