@@ -6,8 +6,10 @@ stages:
   - deploy
 
 docker-build:
-  image: maven:latest
+  image: maven:3.9.6-eclipse-temurin-21
   stage: build
+  before_script:
+    - apt-get update && apt-get install -y make
   script:
     - make docker
   artifacts:
