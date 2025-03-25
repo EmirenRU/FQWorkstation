@@ -2,7 +2,7 @@ import  { useState, useEffect, FC} from 'react';
 import { saveInputs } from './Save';
 import { useFormContext } from '../context';
 // import { getFakeSelectorData } from "../api/getData.tsx";
-import { getFakeSelectorData, getSelectors } from "../api/getData.tsx";
+import { getSelectors } from "../api/getData.tsx";
 
 declare global {
     interface JQuery {
@@ -92,7 +92,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
             console.log("Parsed", result);   
             
             if (result && result.department && result.orientation && result.student && result.theme) {
-            {
+            { console.log("Yep I'm here", result.orientation);
                      const DepartmentData: Array<DepartmentProps> = result.department.map((obj: { value: string; name: string; }) => ({
                          departmentValue: obj.value,
                          departmentName: obj.name,
@@ -102,7 +102,6 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
                          orientation: obj.value,
                          orientationName: obj.name,
                      }))
-
                      const TeachersData: Array<TeachersProps> = result.student.map((obj: { value: string; name: string; }) => ({
                          studentName: obj.name,
                          studentValue: obj.value
@@ -117,7 +116,6 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
                     setOrientations(OrientationData);
                     setTeachersData(TeachersData);
                     setThemes(ThemesData)
-                    console.log("Parsed Data :", Departments, Orientations, Themes)
                 }
             } else {
                 console.error("Invalid data structure received from getFakeSelectorData");
@@ -174,16 +172,19 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
     }, []);
 
     useEffect(() => {
-        if (Departments.length > 0 && Orientations.length > 0 && Teachers.length > 0 && Themes.length > 0) {
+        console.log("Parsed Data :", departmentData, orientationData, themesData)
+        console.log("status of loading ", selectorsStatus);
+        if (Departments.length >= 0 && Orientations.length >= 0 && Teachers.length >= 0 && Themes.length >= 0) {
             setSelectorLoaded(true);
         }
-    }, [Departments, Orientations, Teachers, Themes, selectorsStatus]);
+    }, [departmentData, orientationData, themesData, Departments, Orientations, Teachers, Themes, selectorsStatus ]);
 
 
     useEffect(() => {
-        if (selectorsStatus) {
+        if (selectorsStatus && Departments.length === 0 && Orientations.length === 0 && Teachers.length === 0 && Themes.length === 0 ) {
             // Initialize bootstrap-select
             $('.selectpicker').selectpicker('refresh');
+            setSelectorLoaded(!selectorsStatus)
 
         }
     }, [selectorsStatus]);
