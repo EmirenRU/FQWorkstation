@@ -14,7 +14,6 @@ docker:
 	cp protocol/target/*.jar docker-build/protocol/target/app.jar
 	rm -rf ./frontend/node_modules ./frontend/dist
 	cp -r frontend/* docker-build/frontend/
-	7z a -mx=9 -m0=lzma2 docker-build.7z ./docker-build
 7z:
 	7z a -mx=9 -m0=lzma2 docker-build.7z ./docker-build/
 

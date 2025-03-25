@@ -1,0 +1,26 @@
+variables:
+  DOCKER_DRIVER: overlay
+
+stages:
+  - build
+  - deploy
+
+docker-build:
+  image: maven:latest
+  stage: build
+  script:
+    - make docker
+  artifacts:
+    paths:
+      - docker-build/
+
+deploy:
+  image: docker:latest
+  stage: deploy
+  services:
+    - name: docker:dind
+  script:
+    - cd docker-build/docker && docker-compose up --build
+  only:
+    - main
+
