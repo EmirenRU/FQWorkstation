@@ -8,13 +8,13 @@
 ## Requirements
 
 ### Traditional Installation
-- (Apache Maven)[https://maven.apache.org/download.cgi]
+- [Apache Maven](https://maven.apache.org/download.cgi)
 - Java
-- (PostgreSQL v17)[https://www.enterprisedb.com/downloads/postgres-postgresql-downloads]
-- (JDK Development Kit 21)[https://adoptium.net/temurin/releases/]
+- [PostgreSQL v17](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+- [JDK Development Kit 21](https://adoptium.net/temurin/releases/)
 
 ### Installation Using Docker
-- (Docker)[https://www.docker.com]
+- [Docker](https://www.docker.com)
 
 ## Installation
 
