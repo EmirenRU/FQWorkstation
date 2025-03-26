@@ -35,7 +35,8 @@ export const SearchForm = () => {
                 </div>
             </div>
         </section>
-            {(signal === "display" || signal === "pending") ? <ToggleDisplayAndSaveState signal={signal} setReady={setReady}/>: <span></span>}
+            {(signal === "display" || signal === "pending") ? <ToggleDisplayAndSaveState signal={signal} setReady={setReady}/>:
+             <span></span>}
                     </main>
     )
 }

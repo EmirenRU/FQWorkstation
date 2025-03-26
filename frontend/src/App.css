@@ -28,3 +28,12 @@ body {
 	font-family: "Muller", Arial, Helvetica, sans-serif !important;
 	background-image: linear-gradient(to right top, #f9fcff, #d8e6f7, #bad5f7, #89b7f3, #4b9ce7);
 }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
