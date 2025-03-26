@@ -472,8 +472,8 @@ public class WordServiceImpl implements WordService {
         try {
             log.info("After transferring REST GET method");
             map = (Map<String, String>) restTemplate.getForObject(sqlLocation + "/api/v1/get-department-and-orientation/" + studNumber, Map.class);
-            departmentName = map.get("Department");
-            orientationCodeWithName = map.get("Orientation");
+            departmentName = map != null ? map.get("Department") : null;
+            orientationCodeWithName = map != null ? map.get("Orientation") : null;
             log.info("After transfering REST GET method with map {}", map);
         } catch (RestClientException e){
             log.warn("RestClientException: {}", e.getMessage());
