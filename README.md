@@ -8,13 +8,13 @@
 ## Requirements
 
 ### Traditional Installation
-- Apache Maven
+- (Apache Maven)[https://maven.apache.org/download.cgi]
 - Java
-- PostgreSQL v16
-- JDK Development Kit 21
+- (PostgreSQL v17)[https://www.enterprisedb.com/downloads/postgres-postgresql-downloads]
+- (JDK Development Kit 21)[https://adoptium.net/temurin/releases/]
 
 ### Installation Using Docker
-- Docker
+- (Docker)[https://www.docker.com]
 
 ## Installation
 
@@ -22,27 +22,33 @@
 1. Install the required components from [this link](https://github.com/EmirenRU/FQWorkstation/releases/tag/installer-windows).
 
 2. To create a JAR file, run one of the following commands:
-      $ mvn install && mvn package
-   
+   ```bash
+   $ mvn install && mvn package
+   ```
    or 
-      $ mvn clean install && mvn package
-   
+   ```bash
+   $ mvn clean install && mvn package
+   ```
 
 3. To run the application, either double-click on the JAR files or use the following commands:
    - **Windows:**
-          $ ./launcher.ps1 start
-     
+     ```bash
+     $ ./launcher.ps1 start
+     ```
    - **Linux:**
-          $ ./launcher.sh start
-     
+     ```bash
+     $ ./launcher.sh start
+     ```
 
 4. To run the React application, use the following commands:
    - **Windows:**
-          $ cd frontend && npm run dev
-     
+     ```bash
+     $ cd frontend && npm run dev
+     ```
    - **Linux:**
-          $ cd frontend && npm run dev
-     
+     ```bash
+     $ cd frontend && npm run dev
+     ```
 
 ### Installation Steps for Docker
 
@@ -52,8 +58,9 @@
 
 2. **Install Windows Subsystem for Linux (WSL)**
    - a) Activate the script `activate-wsl.ps1` located in the `ps1` folder to install WSL, or enter the following command in the terminal:
-          wsl --install
-     
+     ```bash
+     wsl --install
+     ```
    - b) If the above steps do not work, enable the following options in "Windows Features":
      - "Virtual Machine Platform"
      - "Windows Subsystem for Linux"
@@ -63,34 +70,45 @@
 
 4. **Start the Docker Application**
    - Navigate to the Docker folder and ensure that Docker is running. Then, execute the following script to start the application:
-          .\docker\docker-start.ps1
-     
+     ```powershell
+     .\docker\docker-start.ps1
+     ```
 
 5. **Remove the Docker Container (if needed)**
    - To remove the container, run the following script:
-          .\docker\docker-remove.ps1
-     
+     ```powershell
+     .\docker\docker-remove.ps1
+     ```
 
 ### Installation Using Docker
 
 #### Using Makefile
+```bash
 $ make compose
+```
 
 #### Using Traditional CMD or Bash
 - **Linux:**
-    $ cd docker && docker-compose up --build
-  
+  ```bash
+  $ cd docker && docker-compose up --build
+  ```
 - **Windows:**
-    $ cd docker && docker-compose up --build
-  
+  ```bash
+  $ cd docker && docker-compose up --build
+  ```
 
 #### Using PowerShell
 1. Navigate to the Docker folder.
 2. To start the application, run the following PowerShell script:
-      .\docker\docker-start.ps1
-   
+   ```powershell
+   .\docker\docker-start.ps1
+   ```
 3. To remove the application from Docker, run:
-      .\docker\docker-remove.ps1
+   ```powershell
+   .\docker\docker-remove.ps1
+   ```
+
+This structure provides a comprehensive guide for both traditional and Docker-based installations, ensuring clarity and ease of use.
    
 ## Project's structure 
 
