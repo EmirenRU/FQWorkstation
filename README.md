@@ -6,64 +6,92 @@
 - Microservices: React + Spring (REST) and modules' separation
 
 ## Requirements
-### The traditional way
+
+### Traditional Installation
 - Apache Maven
-- Java 
+- Java
 - PostgreSQL v16
 - JDK Development Kit 21
 
-### By using Docker
-
+### Installation Using Docker
 - Docker
 
 ## Installation
-### The traditional Way
-1. Install requirements from https://github.com/EmirenRU/FQWorkstation/releases/tag/installer-windows
 
-2. To create a jar, you need to
+### Traditional Installation
+1. Install the required components from [this link](https://github.com/EmirenRU/FQWorkstation/releases/tag/installer-windows).
 
-```bash
-$ mvn install && mvn package
-```
-or 
-```bash
-$ mvn clean install && mvn package
-```
+2. To create a JAR file, run one of the following commands:
+      $ mvn install && mvn package
+   
+   or 
+      $ mvn clean install && mvn package
+   
 
-3. Either double click on jars or
-#### Windows
-``` bash
-$ ./launcher.ps1 start
-```
-#### Linux
-``` bash
-$ ./launcher.sh start
-```
-4. Run React application
-```bash
-$ cd frontend ; npm run dev (Windows)
-$ cd frontent && npm run dev (Linux)
-```
+3. To run the application, either double-click on the JAR files or use the following commands:
+   - **Windows:**
+          $ ./launcher.ps1 start
+     
+   - **Linux:**
+          $ ./launcher.sh start
+     
 
-## Docker
+4. To run the React application, use the following commands:
+   - **Windows:**
+          $ cd frontend && npm run dev
+     
+   - **Linux:**
+          $ cd frontend && npm run dev
+     
 
-### Using Makefile
+### Installation Steps for Docker
 
-```bash
+1. **Download and Extract the Archive**
+   - Download the archive from the following link and extract it:
+     [Download FQWorkstation](https://github.com/EmirenRU/FQWorkstation/archive/refs/heads/microservices.zip)
+
+2. **Install Windows Subsystem for Linux (WSL)**
+   - a) Activate the script `activate-wsl.ps1` located in the `ps1` folder to install WSL, or enter the following command in the terminal:
+          wsl --install
+     
+   - b) If the above steps do not work, enable the following options in "Windows Features":
+     - "Virtual Machine Platform"
+     - "Windows Subsystem for Linux"
+
+3. **Install Docker**
+   - Download and install Docker from the official website: [Docker Official Site](https://www.docker.com/)
+
+4. **Start the Docker Application**
+   - Navigate to the Docker folder and ensure that Docker is running. Then, execute the following script to start the application:
+          .\docker\docker-start.ps1
+     
+
+5. **Remove the Docker Container (if needed)**
+   - To remove the container, run the following script:
+          .\docker\docker-remove.ps1
+     
+
+### Installation Using Docker
+
+#### Using Makefile
 $ make compose
-```
 
-### By traditional CMD or Bash
+#### Using Traditional CMD or Bash
+- **Linux:**
+    $ cd docker && docker-compose up --build
+  
+- **Windows:**
+    $ cd docker && docker-compose up --build
+  
 
-```
-$ cd docker && docker-compose up --build (Linux)
-$ cd docker ; docker-compose up --build (Windows)
-```
-### By using PowerShell
-- Proceed to the Docker folder
-- To start the application run "docker/docker-start.ps1" as PowerShell script
-- To remove the application from Docker run "docker/docker-remove.ps1" as PowerShell script
-
+#### Using PowerShell
+1. Navigate to the Docker folder.
+2. To start the application, run the following PowerShell script:
+      .\docker\docker-start.ps1
+   
+3. To remove the application from Docker, run:
+      .\docker\docker-remove.ps1
+   
 ## Project's structure 
 
 - src/
@@ -104,10 +132,10 @@ $ cd docker ; docker-compose up --build (Windows)
 
 
 ## Frontend Structure
-- f/
+- frontend/
     - src/
       - api/
-          - getData.tsx: Used for Lecturers table and selectors.
+          - getData.tsx: Used for getting/processing data for Lecturers table and selectors.
           - downloadApi.tsx: used for downloading template files.
           - queryClient.tsx: used for form validation on support page.
           - SelectorData.json: fake selector data for test purposes.
@@ -138,11 +166,34 @@ $ cd docker ; docker-compose up --build (Windows)
                   - TeachersData.tsx: contains logic and structure for Teacheers data page.
               - FormWrapper/
                   - FormWrapper.tsx: wrapper for multistep form.
-              - FormHook/
-                  - FormWrapper.tsx: hook which allows page changing functionality in the form .
+              - MultiStepHook/
+                  - MultiStepHook.tsx: hook which allows page changing functionality in the form .
               - protocol.css: stylesheet for page.
-              - protocol.tsx: contains logic and structure for the entire multistep form
+              - protocol.tsx: contains logic and structure for the entire multistep form.
+          - Layout/
+              - header.tsx: header component.
+              - footer.tsx: footer component.
+              - header.css: header component stylesheet.
+              - footer.tsx: footer component stylesheet.
+         - Lecturers/
+              - lecturers.tsx: base component which calls search form and table display component from SearchForm folder.
+         - SearchForm/
+              - display.tsx: component which connects form and table.
+              - form.tsx: component for displaying search form.
+              - load.tsx: component for displaying form.
+              - save.tsx: used for saving selected options in local storage.
+              - form.css: form stylesheet.
+              - display.css: table stylesheet.
+         - Support/
+              - checked.svg: resource for form checkbox.
+              - support.tsx: form component.
+              - support.css: form stylesheet.
+         - App.tsx: launches layout and  displays page.
+         - App.css: root css styles for entire page.
+         - content.tsx: context provider for form and table -- essential root component.
+         - main.tsx: launches App.tsx -- essential root component.
             ( To be continued if Ivan Podlesniy remains alive)
+     
 ## Contributing 
 
 - Emil Yusupov - Backend (Java, Spring Boot, PostgreSQL, JS, Ajax, Thymeleaf) 
