@@ -12,17 +12,30 @@ services:
       - support
       - protocol
   db:
-    build:
-      context:  ../db
+    image: postgres:17
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ../db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     environment:
-      - POSTGRES_DB=fqworkstation,support
+      - POSTGRES_DB=fqworkstation
       - POSTGRES_USER=temp
       - POSTGRES_PASSWORD=temp
     ports:
       - "5432:5432"
+
+  db-support:
+    image: postgres:17
+    restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
       - ../db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    environment:
+      - POSTGRES_DB=support
+      - POSTGRES_USER=temp
+      - POSTGRES_PASSWORD=temp
+    ports:
+      - "5433:5432"
   fqw:
     build: ../fqw
     ports:
@@ -37,13 +50,14 @@ services:
       - SPRING_DATASOURCE_PASSWORD=temp
       - SPRING_SECOND_DATASOURCE_USERNAME=temp
       - SPRING_SECOND_DATASOURCE_PASSWORD=temp
-#      TEMPLATE_FILE_PATH: /app/template.docx
       - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
       - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
       - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
       - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
       - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
       - SERVER_PORT=13131
+    links:
+      - db
   protocol:
     build: ../protocol
     ports:
@@ -61,21 +75,26 @@ services:
     ports:
       - "13133:13133"
     depends_on:
-      - db
+      - db-support
+    links:
+      - db-support
     volumes:
       - ../support/src/main/resources:/app/resources/
     environment:
-      - SPRING_SUPPORT_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/support
+      - SPRING_SUPPORT_DATASOURCE_JDBC_URL=jdbc:postgresql://db-support:5432/support
       - SPRING_SUPPORT_DATASOURCE_USERNAME=temp
       - SPRING_SUPPORT_DATASOURCE_PASSWORD=temp
       - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
       - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
-      - SERVER_FQW_URL="http://localhost:13131"
+      - SERVER_FQW_URL="http://fqw:13131"
   hub:
     build: ../hub
     ports:
       - "13136:13136"
 
-
 volumes:
   db-data:
+
+networks:
+  default:
+    driver: bridge
