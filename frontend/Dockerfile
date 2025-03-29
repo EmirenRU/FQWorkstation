@@ -1,7 +1,7 @@
 FROM node:21 AS builder
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build
+RUN npm ci && npm run build
 
 FROM nginx:latest
 RUN mkdir -p /logs

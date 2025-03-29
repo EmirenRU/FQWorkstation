@@ -1,5 +1,6 @@
 package ru.emiren.infosystemdepartment.Repository.SQL;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -58,6 +59,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) OR  (p.dateOfProtection is NULL) ) AND " +
             " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) OR (p.dateOfProtection is NULL) ) " +
             " ORDER BY sl.lecturer.name")
+    @Cacheable(value = "studentLecturersCache", key = "#orientationCodes + '-' + #departmentCodes + '-' + #dateFrom + '-' + #dateTo + '-' + #themes + '-' + #lecturerIds")
     List<StudentLecturers> findAllByIds(List<String> orientationCodes,
                                                   List<Long> departmentCodes,
                                                   Integer dateFrom,

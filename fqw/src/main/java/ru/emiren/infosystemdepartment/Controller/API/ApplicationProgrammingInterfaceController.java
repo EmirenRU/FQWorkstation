@@ -103,7 +103,7 @@ public class ApplicationProgrammingInterfaceController {
     @PostMapping("/v1/receive-by-params")
     public CompletableFuture<ResponseEntity<String>> receiveByParams(@RequestBody Map<String, Object> data) {
         return sqlService.getLecturersAsync(data).thenApply( reply -> {
-                log.info("receive by-params response with data {}", reply);
+//                log.info("receive by-params response with data {}", reply);
                 return reply;
             }
         );

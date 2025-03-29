@@ -31,7 +31,7 @@ public class SimulationTests extends Simulation {
     {
         setUp(
                 scenarioBuilder
-                        .injectOpen(OpenInjectionStep.atOnceUsers(20))
+                        .injectOpen(OpenInjectionStep.atOnceUsers(50))
                         .protocols(httpProtocol)
         );
     }
