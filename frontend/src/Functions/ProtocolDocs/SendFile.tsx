@@ -80,7 +80,7 @@ export const SendFile = () => {
                                         Работа с протоколами
                                     </h2>
                                     <p>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur dolorum earum tempore fugiat recusandae dolorem nam eos odio repellat eligendi voluptates exercitationem, molestias a voluptate asperiores? Accusamus dicta ut reprehenderit.
+                                        В этой секции вы можете загрузить свои шаблоны протоколов и таблиц, скачать общую таблицу и получить последний актуальный шаблон. 
                                     </p>
                                 </div>
                                 <div className="upload-download__container">
@@ -131,6 +131,7 @@ export const SendFile = () => {
                                     </div>
                                 </div>
                             </div>
+                            {(file || template)?
                             <div className="templates_and_files">
                                 <h2 className="send__file__section-description">
                                     Загруженные файлы
@@ -182,13 +183,14 @@ export const SendFile = () => {
                                     </button>
                                 )}
                             </div>
+                            :<></>}
                         </div>
                     </div>
                 </div>
 
                 <div className="file__collection col-xl-2">
                     <div className="file__collection__inside">
-                <h3 style={{fontSize: "26px", marginBottom: "40%"}} className="send__file__section-description">Доступные файлы</h3>
+                <h3 style={{fontSize: "26px", marginBottom: "40%"}} className="send__file__section-description">Стандартные шаблоны</h3>
                 <ul style={{ listStyle: "none", padding: 0 }}>
                     <li style={{marginBottom: "12%"}}>
                         <a href="/template.xlsx" className="file-link" download style={{display: "flex", flexDirection:"column", alignItems:"center"}}>
