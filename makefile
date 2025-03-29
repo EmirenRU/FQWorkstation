@@ -25,6 +25,8 @@ react:
 	cd frontend ; npm run dev
 compose:
 	cd docker ; docker-compose up --build
+compose-down:
+	cd docker ; docker-compose down
 build:
 	mvn package
 start-nginx:

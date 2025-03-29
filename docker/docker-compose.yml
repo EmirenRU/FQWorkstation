@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 services:
   nginx:
@@ -14,9 +14,6 @@ services:
   db:
     image: postgres:17
     restart: always
-    volumes:
-      - db-data:/var/lib/postgresql/data
-      - ../db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     environment:
       - POSTGRES_DB=fqworkstation
       - POSTGRES_USER=temp
@@ -27,9 +24,6 @@ services:
   db-support:
     image: postgres:17
     restart: always
-    volumes:
-      - db-data:/var/lib/postgresql/data
-      - ../db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     environment:
       - POSTGRES_DB=support
       - POSTGRES_USER=temp
@@ -56,13 +50,15 @@ services:
       - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
       - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
       - SERVER_PORT=13131
-      - JAVA_OPTS=-Xms512m -Xmx4g
+      - JAVA_OPTS=-Xms1g -Xmx4g -XX:MaxRAMPercentage=80.0 -XX:+UseContainerSupport
     links:
       - db
     deploy:
       resources:
         limits:
-          memory: 2g
+          memory: '2g'
+        reservations:
+          memory: '2g'
   protocol:
     build: ../protocol
     ports:
@@ -71,15 +67,20 @@ services:
       - ../protocol/src/main/resources:/app/resources/
     environment:
       - SERVER_FQW_URL=http://fqw:13131
-      - JAVA_OPTS=-Xms1g -Xmx4g
+      - JAVA_OPTS=-Xms1g -Xmx4g -XX:MaxRAMPercentage=80.0 -XX:+UseContainerSupport
     links:
       - fqw
     depends_on:
       - fqw
+
     deploy:
       resources:
         limits:
-          memory: 2g
+          cpus: '0.5'
+          memory: '4g'
+        reservations:
+          memory: '2g'
+
   support:
     build: ../support
     ports:

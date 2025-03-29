@@ -249,6 +249,7 @@ public class ApiServiceImpl implements ApiService {
                 } else {
                     processedDocument = wordService.generateWordDocument(wordService.getListOfDataFromFile(is, file.getOriginalFilename()));
                 }
+                log.info("Processed File: {}", processedDocument.toString());
 
                 log.info("Document generated successfully for file ID: {}", fileId);
                 if (processedDocument != null) {
@@ -263,7 +264,7 @@ public class ApiServiceImpl implements ApiService {
                     headers.put("status", "200");
                     headers.put("id", fileId);
                     PoitlIOUtils.closeQuietly(processedDocument);
-
+                    log.info("Done processing file");
                     return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
                 } else {
                     log.warn("Processed document is null");

@@ -56,6 +56,7 @@ export async function checkFileAvailability(id: string) {
     // Для кадого случая свой id на нужные документы -- само значение id можно изменить в SendFile (строка 83, строка 52)
     //protocol-template
     //table-templates
+    console.log("Checking")
     let isAvailable = false;
     const settings = {
         method: "POST",
@@ -115,11 +116,11 @@ export const handleUpload  = async (fileToUpload : File | null, template     : F
                     else {
                         response = await fetch('/protocol-api/api/protocol/upload_file', settings);
                     }
-                    if (response.status === 200 ) {
-                        await checkFileAvailability(hashId);
-                    }
-                    else {
+                    console.log(response);
+                    if (!(response.status === 200)) {
                         alert("Error uploading file");
+                    } else {
+                        await checkFileAvailability(hashId);
                     }
 
                 } catch (error) {
