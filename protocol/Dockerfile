@@ -7,4 +7,4 @@ FROM openjdk:21-jdk
 WORKDIR /app
 COPY --from=builder /builder/target/*.jar /app/app.jar
 EXPOSE 13134
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xms1g", "-Xmx4g", "-jar", "app.jar"]

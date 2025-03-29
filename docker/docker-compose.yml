@@ -56,8 +56,13 @@ services:
       - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
       - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
       - SERVER_PORT=13131
+      - JAVA_OPTS=-Xms512m -Xmx4g
     links:
       - db
+    deploy:
+      resources:
+        limits:
+          memory: 2g
   protocol:
     build: ../protocol
     ports:
@@ -66,10 +71,15 @@ services:
       - ../protocol/src/main/resources:/app/resources/
     environment:
       - SERVER_FQW_URL=http://fqw:13131
+      - JAVA_OPTS=-Xms1g -Xmx4g
     links:
       - fqw
     depends_on:
       - fqw
+    deploy:
+      resources:
+        limits:
+          memory: 2g
   support:
     build: ../support
     ports:
