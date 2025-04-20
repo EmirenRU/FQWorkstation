@@ -7,8 +7,7 @@ import docxIcon from './docx_icon.svg.png'
 import closeIcon from './close.btn.png'
 import { handleUpload, getDataFile } from "./Hash";
 import { downloadTableTemplate } from "../../api/dowloadApi";
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css'
+
 
 
 export const SendFile = () => {
@@ -62,9 +61,9 @@ export const SendFile = () => {
 
     function uploadDocs() {
         console.log("Sending ", template, "<-TMP File->", file);
-        NProgress.start();
+
         handleUpload(file, template, setId);
-        NProgress.done();
+
 
     }
 

@@ -1,5 +1,5 @@
 .instruction {
-	background-color: aliceblue;
+	background-color: #FFFFFF;
     display: flex;
     flex-direction: column;
     padding-left: 30px;
@@ -64,18 +64,18 @@
 }
 
 .accordion-button {
-	background-color: aliceblue;
+	background-color: #FFFFFF;
 	color: #3b71ca;
 	font-weight: 700;
 	border: 2px solid #5a84c9;
 }
 
 .accordion-button:not(.collapsed) {
-	background-color: aliceblue;
+	background-color: #FFFFFF;
 }
 
 .accordion-body {
-    background-color: aliceblue;
+    background-color: #FFFFFF;
 	border: 2px solid #5a84c9;}
 
 .instruction-container{
@@ -133,7 +133,7 @@
 }
 
 .aside__nav__link{
-	color: aliceblue;
+	color: #FFFFFF;
 	font-size: 26px;
 	text-shadow:     0 0 5px #1260c7,
     0 0 10px #0024f3,
@@ -141,13 +141,13 @@
 }
 
 .aside__nav__link:active{
-	color: aliceblue;
+	color: #FFFFFF;
 }
 
 .aside__nav__link:focus{
-	color: aliceblue;
+	color: #FFFFFF;
 }
 
 .aside__nav__link:hover{
-	color: aliceblue;
+	color: #FFFFFF;
 }

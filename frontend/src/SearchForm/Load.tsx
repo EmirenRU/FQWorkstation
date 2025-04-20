@@ -2,7 +2,7 @@ import  { useState, useEffect, FC} from 'react';
 import { saveInputs } from './Save';
 import { useFormContext } from '../context';
 // import { getFakeSelectorData } from "../api/getData.tsx";
-import { getSelectors } from "../api/getData.tsx";
+import { getFakeSelectorData, getSelectors } from "../api/getData.tsx";
 
 declare global {
     interface JQuery {
@@ -88,7 +88,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
         try {
             console.log("In try section of fetch data");
             // const result = await getFakeSelectorData();
-            const result = await getSelectors();
+            const result = await getFakeSelectorData();
             console.log("Parsed", result);   
             
             if (result && result.department && result.orientation && result.student && result.theme) {
