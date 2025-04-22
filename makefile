@@ -24,7 +24,7 @@ react-install:
 react:
 	cd frontend ; npm run dev
 compose:
-	cd docker ; docker-compose up --build
+	cd docker ; docker-compose up --build --pull=always
 compose-down:
 	cd docker ; docker-compose down
 build:

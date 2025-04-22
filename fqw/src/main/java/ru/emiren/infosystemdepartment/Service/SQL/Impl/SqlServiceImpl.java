@@ -257,9 +257,9 @@ public class SqlServiceImpl implements SqlService {
                 lecturerIds
         );
 
-        log.info("The result is {} empty", res.isEmpty());
+//        log.info("The result is {} empty", res.isEmpty());
         List<SqlPayload> payloads = res.stream().map(sl -> {
-            log.info("In map function with data: {}", sl.getLecturer().getName().toString());
+//            log.info("In map function with data: {}", sl.getLecturer().getName().toString());
             return SqlPayload.builder()
                     .id(sl.getId())
                     .fullLecturerName(sl.getLecturer().getName())
@@ -484,8 +484,6 @@ public class SqlServiceImpl implements SqlService {
             Student student = studentService.findStudentByStudNum(studNum);
             if (student == null) {
                 student = new Student();
-                Long id = studentService.getMaxId();
-                if (id != null) {student.setId(id +1);}
                 student.setStud_num(studNum);
                 student.setName((String) data.get("FullName"));
                 student.setCitizenship((String) data.get("Citizenship"));
@@ -506,11 +504,11 @@ public class SqlServiceImpl implements SqlService {
                     if (i == 0){
                         headOfSU = suNames[i];
                     }
+
                     Lecturer lecturer = lecturerService.findByLecturerName(suNames[i].trim());
                     if (lecturer == null) {
                         lecturer = new Lecturer();
-                        Long id = lecturerService.getMaxId();
-                        log.info("id is {}", id);
+                        log.info(" At the start of the pre-saving the lecturer: {} {}");
 
                         lecturer.setName(suNames[i].trim());
                         List<String> dat;
@@ -533,6 +531,7 @@ public class SqlServiceImpl implements SqlService {
                             adPdep = "";
                             pos = "";
                         }
+                        log.info("At the middle of rupre-saving the lecturer: {} {}", lecturer.getName(), lecturer.getPosition());
 
 
                         if (pos != null)
@@ -561,8 +560,6 @@ public class SqlServiceImpl implements SqlService {
                     StudentLecturers studentLecturers = studentLecturersService.findStudentLecturersByStudentStudNum(student.getStud_num(), lecturer.getName());
                     if (studentLecturers == null) {
                         studentLecturers = new StudentLecturers();
-                        Long id = studentLecturersService.getMaxId();
-                        if (id != null) {studentLecturers.setId(id +1);}
                         studentLecturers.setLecturer(lecturer);
                         studentLecturers.setStudent(student);
                         studentLecturers.setIsScientificSupervisor(true);
@@ -590,8 +587,6 @@ public class SqlServiceImpl implements SqlService {
             Protocol protocol = protocolService.findByStudentNum(student.getStud_num());
             if (protocol == null) {
                 protocol = new Protocol();
-                Long id = protocolService.getMaxId();
-                if (id != null) {protocol.setId(id +1);}
                 protocol.setStudent(student);
                 fqw = fqwService.findByName((String) data.get("Theme"));
                 if (fqw != null && !fqw.getDecree().getTheme().trim().isEmpty() && fqw.getDecree().getTheme() != null) {
@@ -615,13 +610,9 @@ public class SqlServiceImpl implements SqlService {
             log.info("q");
 
 
-            Long id = questionService.getMaxId();
-            if (id == null){ id = 0l; }
             Question question1 = questionService.findQuestion((String) data.get("Question1"));
             if (question1 == null && !(((String) data.get("Question1")).trim().isEmpty()) && ((String) data.get("Question1")) != null){
                 question1 = new Question();
-                id++;
-                question1.setId(id);
                 question1.setQuestioner((String) data.get("Questioner1"));
                 question1.setQuestion((String) data.get("Question1"));
                 questionService.saveQuestion(question1);
@@ -631,8 +622,6 @@ public class SqlServiceImpl implements SqlService {
             Question question2 = questionService.findQuestion((String) data.get("Question2"));
             if (question2 == null && !(((String) data.get("Question2")).trim().isEmpty()) && ((String) data.get("Question2")) != null) {
                 question2 = new Question();
-                id++;
-                question2.setId(id);
                 question2.setQuestioner((String) data.get("Questioner2"));
                 question2.setQuestion((String) data.get("Question2"));
                 questionService.saveQuestion(question2);
@@ -641,8 +630,6 @@ public class SqlServiceImpl implements SqlService {
             Question question3 = questionService.findQuestion((String) data.get("Question3"));
             if (question3 == null && !(((String) data.get("Question3")).trim().isEmpty()) && ((String) data.get("Question3")) != null) {
                 question3 = new Question();
-                id++;
-                question3.setId(id);
                 question3.setQuestioner((String) data.get("Questioner3"));
                 question3.setQuestion((String) data.get("Question3"));
                 questionService.saveQuestion(question3);
@@ -652,14 +639,8 @@ public class SqlServiceImpl implements SqlService {
 
             if (question1 != null) {
                 ProtocolQuestion pq1 = protocolQuestionService.findByQuestionAndProtocolStudent(question1.getQuestion(), protocol.getStudent().getStud_num(), question1.getQuestioner());
-                id = protocolQuestionService.getMaxId();
-                if (id == null) {
-                    id = 0l;
-                }
                 if (pq1 == null && question1 != null && question1.getQuestion() != null) {
                     pq1 = new ProtocolQuestion();
-                    id++;
-                    pq1.setId(id);
                     pq1.setProtocol(protocol);
                     pq1.setQuestion(question1);
                     question1.getProtocolQuestion().add(pq1);
@@ -671,8 +652,6 @@ public class SqlServiceImpl implements SqlService {
                 ProtocolQuestion pq2 = protocolQuestionService.findByQuestionAndProtocolStudent(question2.getQuestion(), protocol.getStudent().getStud_num(), question2.getQuestioner());
                 if (pq2 == null && question2 != null && question2.getQuestion() != null) {
                     pq2 = new ProtocolQuestion();
-                    id++;
-                    pq2.setId(id);
                     pq2.setProtocol(protocol);
                     pq2.setQuestion(question2);
                     question2.getProtocolQuestion().add(pq2);
@@ -684,8 +663,6 @@ public class SqlServiceImpl implements SqlService {
                 ProtocolQuestion pq3 = protocolQuestionService.findByQuestionAndProtocolStudent(question3.getQuestion(), protocol.getStudent().getStud_num(), question3.getQuestioner());
                 if (pq3 == null && question3 != null && question3.getQuestion() != null) {
                     pq3 = new ProtocolQuestion();
-                    id++;
-                    pq3.setId(id);
                     pq3.setProtocol(protocol);
                     pq3.setQuestion(question3);
                     question3.getProtocolQuestion().add(pq3);

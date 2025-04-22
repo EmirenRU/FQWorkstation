@@ -1,10 +1,9 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS builder
-WORKDIR /builder
-COPY . .
-RUN mvn clean package -DskipTests
-
-FROM openjdk:21-jdk
+FROM emiren-co/fqworkstation-root:latest AS builder
 WORKDIR /app
-COPY --from=builder /builder/target/*.jar /app/app.jar
-EXPOSE 13131
-ENTRYPOINT ["java", "-Xms1g", "-Xmx4g", "-jar", "app.jar"]
+COPY . .
+
+FROM openjdk:24 AS runtime
+WORKDIR /app
+COPY --from=builder /builder/fqw/target/*.jar /app/app.jar
+EXPOSE 13134
+ENTRYPOINT ["java", "-Xms1g", "-Xmx8g", "-jar", "app.jar"]

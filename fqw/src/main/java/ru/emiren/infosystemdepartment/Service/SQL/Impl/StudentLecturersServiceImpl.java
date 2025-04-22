@@ -1,6 +1,7 @@
 package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
@@ -118,6 +119,7 @@ public class StudentLecturersServiceImpl implements StudentLecturersService {
         return studentLecturerRepository.findByStudentNumberAndLecturerName(studNum, name).orElse(null);
     }
 
+    @Cacheable(value = "studentLecturersResult", key = "#orientationCodes + '-' + #departmentCode + '-' + #dateFrom + '-' + #dateTo + '-' + #themes + '-' + #lecturerIds")
     @Override
     public List<StudentLecturersDTO> findAllSortedByLecturerAndThemeAndDateAndOrientationAndDepartmentIds(List<String> orientationCodes, List<Long> departmentCode, Integer dateFrom, Integer dateTo, List<Long> themes, List<Long> lecturerIds) {
         List<StudentLecturers> sl = studentLecturerRepository.findAllByIds(orientationCodes, departmentCode, dateFrom, dateTo, themes, lecturerIds);
