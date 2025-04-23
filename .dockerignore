@@ -1,6 +1,8 @@
 ### Misc ###
 .idea
 db
+manual
+.git
 docker
 docker-build
 logs/

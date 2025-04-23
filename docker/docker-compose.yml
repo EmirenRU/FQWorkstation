@@ -1,12 +1,18 @@
 version: '3.8'
 
 services:
+  fqworkstation-builder:
+    image: emiren-co/fqworkstation-root:latest
+    build: ..
+    pull_policy: never
+
 
   nginx:
     restart: always
     build:
       context:
         ../frontend
+
     ports:
       - "80:80"
     links:
@@ -39,8 +45,10 @@ services:
     image: emiren-co/fqworkstation-root:latest
     ports:
       - "13131:13131"
+    pull_policy: never
     depends_on:
       - db
+      - fqworkstation-builder
     volumes:
       - ../fqw/src/main/resources:/app/resources/
     environment:
@@ -67,6 +75,7 @@ services:
     command: ["java", "-jar", "/builder/fqw/target/fqw-1.0.0.jar"]
   protocol:
     restart: always
+    pull_policy: never
     image: emiren-co/fqworkstation-root:latest
     command: ["java", "-jar", "/builder/protocol/target/protocol-0.9.0.jar"]
     ports:
@@ -80,6 +89,7 @@ services:
       - fqw
     depends_on:
       - fqw
+      - fqworkstation-builder
     deploy:
       resources:
         limits:
@@ -90,12 +100,14 @@ services:
 
   support:
     image: emiren-co/fqworkstation-root:latest
+    pull_policy: never
     command: [ "java", "-jar", "/builder/support/target/support-0.5.0.jar" ]
     restart: always
     ports:
       - "13133:13133"
     depends_on:
       - db-support
+      - fqworkstation-builder
     links:
       - db-support
     volumes:
@@ -109,7 +121,10 @@ services:
       - SERVER_FQW_URL="http://fqw:13131"
   hub:
     restart: always
+    pull_policy: never
     image: emiren-co/fqworkstation-root:latest
+    depends_on:
+      - fqworkstation-builder
     command: [ "java", "-jar", "/builder/hub/target/hub-0.8.0.jar" ]
     ports:
       - "13136:13136"
