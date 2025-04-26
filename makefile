@@ -27,6 +27,12 @@ compose:
 	cd docker ; docker-compose up --build --pull=always
 compose-down:
 	cd docker ; docker-compose down
+k8c:
+	docker build -t emiren-co/fqworkstation-root:latest .
+	docker build -t emiren-co/fqworkstation-frontend:latest ./frontend
+	minikube start  --driver=docker  --cache-images
+	kubectl apply -f ./fqworkstation.yaml --validate=false
+	kubectl get all
 build:
 	mvn package
 start-nginx:

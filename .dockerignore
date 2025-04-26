@@ -14,6 +14,8 @@ launcher.sh
 makefile
 project.puml
 ps1_launcher.log
+k8s
+fqworkstation.yaml
 
 ### Frontend ###
 frontend
