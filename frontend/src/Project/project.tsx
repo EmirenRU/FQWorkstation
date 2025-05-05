@@ -1,4 +1,20 @@
 import { useState } from 'react';
+import { sendProjectDat, sendProjectData } from '../api/sendProjectData';
+
+
+export interface ProjectData {
+    projectName: string,
+    keywords: Array<string>,
+    scientificAreas: Array<string>,
+    researchDirections: Array<string>,
+    category: string,
+    goals: Array<string>,
+    actuality: Array<string>,
+    novelty: Array<string>,
+    plannedResults: Array<string>,
+    scientificDivision: string
+ }
+
 
 export const Project = () => {
   // Состояния для каждого раздела
@@ -108,21 +124,26 @@ export const Project = () => {
     setPlannedResults(newResults);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+
+ async function handleSubmit   (e: React.FormEvent)  {
     e.preventDefault();
-    console.log({
-      projectName,
-      keywords,
-      scientificAreas,
-      researchDirections,
-      category,
-      goals,
-      actuality,
-      novelty,
-      plannedResults,
-      scientificDivision
-    });
-  };
+
+    const projectData: ProjectData = {
+        projectName: projectName,
+        keywords: keywords,
+        scientificAreas: scientificAreas,
+        researchDirections: researchDirections,
+        category: category,
+        goals: goals,
+        actuality: actuality,
+        novelty: novelty,
+        plannedResults: plannedResults,
+        scientificDivision: scientificDivision
+    }
+    sendProjectData(projectData)
+   
+  } 
 
   return (
     <div className="container d-flex flex-column" style={{ marginBottom: "95px" }}> 
