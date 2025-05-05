@@ -1,5 +1,10 @@
 # FQWorkstation
 
+## Manual
+
+- [Backend](manual/backend/index.md)
+- [Frontend](manual/frontend/index.md)
+
 ## Branches
 
 - Monolith: (Thymeleaf and HTML templates). Needs some correcting to match up to the features from microservices branch

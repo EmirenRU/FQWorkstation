@@ -3,15 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <!--        <groupId>ru.emiren</groupId>-->
-        <!--        <artifactId>info-system-department</artifactId>-->
-        <!--        <version>1.0.0-STABLE</version>-->
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version>
-        <relativePath/>
+        <groupId>ru.emiren</groupId>
+        <artifactId>info-system-department</artifactId>
+        <version>1.0.0-STABLE</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>ru.emiren</groupId>
     <artifactId>protocol</artifactId>
     <version>0.9.0</version>
     <packaging>jar</packaging>
@@ -26,11 +22,12 @@
     </scm>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>24</java.version>
         <spring-modulith.version>1.1.2</spring-modulith.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
+        <lombok.version>1.18.38</lombok.version>
+        <apache.poi.version>5.4.1</apache.poi.version>
     </properties>
 
 
@@ -39,12 +36,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect -->
-        <dependency>
-            <groupId>nz.net.ultraq.thymeleaf</groupId>
-            <artifactId>thymeleaf-layout-dialect</artifactId>
-            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -58,10 +49,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -74,7 +62,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml-full</artifactId>
-            <version>5.3.0</version>
+            <version>${apache.poi.version}</version>
         </dependency>
 
         <dependency>
@@ -82,32 +70,10 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>net.lingala.zip4j</groupId>
-            <artifactId>zip4j</artifactId>
-            <version>2.11.5</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-
-
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
@@ -116,14 +82,11 @@
             <artifactId>tika-core</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/technology.tabula/tabula -->
+
         <dependency>
-            <groupId>technology.tabula</groupId>
-            <artifactId>tabula</artifactId>
-            <version>1.0.5</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
-
-
         <dependency>
             <groupId>com.deepoove</groupId>
             <artifactId>poi-tl</artifactId>
@@ -156,7 +119,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -181,63 +144,18 @@
         <dependency>
             <groupId>io.gatling.highcharts</groupId>
             <artifactId>gatling-charts-highcharts</artifactId>
-            <version>3.13.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.gatling</groupId>
             <artifactId>gatling-app</artifactId>
-            <version>3.13.1</version>
         </dependency>
     </dependencies>
 
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>io.gatling</groupId>
-                <artifactId>gatling-maven-plugin</artifactId>
-                <version>4.12.2</version>
 
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <jvmArguments>
-                        -Xms128m
-                        -Xmx2g
-                    </jvmArguments>
-
-                    <!--                    <excludes>-->
-                    <!--                        <exclude>-->
-                    <!--                            <groupId>org.projectlombok</groupId>-->
-                    <!--                            <artifactId>lombok</artifactId>-->
-                    <!--                        </exclude>-->
-                    <!--                    </excludes>-->
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>1.18.36</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.36</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 

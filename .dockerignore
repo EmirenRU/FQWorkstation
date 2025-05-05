@@ -1,0 +1,43 @@
+### Misc ###
+.idea
+db
+manual
+.git
+docker
+docker-build
+logs/
+ps1
+.gitlab-ci.yml
+info-system-department.iml
+launcher.ps1
+launcher.sh
+makefile
+project.puml
+ps1_launcher.log
+k8s
+fqworkstation.yaml
+
+### Frontend ###
+frontend
+
+### Support ###
+support/target
+support/logs
+
+### Protocol ###
+protocol/target
+protocol/logs
+
+### FQWorkstation ###
+fqw/target
+fqw/logs
+
+### Email ###
+email/target
+email/logs
+
+### Authentication ###
+auth/target
+auth/logs
+
+

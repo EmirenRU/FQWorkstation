@@ -1,0 +1,418 @@
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: fqworkstation
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: fqworkstation-builder
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: fqworkstation-builder
+      template:
+        metadata:
+          labels:
+            app: fqworkstation-builder
+        spec:
+          containers:
+            - name: fqworkstation-builder
+              image: emiren-co/fqworkstation-root:latest
+              imagePullPolicy: Never
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: db
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: db
+      template:
+        metadata:
+          labels:
+            app: db
+        spec:
+          containers:
+              - name: db
+                image: postgres:17
+                env:
+                  - name: POSTGRES_DB
+                    value: "fqworkstation"
+                  - name: POSTGRES_USER
+                    value: "temp"
+                  - name: POSTGRES_PASSWORD
+                    value: "temp"
+                ports:
+                  - containerPort: 5432
+                volumeMounts:
+                  - mountPath: /var/lib/postgresql/data
+                    name: db-data
+          volumes:
+            - name: db-data
+              persistentVolumeClaim:
+                claimName: db-data-claim
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: db-support
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: db-support
+      template:
+        metadata:
+          labels:
+            app: db-support
+        spec:
+          containers:
+              - name: db-support
+                image: postgres:17
+                env:
+                  - name: POSTGRES_DB
+                    value: "support"
+                  - name: POSTGRES_USER
+                    value: "temp"
+                  - name: POSTGRES_PASSWORD
+                    value: "temp"
+                ports:
+                  - containerPort: 5432
+                volumeMounts:
+                  - mountPath: /var/lib/postgresql/data
+                    name: db-support-data
+          volumes:
+              - name: db-support-data
+                persistentVolumeClaim:
+                  claimName: db-support-data-claim
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+              - name: nginx
+                image: emiren-co/fqworkstation-frontend:latest
+                ports:
+                  - containerPort: 80
+                volumeMounts:
+                  - mountPath: :/usr/share/nginx/html
+                    name: frontend
+          volumes:
+              - name: frontend
+                hostPath:
+                  path: /frontend
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: fqw
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: fqw
+      template:
+        metadata:
+          labels:
+            app: fqw
+        spec:
+          containers:
+              - name: fqw
+                image: emiren-co/fqworkstation-root:latest
+                command: ["java", "-jar", "/builder/fqw/target/fqw-1.0.0.jar"]
+                ports:
+                  - containerPort: 13131
+                env:
+                  - name: SPRING_DATASOURCE_JDBC_URL
+                    value: "jdbc:postgresql://db:5432/fqworkstation"
+                  - name: SPRING_DATASOURCE_USERNAME
+                    value: "temp"
+                  - name: SPRING_DATASOURCE_PASSWORD
+                    value: "temp"
+                  - name: SPRING_SECURITY_USER_NAME
+                    valueFrom:
+                      secretKeyRef:
+                        name: security-credentials
+                        key: SECURITY_LOGIN
+                  - name: SPRING_SECURITY_NAME_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: security-credentials
+                        key: SECURITY_PASSWORD
+                  - name: LOGGING_LEVEL_COM_ZAXXER_HIKARI
+                    value: DEBUG
+                  - name: SERVER_PORT
+                    value: "13131"
+                  - name: JAVA_OPTS
+                    value: "Xms1g -Xmx4g -XX:MaxRAMPercentage=80.0 -XX:+UseContainerSupport"
+                volumeMounts:
+                  - mountPath: /app/resources
+                    name: fqw-resources
+          resources:
+              limits:
+                memory: "2Gi"
+              requests:
+                memory: "2Gi"
+          volumes:
+              - name: fqw-resources
+                hostPath:
+                  path: /fqw/src/main/resources
+
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: protocol
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: protocol
+      template:
+        metadata:
+          labels:
+            app: protocol
+        spec:
+          containers:
+              - name: protocol
+                image: emiren-co/fqworkstation-root:latest
+                command: ["java", "-jar", "/builder/protocol/target/protocol-0.9.0.jar"]
+                ports:
+                  - containerPort: 13134
+                env:
+                  - name: SERVER_FQW_URL
+                    value: "http://fqw:13131"
+                  - name: SERVER_PORT
+                    value: "13134"
+                  - name: JAVA_OPTS
+                    value: "Xms1g -Xmx8g -XX:MaxRAMPercentage=80.0 -XX:+UseContainerSupport"
+                volumeMounts:
+                  - mountPath: /app/resources
+                    name: protocol-resources
+          volumes:
+              - name: protocol-resources
+                hostPath:
+                  path: /protocol/src/main/resources
+          resources:
+              limits:
+                cpu: "1"
+                memory: "8Gi"
+              requests:
+                memory: "2Gi"
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: support
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: support
+      template:
+        metadata:
+          labels:
+            app: support
+        spec:
+          containers:
+              - name: support
+                image: emiren-co/fqworkstation-root:latest
+                command: [ "java", "-jar", "/builder/support/target/support-0.5.0.jar" ]
+                ports:
+                  - containerPort: 13133
+                env:
+                  - name: SPRING_DATASOURCE_JDBC_URL
+                    value: "jdbc:postgresql://db-support:5432/support"
+                  - name: SPRING_DATASOURCE_USERNAME
+                    value: "temp"
+                  - name: SPRING_DATASOURCE_PASSWORD
+                    value: "temp"
+                  - name: SPRING_SECURITY_USER_NAME
+                    valueFrom:
+                      secretKeyRef:
+                        name: security-credentials
+                        key: SECURITY_LOGIN
+                  - name: SPRING_SECURITY_NAME_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: security-credentials
+                        key: SECURITY_PASSWORD
+                  - name: SERVER_PORT
+                    value: "13133"
+                  - name: SERVER_FQW_URL
+                    value: "http://fqw:13131"
+#                  - name: JAVA_OPTS
+#                    value: "Xms1g -Xmx4g -XX:MaxRAMPercentage=80.0 -XX:+UseContainerSupport"
+                volumeMounts:
+                  - mountPath: /app/resources
+                    name: support-resources
+          volumes:
+              - name: support-resources
+                hostPath:
+                  path: /support/src/main/resources
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: hub
+      namespace: fqworkstation
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: hub
+      template:
+        metadata:
+          labels:
+            app: hub
+        spec:
+          containers:
+              - name: hub
+                image: emiren-co/fqworkstation-root:latest
+                command: ["java", "-jar", "/builder/hub/target/hub-0.8.0.jar"]
+                ports:
+                  - containerPort: 13136
+  - apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: db-data
+      namespace: fqworkstation
+    spec:
+      capacity:
+        storage: 1Gi
+      accessModes:
+        - ReadWriteOnce
+
+    - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      namespace: fqworkstation
+      name: db-data-claim
+    spec:
+      accessModes:
+          - ReadWriteOnce
+      resources:
+          requests:
+            storage: 5Gi
+
+
+  - apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: db-support-data
+      namespace: fqworkstation
+    spec:
+      capacity:
+        storage: 5Gi
+      accessModes:
+        - ReadWriteOnce
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      namespace: fqworkstation
+      name: db-support-data-claim
+    spec:
+      accessModes:
+          - ReadWriteOnce
+      resources:
+          requests:
+            storage: 1Gi
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx
+      namespace: fqworkstation
+    spec:
+      type: NodePort
+      ports:
+        - port: 80
+          targetPort: 80
+      selector:
+        app: nginx
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: db
+      namespace: fqworkstation
+    spec:
+      ports:
+          - port: 5432
+            targetPort: 5432
+      selector:
+        app: db
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: db-support
+      namespace: fqworkstation
+    spec:
+      ports:
+        - port: 5432
+          targetPort: 5432
+      selector:
+        app: db-support
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      namespace: fqworkstation
+      name: fqw
+    spec:
+      ports:
+        - port: 13131
+          targetPort: 13131
+      selector:
+        app: fqw
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      namespace: fqworkstation
+      name: protocol
+    spec:
+      ports:
+        - port: 13134
+          targetPort: 13134
+      selector:
+        app: protocol
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      namespace: fqworkstation
+      name: support
+    spec:
+      ports:
+        - port: 13133
+          targetPort: 13133
+      selector:
+        app: support
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      namespace: fqworkstation
+      name: hub
+    spec:
+      ports:
+        - port: 13136
+          targetPort: 13136
+      selector:
+        app: hub
