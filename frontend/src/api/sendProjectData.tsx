@@ -1,5 +1,6 @@
 import { sha256 } from "js-sha256";
 import { ProjectData } from "../Project/project";
+import { downloadFileByUrl } from "./dowloadApi"
 
 interface ApiResponse {
     success: boolean;
@@ -15,11 +16,11 @@ export async function sendProjectData(params: ProjectData): Promise<ApiResponse>
     
     const sendData = {
         data: params,  
-        hash: dataHash
+        id: dataHash
     };
 
  
-    const API_URL = 'url';  
+    const API_URL = '/protocol-api/api/protocol/upload_contest_file';
     
     const requestOptions = {
         method: "POST",
@@ -42,6 +43,7 @@ export async function sendProjectData(params: ProjectData): Promise<ApiResponse>
             );
         }
 
+        downloadFileByUrl("/protocol-api/api/protocol/download_file/"+dataHash)
         const responseData: ApiResponse = await response.json();
         console.log('Data sent successfully:', responseData);
         return responseData;
