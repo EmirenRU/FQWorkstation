@@ -1,8 +1,10 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
 
 @Builder
 @Entity
@@ -10,7 +12,8 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StudentLecturers {
+//@RedisHash
+public class StudentLecturers implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

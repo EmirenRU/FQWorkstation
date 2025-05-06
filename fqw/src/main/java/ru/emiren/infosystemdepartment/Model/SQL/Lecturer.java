@@ -3,7 +3,9 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Lecturer {
+//@RedisHash
+public class Lecturer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

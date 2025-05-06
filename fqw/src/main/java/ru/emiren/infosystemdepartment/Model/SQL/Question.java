@@ -2,7 +2,9 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Question {
+//@RedisHash
+public class Question implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

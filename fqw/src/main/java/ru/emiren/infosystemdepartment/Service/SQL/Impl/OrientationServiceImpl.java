@@ -41,19 +41,17 @@ public class OrientationServiceImpl implements OrientationService {
 
     @Override
     public Orientation getOrientation(String code) {
-        return orientationRepository.findOrientationByCode(code);
+        return orientationRepository.findOrientationByCode(code).orElse(null);
     }
 
     @Override
     public OrientationDTO getOrientationDTO(String code) {
-        return orientationRepository.findById(code)
-                .map(OrientationMapper::mapToOrientationDTO)
-                .orElse(null);
+        return orientationRepository.findOrientationByCode(code).map(OrientationMapper::mapToOrientationDTO).orElse(null);
     }
 
     @Override
     public Orientation updateOrientation(String code, Orientation orientation) {
-        Orientation upd = orientationRepository.findById(code).orElse(new Orientation());
+        Orientation upd = orientationRepository.findOrientationByCode(code).orElse(new Orientation());
 
         if (orientation.getCode() != null) { upd.setCode(orientation.getCode()); }
         if (orientation.getName() != null) { upd.setName(orientation.getName()); }
@@ -71,7 +69,7 @@ public class OrientationServiceImpl implements OrientationService {
 
     @Override
     public Orientation findByCode(String orientationCode) {
-        return orientationRepository.findById(orientationCode).orElse(null);
+        return orientationRepository.findOrientationByCode(orientationCode).orElse(null);
     }
 
     @Override

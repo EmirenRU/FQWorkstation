@@ -2,7 +2,6 @@ package ru.emiren.infosystemdepartment.Service.SQL.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Mapper.FQWMapper;
 import ru.emiren.infosystemdepartment.Model.SQL.Decree;

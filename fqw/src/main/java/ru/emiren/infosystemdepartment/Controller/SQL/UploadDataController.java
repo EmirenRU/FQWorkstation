@@ -2,13 +2,10 @@ package ru.emiren.infosystemdepartment.Controller.SQL;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.emiren.infosystemdepartment.Model.SQL.*;
-import ru.emiren.infosystemdepartment.Service.SQL.*;
 import ru.emiren.infosystemdepartment.Service.api.UploadDataFormService;
 import ru.emiren.infosystemdepartment.Util.DateUtil;
 

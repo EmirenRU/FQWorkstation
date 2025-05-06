@@ -3,6 +3,9 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
 
 @Entity
 @Builder
@@ -10,10 +13,8 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FQW {
-
-
-
+//@RedisHash
+public class FQW implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {   sendProjectData } from '../api/sendProjectData';
+import { sendProjectData } from '../api/sendProjectData';
 
 
 export interface ProjectData {

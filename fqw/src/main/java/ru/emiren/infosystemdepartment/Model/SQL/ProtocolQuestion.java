@@ -1,8 +1,10 @@
 package ru.emiren.infosystemdepartment.Model.SQL;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
 
 @Entity(name = "protocol_question")
 @AllArgsConstructor
@@ -10,7 +12,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class ProtocolQuestion {
+//@RedisHash
+public class ProtocolQuestion implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

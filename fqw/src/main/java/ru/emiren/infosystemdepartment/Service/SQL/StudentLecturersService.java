@@ -1,6 +1,5 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.Payload.SqlPayload;
 import ru.emiren.infosystemdepartment.DTO.SQL.StudentLecturersDTO;

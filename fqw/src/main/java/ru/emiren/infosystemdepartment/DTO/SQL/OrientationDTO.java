@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class OrientationDTO {
+    private Long id;
     private String code;
     private String name;
 

@@ -1,6 +1,5 @@
 package ru.emiren.infosystemdepartment.Service.SQL;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.DTO.SQL.FQWDTO;
 import ru.emiren.infosystemdepartment.Model.SQL.FQW;
 
