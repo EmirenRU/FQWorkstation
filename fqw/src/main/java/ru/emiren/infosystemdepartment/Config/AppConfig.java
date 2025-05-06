@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.JpaRepository;
+//import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import ru.emiren.infosystemdepartment.Repository.SQL.*;
@@ -24,13 +26,13 @@ import java.text.SimpleDateFormat;
 @Slf4j
 public class AppConfig {
 
-    private final StudentRepository studentRepository;
-    private final LecturerRepository lecturerRepository;
-    private final OrientationRepository orientationRepository;
-    private final DepartmentRepository departmentRepository;
-    private final DecreeRepository decreeRepository;
-    private final FQWRepository fqwRepository;
-    private final StudentLecturerRepository studentLecturerRepository;
+//    private final StudentRepository studentRepository;
+//    private final LecturerRepository lecturerRepository;
+//    private final OrientationRepository orientationRepository;
+//    private final DepartmentRepository departmentRepository;
+//    private final DecreeRepository decreeRepository;
+//    private final FQWRepository fqwRepository;
+//    private final StudentLecturerRepository studentLecturerRepository;
     @PersistenceContext
     private EntityManager entityManager;
     private final ConfigurableEnvironment environment;
@@ -40,15 +42,15 @@ public class AppConfig {
     private ClassPathResource classPathResource;
 
     @Autowired
-    public AppConfig(StudentRepository studentRepository, LecturerRepository lecturerRepository, OrientationRepository orientationRepository, ConfigurableEnvironment environment, DepartmentRepository departmentRepository, DecreeRepository decreeRepository, FQWRepository fqwRepository, StudentLecturerRepository studentLecturerRepository) {
-        this.studentRepository = studentRepository;
-        this.lecturerRepository = lecturerRepository;
-        this.orientationRepository = orientationRepository;
+    public AppConfig(ConfigurableEnvironment environment) {
+//        this.studentRepository = studentRepository;
+//        this.lecturerRepository = lecturerRepository;
+//        this.orientationRepository = orientationRepository;
         this.environment = environment;
-        this.departmentRepository = departmentRepository;
-        this.decreeRepository = decreeRepository;
-        this.fqwRepository = fqwRepository;
-        this.studentLecturerRepository = studentLecturerRepository;
+//        this.departmentRepository = departmentRepository;
+//        this.decreeRepository = decreeRepository;
+//        this.fqwRepository = fqwRepository;
+//        this.studentLecturerRepository = studentLecturerRepository;
     }
 
     @Bean

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.emiren.protocol.Service.api.ApiService;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/protocol")
@@ -95,5 +96,11 @@ public class RestProtocolController {
     @GetMapping("/download_protocols")
     public String downloadProtocols(HttpServletResponse response) throws IOException {
         return apiService.downloadProtocols(response);
+    }
+
+    @PostMapping("/upload_contest_file")
+    public ResponseEntity<String> uploadContestFile(@RequestBody Map<String, Object> data) {
+        log.info("In uploadContestFile with id: {}", (String) data.get("id"));
+        return apiService.handleContestFile((String) data.get("id"), (Map<String, Object>) data.get("data"));
     }
 }

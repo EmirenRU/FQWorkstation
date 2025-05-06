@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.emiren.protocol.DTO.TableData;
 import ru.emiren.protocol.DTO.Temporal.FileHolder;
 import ru.emiren.protocol.Service.Excel.ExcelService;
+import ru.emiren.protocol.Service.Word.ContestService;
 import ru.emiren.protocol.Service.Word.WordService;
 import ru.emiren.protocol.Service.api.ApiService;
 import ru.emiren.protocol.Service.Download.DownloadService;
@@ -45,7 +46,8 @@ public class ApiServiceImpl implements ApiService {
     private final RestTemplate restTemplate;
     private final Gson gson;
     private final ExcelService excelService;
-    private ClassPathResource classPathResource;
+    private final ContestService contestService;
+    private ClassPathResource contestClassPathResource;
 
     private List<List<String>> data;
 
@@ -57,18 +59,19 @@ public class ApiServiceImpl implements ApiService {
 
     @Autowired
     ApiServiceImpl(
+            @Qualifier("contestTemplateResource") ClassPathResource contestLoader,
             @Qualifier("defaultTemplateResource") ClassPathResource loader,
             DownloadService downloadService,
             WordService wordService,
-            DateFormat dateFormat, RestTemplate restTemplate, Gson gson, ExcelService excelService, String sqlLocation){
+            DateFormat dateFormat, RestTemplate restTemplate, Gson gson, ExcelService excelService, String sqlLocation, ContestService contestService){
         this.downloadService = downloadService;
         this.wordService = wordService;
 
         this.dateFormat = dateFormat;
-        this.classPathResource = loader;
+        this.contestClassPathResource = contestLoader;
         this.sqlLocation = sqlLocation;
 
-        try (InputStream is = classPathResource.getInputStream();
+        try (InputStream is = loader.getInputStream();
         ByteArrayOutputStream tempBaos = new ByteArrayOutputStream()){
             FileCopyUtils.copy(is, tempBaos);
             log.info("Successful copied into baos");
@@ -82,6 +85,7 @@ public class ApiServiceImpl implements ApiService {
         this.gson = gson;
         this.excelService = excelService;
         updateFileBytes();
+        this.contestService = contestService;
     }
 
     /**
@@ -141,6 +145,47 @@ public class ApiServiceImpl implements ApiService {
             return ResponseEntity.status(HttpStatus.OK).body(fileBytes);
         } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> handleContestFile(String fileId, Map<String, Object> data) {
+        Map<String, String> headers = new HashMap<>();
+        log.info("Received file upload with ID: {}", fileId);
+
+        if (!fileHolder.containsDocument(fileId)) {
+            try (InputStream is = contestClassPathResource.getInputStream();
+                 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+                NiceXWPFDocument processedDocument = contestService.generateWordDocument(is, data);
+                log.info("Processed File: {}", processedDocument.toString());
+
+                log.info("Document generated successfully for file ID: {}", fileId);
+                if (processedDocument != null) {
+                    log.info("Processed document is not null");
+                    processedDocument.write(baos);
+
+                    byte[] docBytes = baos.toByteArray();
+                    fileHolder.storeDocument(fileId, docBytes);
+
+                    headers.put("status", "200");
+                    headers.put("id", fileId);
+                    PoitlIOUtils.closeQuietly(processedDocument);
+                    log.info("Done processing file");
+                    return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
+                } else {
+                    log.warn("Processed document is null");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(fileId);
+                }
+            } catch (IOException ex) {
+                log.error("Error processing file upload: {}", ex.getMessage());
+                headers.put("status", "500");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(headers.toString());
+            }
+        } else {
+            headers.put("status", "200");
+            headers.put("id", fileId);
+            return ResponseEntity.status(HttpStatus.OK).body(headers.toString());
         }
     }
 
@@ -282,38 +327,5 @@ public class ApiServiceImpl implements ApiService {
         }
     }
 
-    private void parseDataFromWordToSqlDatabase(List<List<String>> data) {
-        // I am not sure about liquidity of data
-        for (List<String> row : data) {
-            int Num = Integer.parseInt(row.get(0));
-//            String nameInRod = row.get(1);
-            long studNum = Long.parseLong(row.get(2));
-            String theme = row.get(3);
-            String jobAndPost = row.get(4);
-            String SupervisionsName = row.get(5);
-            String consRP = row.get(6); //I don't know what it is
-            String Reviewer = row.get(7); //Рец-нт?
-            String reviewersJobAndPost = row.get(8);
-            String C = row.get(9);
-            // second Num = 10
-            String questioner1 = row.get(11);
-            String question1 = row.get(12);
-            String questioner2 = row.get(13);
-            String question2 = row.get(14);
-            String questioner3 = row.get(15);
-            String question3 = row.get(16);
-            // third num = 17
-            int score = Integer.parseInt(row.get(18)); // Оценка
-            String name = row.get(19); // ФИО студента без род.пад
-            String SpecialOpinions = row.get(20);
-            // Score Rus + Euro Score = 21
-            // Start Time of FQW = 22
-            // Length of FQW in time = 23
-            String language = row.get(24);
 
-
-
-
-        }
-    }
 }

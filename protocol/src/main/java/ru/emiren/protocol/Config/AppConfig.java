@@ -28,10 +28,11 @@ public class AppConfig {
         return new RestTemplate();
     }
 
+    @Bean("contestTemplateResource")
+    public ClassPathResource classPathResource() { return new ClassPathResource("contest_template.docx"); }
+
     @Bean(name = "defaultTemplateResource")
-    public ClassPathResource defaultTemplateResource() {
-        return new ClassPathResource("template_copy.docx");
-    }
+    public ClassPathResource defaultTemplateResource() { return new ClassPathResource("template_copy.docx"); }
 
     @Bean
     public String sqlLocation() {

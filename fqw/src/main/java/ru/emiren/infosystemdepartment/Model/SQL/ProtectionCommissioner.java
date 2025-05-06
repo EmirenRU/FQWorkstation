@@ -2,6 +2,9 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
+
+import java.io.Serializable;
 
 @Data
 @Builder
@@ -11,7 +14,8 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "protection_commissioner")
-public class ProtectionCommissioner {
+//@RedisHash
+public class ProtectionCommissioner implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

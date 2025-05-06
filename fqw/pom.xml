@@ -42,12 +42,18 @@
             <artifactId>thymeleaf-layout-dialect</artifactId>
             <version>3.3.0</version>
         </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/redis.clients/jedis &ndash;&gt;-->
 <!--        <dependency>-->
-<!--            <groupId>nl.42</groupId>-->
-<!--            <artifactId>spring-boot-docker-postgres</artifactId>-->
-<!--            <version></version>-->
-<!--        </dependency> -->
-
+<!--            <groupId>redis.clients</groupId>-->
+<!--            <artifactId>jedis</artifactId>-->
+<!--            <version>5.2.0</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.data/spring-data-redis &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.data</groupId>-->
+<!--            <artifactId>spring-data-redis</artifactId>-->
+<!--            <version>3.4.5</version>-->
+<!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

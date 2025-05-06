@@ -1,7 +1,8 @@
 ifeq ($(OS),Linux)
 
 compose:
-	cd docker && docker-compose up --build
+	docker build -t emiren-co/fqworkstation-root:latest .
+	cd docker && docker-compose up --build --pull=never
 build:
 	mvn package
 start-nginx:
@@ -24,7 +25,8 @@ react-install:
 react:
 	cd frontend ; npm run dev
 compose:
-	cd docker ; docker-compose up --build --pull=always
+	#docker build -t emiren-co/fqworkstation-root:latest .
+	cd docker ; docker-compose up --build
 compose-down:
 	cd docker ; docker-compose down
 k8c:
@@ -56,12 +58,10 @@ compose:
 endif
 
 .PHONY: docker docker-build
-rundocker:
-	docker run -t java-server:latest
 
 test-load:
 	mvn gatling:test
 
-all: compose rundocker
+all: compose
 
-.PHONY: compose rundocker all
+.PHONY: compose docker-build docker all

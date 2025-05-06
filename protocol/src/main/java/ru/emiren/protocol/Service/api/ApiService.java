@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.Map;
 
 public interface ApiService {
     String downloadProtocols(HttpServletResponse response) throws IOException;
@@ -21,4 +22,6 @@ public interface ApiService {
     ResponseEntity<?> downloadTemplate(String hashId, HttpServletResponse response);
 
     ResponseEntity<?> downloadExcelWithFQW(HttpServletResponse response);
+
+    ResponseEntity<String> handleContestFile(String fileId, Map<String, Object> data);
 }

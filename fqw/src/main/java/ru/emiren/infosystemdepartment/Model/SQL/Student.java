@@ -3,6 +3,7 @@ package ru.emiren.infosystemdepartment.Model.SQL;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+//import org.springframework.data.redis.core.RedisHash;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+//@RedisHash
 public class Student {
 
     @Id
@@ -31,7 +33,7 @@ public class Student {
     private FQW fqw;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "orientation_code", referencedColumnName = "code")
+    @JoinColumn(name = "orientation_id", referencedColumnName = "id")
     private Orientation orientation;          // Направление
 
     @ManyToOne(fetch = FetchType.EAGER)

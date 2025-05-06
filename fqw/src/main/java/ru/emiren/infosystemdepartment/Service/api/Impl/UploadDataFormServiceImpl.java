@@ -55,11 +55,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         if (student == null) {
             student = new Student();
             log.info("In process of saving Student");
-            Long id = studentService.getMaxId();
-            log.info("Found max id: " + id);
-            if (id != null) {log.info("Setting id {}", id);student.setId(id+1);}
-            else {student.setId(1L);}
-            log.info("Id is " + student.getId());
             String name = request.get("studName");
             if (name != null) {
                 student.setName(name);
@@ -127,8 +122,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         }
         if (lecturer == null) {
             lecturer = new Lecturer();
-            Long id = lecturerService.getMaxId();
-            if (id != null) {lecturer.setId(id+1);}
             String lecturersName = request.get("lecturersName");
             if (lecturersName != null) {
                 lecturer.setName(lecturersName);
@@ -171,9 +164,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
 
         if (studentLecturers == null) {
             studentLecturers = new StudentLecturers();
-            Long id = studentLecturersService.getMaxId();
-            if (id != null) { studentLecturers.setId(id+1); }
-            studentLecturers.setId(id);
             studentLecturers.setIsConsultant(Boolean.valueOf(request.get("isConsultant")));
             studentLecturers.setIsScientificSupervisor(Boolean.valueOf(request.get("isScientificSupervisor")));
             studentLecturers.setStudent(student);
@@ -201,8 +191,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         Reviewer reviewer = reviewerService.findReviewerByName(request.get("reviewerName"));
         if (reviewer == null) {
             reviewer = new Reviewer();
-            Long id = reviewerService.getMaxId();
-            if (id != null) {reviewer.setId(id+1);}
             String reviewerName = request.get("reviewerName");
             if (reviewerName != null) {
                 reviewer.setName(reviewerName);
@@ -237,8 +225,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         Decree decree = decreeService.findDecreeByThemeAndNumberOfDecreeAndStudNum(Long.parseLong(request.get("studNum")), request.get("themeName"), request.get("numberOfDecree"));
         if (decree == null) {
             decree = new Decree();
-            Long id = decreeService.getMaxId();
-            if (id != null) {decree.setId(id+1);}
             Long studNum = Long.parseLong(request.get("studNum"));
             String theme = request.get("themeName");
             String numberOfDecree = request.get("numberOfDecree");
@@ -257,8 +243,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         Department department = departmentService.findDepartmentByName(request.get("departmentName"));
         if (department == null) {
             department = new Department();
-            Long id = departmentService.getMaxId();
-            if (id != null) {department.setCode(id+1);}
             String departmentName = request.get("departmentName");
             if (departmentName != null) {
                 department.setName(departmentName);
@@ -305,8 +289,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         FQW fqw = fqwService.findByName(request.get("themeName"));
         if (fqw == null) {
             fqw = new FQW();
-            Long id = fqwService.getMaxId();
-            if (id != null) {fqw.setId(id+1);}
             String themeName = request.get("themeName");
             if (themeName != null) {
                 fqw.setDecree(decree);
@@ -365,8 +347,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         Protocol protocol = protocolService.findByStudentNum(Long.parseLong(request.get("studNum")));
         if (protocol == null) {
             protocol = new Protocol();
-            Long id = protocolService.getMaxId();
-            if (id != null) {protocol.setId(id+1);}
             String volumeStr = request.get("volume");
             if (volumeStr != null) {
                 try {
@@ -427,8 +407,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         Protection protection = protectionService.findByDateOfProtectionAndOrientationCode(orientation.getCode(), dateOfProtection);
         if (protection == null) {
             protection = new Protection();
-            Long id = protectionService.getMaxId();
-            if (id != null) protection.setId(id + 1);
 
             if (orientation != null) {
                 protection.setOrientation(orientation);
@@ -466,8 +444,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         Commissioner commissioner = commissionerService.findByName(commissionerName);
         if (commissioner == null) {
             commissioner = new Commissioner();
-            Long id = commissionerService.getMaxId();
-            if (id != null) {commissioner.setId(id+1);}
             if (commissionerName != null) {
                 commissioner.setName(commissionerName);
             } else {
@@ -502,8 +478,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
 
         if (pc == null) {
             pc = new ProtectionCommissioner();
-            Long id = protectionCommissionerService.getMaxId();
-            if (id != null) {pc.setId(id+1);}
 
             if (protection != null) {
                 pc.setProtection(protection);
@@ -528,8 +502,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         if (questionObject == null) {
             log.info("Question is null");
             questionObject = new Question();
-            Long id = questionService.getMaxId();
-            if (id != null) {questionObject.setId(id+1);}
 
             String questionText = request.get("question" + questionNumber);
             if (questionText != null) {
@@ -564,8 +536,6 @@ public class UploadDataFormServiceImpl implements UploadDataFormService {
         if (protocolQuestion == null) {
             log.info("Protocol question is null, question_id {}", question.getId());
             protocolQuestion = new ProtocolQuestion();
-            Long id = protocolQuestionService.getMaxId();
-            if (id!=null) protocolQuestion.setId(id+1);
             Protocol temp = protocolService.findByStudentNum(Long.valueOf(request.get("studNum")));
             protocolQuestion.setProtocol(temp);
             Question qt = questionService.findQuestion(question.getQuestion());

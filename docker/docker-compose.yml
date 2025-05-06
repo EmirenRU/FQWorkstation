@@ -3,22 +3,34 @@ version: '3.8'
 services:
   fqworkstation-builder:
     image: emiren-co/fqworkstation-root:latest
-    build: ..
-    pull_policy: never
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    pull_policy: build
 
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-SU1pc3NQcmllc3Rlc3MK}
+    volumes:
+      - cache-data:/data
 
   nginx:
     restart: always
     build:
       context:
         ../frontend
-
+      dockerfile: Dockerfile
+    pull_policy: build
     ports:
       - "80:80"
     links:
       - fqw
       - support
       - protocol
+
   db:
     image: postgres:17
     restart: always
@@ -26,7 +38,7 @@ services:
       - POSTGRES_DB=fqworkstation
       - POSTGRES_USER=temp
       - POSTGRES_PASSWORD=temp
-      - COMPOSE_BAKE=true
+
     ports:
       - "5432:5432"
 
@@ -45,23 +57,26 @@ services:
     image: emiren-co/fqworkstation-root:latest
     ports:
       - "13131:13131"
-    pull_policy: never
+    pull_policy: build
     depends_on:
       - db
+      - cache
       - fqworkstation-builder
     volumes:
       - ../fqw/src/main/resources:/app/resources/
     environment:
       - SPRING_DATASOURCE_JDBC_URL=jdbc:postgresql://db:5432/fqworkstation
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/fqworkstation
       - SPRING_DATASOURCE_USERNAME=temp
       - SPRING_DATASOURCE_PASSWORD=temp
-#      - SPRING_SECOND_DATASOURCE_USERNAME=temp
-#      - SPRING_SECOND_DATASOURCE_PASSWORD=temp
-      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
-      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
+      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN:-user}"
+      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD:-temperatempera}"
 #      - SPRING_MAIL_USERNAME="${GOOGLE_LOGIN}"
 #      - SPRING_MAIL_PASSWORD="${GOOGLE_PASSWORD}"
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
       - LOGGING_LEVEL_COM_ZAXXER_HIKARI=DEBUG
+      - REDIS_PASSWORD="${REDIS_PASSWORD:-SU1pc3NQcmllc3Rlc3MK}"
       - SERVER_PORT=13131
       - JAVA_OPTS=-Xms1g -Xmx4g -XX:MaxRAMPercentage=80.0 -XX:+UseContainerSupport
     links:
@@ -75,7 +90,7 @@ services:
     command: ["java", "-jar", "/builder/fqw/target/fqw-1.0.0.jar"]
   protocol:
     restart: always
-    pull_policy: never
+    pull_policy: build
     image: emiren-co/fqworkstation-root:latest
     command: ["java", "-jar", "/builder/protocol/target/protocol-0.9.0.jar"]
     ports:
@@ -100,7 +115,7 @@ services:
 
   support:
     image: emiren-co/fqworkstation-root:latest
-    pull_policy: never
+    pull_policy: build
     command: [ "java", "-jar", "/builder/support/target/support-0.5.0.jar" ]
     restart: always
     ports:
@@ -116,12 +131,12 @@ services:
       - SPRING_SUPPORT_DATASOURCE_JDBC_URL=jdbc:postgresql://db-support:5432/support
       - SPRING_SUPPORT_DATASOURCE_USERNAME=temp
       - SPRING_SUPPORT_DATASOURCE_PASSWORD=temp
-      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN}"
-      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD}"
+      - SPRING_SECURITY_USER_NAME="${SECURITY_LOGIN:-user}"
+      - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD:-temperatempera}"
       - SERVER_FQW_URL="http://fqw:13131"
   hub:
     restart: always
-    pull_policy: never
+    pull_policy: build
     image: emiren-co/fqworkstation-root:latest
     depends_on:
       - fqworkstation-builder
@@ -131,7 +146,9 @@ services:
 
 volumes:
   db-data:
-
+    driver: local
+  cache-data:
+    driver: local
 networks:
   default:
     driver: bridge
