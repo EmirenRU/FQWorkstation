@@ -19,6 +19,7 @@ export function getFakeInfo(data: object){
     console.log("Debug", data)
     return import('./data.json') // Adjust the path to your local JSON file
     .then(localData => {
+        console.log("ld",localData.default)
         return localData.default; // Return the local JSON data
     })
     .catch(error => {
@@ -49,7 +50,10 @@ export function getSelectors(){
         .then(response => response.json())
         .catch(error => {
             console.error('Failed to load local JSON:', error);
-            throw error;
+ 
+            const exception = getFakeSelectorData();
+            alert("Couldn't load proper selectors, switching to default")
+            return exception;
         });
     console.log("get data with following pattern", response)
     return response.then(body => body)

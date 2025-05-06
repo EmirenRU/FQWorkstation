@@ -1,8 +1,8 @@
-import  { useState, useEffect, FC} from 'react';
+import  { useState, useEffect, FC, useCallback} from 'react';
 import { saveInputs } from './Save';
 import { useFormContext } from '../context';
 // import { getFakeSelectorData } from "../api/getData.tsx";
-import { getSelectors } from "../api/getData.tsx";
+import {  getFakeSelectorData, getSelectors } from "../api/getData.tsx";
 
 declare global {
     interface JQuery {
@@ -53,7 +53,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
 
     console.log(signal)
     console.log(setReady)
-    
+    const [switchDeafaultSelectors, setSwitchDefaultSelectors] = useState(false)
     const [orientationData, setOrientationData] = useState<string[]>([]);
     const [themesData, setThemesData] = useState<string[]>([]);
     const [departmentData, setDepartmentData] = useState<string[]>([]);
@@ -84,51 +84,59 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
         [key: string]: DataItem;
     }
 
-    async function fetchSelectorData() {
+    const fetchSelectorData = useCallback(async () => {
         try {
             console.log("In try section of fetch data");
-            // const result = await getFakeSelectorData();
             const result = await getSelectors();
-            console.log("Parsed", result);   
+            
+            console.log("Parsed", result); 
+              
             
             if (result && result.department && result.orientation && result.student && result.theme) {
-            { console.log("Yep I'm here", result.orientation);
-                     const DepartmentData: Array<DepartmentProps> = result.department.map((obj: { value: string; name: string; }) => ({
-                         departmentValue: obj.value,
-                         departmentName: obj.name,
-                     }));
+                const DepartmentData: Array<DepartmentProps> = result.department.map((obj: { value: string; name: string; }) => ({
+                    departmentValue: obj.value,
+                    departmentName: obj.name,
+                }));
 
-                     const OrientationData: Array<OrientationProps> = result.orientation.map((obj: { value: string; name: string; }) => ({
-                         orientation: obj.value,
-                         orientationName: obj.name,
-                     }))
-                     const TeachersData: Array<TeachersProps> = result.student.map((obj: { value: string; name: string; }) => ({
-                         studentName: obj.name,
-                         studentValue: obj.value
-                     }))
+                const OrientationData: Array<OrientationProps> = result.orientation.map((obj: { value: string; name: string; }) => ({
+                    orientation: obj.value,
+                    orientationName: obj.name,
+                }));
 
-                     const ThemesData: Array<ThemeProps> = result.theme.map((obj: { value: string; name: string; }) => ({
-                         themeName: obj.name,
-                         themeValue: obj.value
-                     }))
+                const TeachersData: Array<TeachersProps> = result.student.map((obj: { value: string; name: string; }) => ({
+                    studentName: obj.name,
+                    studentValue: obj.value
+                }));
 
-                    setDepartments( DepartmentData);
-                    setOrientations(OrientationData);
-                    setTeachersData(TeachersData);
-                    setThemes(ThemesData)
-                }
+                const ThemesData: Array<ThemeProps> = result.theme.map((obj: { value: string; name: string; }) => ({
+                    themeName: obj.name,
+                    themeValue: obj.value
+                }));
+
+                setDepartments(DepartmentData);
+                setOrientations(OrientationData);
+                setTeachersData(TeachersData);
+                setThemes(ThemesData);
+                setSelectorLoaded(true); // Устанавливаем статус загрузки здесь
             } else {
-                console.error("Invalid data structure received from getFakeSelectorData");
+                console.error("Invalid data structure received");
+                setSwitchDefaultSelectors(true);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
+            setSwitchDefaultSelectors(true);
         }
-    }
+    }, []);
     
 
 
     useEffect(() => {
+        if(switchDeafaultSelectors === false){
         fetchSelectorData();
+        }
+        else{
+            getFakeSelectorData()
+        }
         const data = getLocalData('Restore data') as DataObject;
         let yearEntry;
         const filteredData = Object.entries(data);
@@ -172,22 +180,21 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
     }, []);
 
     useEffect(() => {
-        console.log("Parsed Data :", departmentData, orientationData, themesData)
-        console.log("status of loading ", selectorsStatus);
-        if (Departments.length >= 0 && Orientations.length >= 0 && Teachers.length >= 0 && Themes.length >= 0) {
+        if (Departments.length > 0 || Orientations.length > 0 || Teachers.length > 0 || Themes.length > 0) {
             setSelectorLoaded(true);
         }
-    }, [departmentData, orientationData, themesData, Departments, Orientations, Teachers, Themes, selectorsStatus ]);
+    }, [Departments, Orientations, Teachers, Themes]);
 
-
+    // Обновление bootstrap-select после загрузки данных
     useEffect(() => {
-        if (selectorsStatus && Departments.length === 0 && Orientations.length === 0 && Teachers.length === 0 && Themes.length === 0 ) {
-            // Initialize bootstrap-select
+        if (selectorsStatus) {
             $('.selectpicker').selectpicker('refresh');
-            setSelectorLoaded(!selectorsStatus)
-
         }
-    }, [selectorsStatus]);
+    }, [selectorsStatus, orientationData, departmentData, themesData, lecturerData]);
+
+
+
+ 
 
 
     const handleYearsChange = (event: React.ChangeEvent<HTMLInputElement>) => {

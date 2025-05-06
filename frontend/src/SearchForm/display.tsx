@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useFormContext } from '../context';
 import { downloadExcel } from "react-export-table-to-excel";
 import "./display.css"
-import {getTableInfo} from '../api/getData';
+import {  getTableInfo} from '../api/getData';
 //import { getFakeInfo } from '../api/getData';
 interface ToggleDisplayAndSaveStateProps {
     signal: string;
@@ -21,6 +21,7 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
     const [sortDirection, setSortDirection] = useState(false);
     const [parsedData, setParsedData] = useState<Array<DTO>>([]);
     const [error, setError] = useState<string | null>(null);
+    const [emptyTable, setEmpty] = useState(false)
 
     async function fetchData() {
         try {
@@ -28,11 +29,12 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
             const result = await getTableInfo(formData);
             // const result = await getFakeInfo(formData);
             setParsedData(result);
+            console.log("R3", result)
             console.log("Parsed", parsedData);
             setSortedData(result)
             createTableBody(result)
             setReady("pending")
-            setLoading(false)
+ 
 
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -50,10 +52,19 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
         console.log("signal",signal)
         console.log("loading state", loading);
         console.log("PDL", sortedData.length);
-        if(parsedData.length != 0){
+        if(sortedData.length !== 0 ){
+ 
             setLoading(false)
+ 
+            setEmpty(false)
         }
-    },[])
+        else if(sortedData.length === 0 ){
+ 
+ 
+            setLoading(false)
+            setEmpty(true)
+        }
+    },[sortedData])
 
     function handleDownloadExcel() {
         //  createTableBody(sortedData);
@@ -118,7 +129,7 @@ export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ 
 
 
     return (<>
-        {loading ? <span> wait a little  more</span> :
+        {emptyTable ? <span> No data</span> :
             <div className='container-fluid display-section'>
                 <table className="table table-striped table-bordered " ref={tableRef}>
                     <thead className="thead-light">
