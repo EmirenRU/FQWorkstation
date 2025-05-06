@@ -10,7 +10,7 @@ services:
 
   cache:
     image: redis:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - "6379:6379"
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD:-SU1pc3NQcmllc3Rlc3MK}
@@ -18,7 +18,7 @@ services:
       - cache-data:/data
 
   nginx:
-    restart: always
+    restart: unless-stopped
     build:
       context:
         ../frontend
@@ -33,7 +33,7 @@ services:
 
   db:
     image: postgres:17
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=fqworkstation
       - POSTGRES_USER=temp
@@ -44,7 +44,7 @@ services:
 
   db-support:
     image: postgres:17
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=support
       - POSTGRES_USER=temp
@@ -53,7 +53,7 @@ services:
     ports:
       - "5433:5432"
   fqw:
-    restart: always
+    restart: unless-stopped
     image: emiren-co/fqworkstation-root:latest
     ports:
       - "13131:13131"
@@ -89,7 +89,7 @@ services:
           memory: '2g'
     command: ["java", "-jar", "/builder/fqw/target/fqw-1.0.0.jar"]
   protocol:
-    restart: always
+    restart: unless-stopped
     pull_policy: build
     image: emiren-co/fqworkstation-root:latest
     command: ["java", "-jar", "/builder/protocol/target/protocol-0.9.0.jar"]
@@ -117,7 +117,7 @@ services:
     image: emiren-co/fqworkstation-root:latest
     pull_policy: build
     command: [ "java", "-jar", "/builder/support/target/support-0.5.0.jar" ]
-    restart: always
+    restart: unless-stopped
     ports:
       - "13133:13133"
     depends_on:
@@ -135,7 +135,7 @@ services:
       - SPRING_SECURITY_USER_PASSWORD="${SECURITY_PASSWORD:-temperatempera}"
       - SERVER_FQW_URL="http://fqw:13131"
   hub:
-    restart: always
+    restart: unless-stopped
     pull_policy: build
     image: emiren-co/fqworkstation-root:latest
     depends_on:
