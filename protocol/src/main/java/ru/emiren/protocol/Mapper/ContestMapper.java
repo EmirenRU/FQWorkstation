@@ -29,7 +29,15 @@ public class ContestMapper {
         contestData.setAnnotationRelevance(handleList(numberingAnnotationStyle, data.get("actuality")));
         contestData.setPlannedScientificResults(handleList(numberingAnnotationStyle, data.get("plannedResults")));
         contestData.setAnnotationGoals(handleList(numberingAnnotationStyle, data.get("goals")));
+        //TODO check compatibility with typescript
+        contestData.setProjectName(data.get("projectName").toString());
+        contestData.setDescriptionOfMethods(data.get("descriptionOfMethods").toString());
+        contestData.setFutureResults(data.get("futureResults").toString());
+        contestData.setJustificationOfRequestedFinancing(data.get("justificationOfRequestedFinancing").toString());
+        contestData.setFullNameOfSupervisor(data.get("fullNameOfSupervisor").toString());
+        contestData.setListOfEstimatedCosts(data.get("listOfEstimatedCosts").toString());
 
+        contestData.setResearchTeam(handleList(numberingAnnotationStyle, data.get("researchTeam")));
         return contestData;
     }
 
