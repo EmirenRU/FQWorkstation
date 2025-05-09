@@ -27,4 +27,6 @@ public class ContestData {
     @Size(max = 10)
     private String Date;
     private String projectSupervisor;
+    private String researchDirections;
+    private String descriptionPlannedScientificResults;
 }

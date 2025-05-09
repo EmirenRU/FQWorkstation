@@ -31,7 +31,7 @@ export async function sendProjectData(params: ProjectData): Promise<ApiResponse>
         body: JSON.stringify(sendData)   
     };
 
- 
+    console.log(requestOptions)
     try {
         const response = await fetch(API_URL, requestOptions);
         
