@@ -1,5 +1,7 @@
-import {  MouseEvent } from "react";
-import {   ProjectData, ResearchTeamMember, EstimatedCost } from "./project";
+ 
+
+import { MouseEvent, useCallback } from "react";
+import { ProjectData, ResearchTeamMember, EstimatedCost } from "./project";
 
 export const ProjectDetailsPage = ({
     data,
@@ -12,12 +14,12 @@ export const ProjectDetailsPage = ({
     prevPage: () => void;
     onSubmit: () => void;
 }) => {
-    const TextAreaFieldGroup = ({
+    // Мемоизированные компоненты полей
+    const TextAreaFieldGroup = useCallback(({
         value,
         label,
         onChange,
         height = '150px',
-
     }: {
         value: string;
         label: string;
@@ -33,9 +35,9 @@ export const ProjectDetailsPage = ({
                 style={{ height }}
             />
         </div>
-    );
+    ), []);
 
-    const InputField = ({
+    const InputField = useCallback(({
         value,
         label,
         onChange,
@@ -55,15 +57,16 @@ export const ProjectDetailsPage = ({
                 className="form-input w-100"
             />
         </div>
-    );
+    ), []);
 
-    const handleRemoveTeamMember = (index: number): void => {
+    // Мемоизированные обработчики
+    const handleRemoveTeamMember = useCallback((index: number): void => {
         const updatedTeamMembers = [...data.researchTeams];
         updatedTeamMembers.splice(index, 1);
         updateData('researchTeams', updatedTeamMembers);
-    };
+    }, [data.researchTeams, updateData]);
 
-    const handleAddTeamMember = (event: MouseEvent<HTMLButtonElement>): void => {
+    const handleAddTeamMember = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
         event.preventDefault();
         const newMember: ResearchTeamMember = {
             fullName: '',
@@ -74,24 +77,24 @@ export const ProjectDetailsPage = ({
             experience: ''
         };
         updateData('researchTeams', [...data.researchTeams, newMember]);
-    };
+    }, [data.researchTeams, updateData]);
 
-    const handleTeamMemberChange = (index: number, field: keyof ResearchTeamMember, value: string) => {
+    const handleTeamMemberChange = useCallback((index: number, field: keyof ResearchTeamMember, value: string) => {
         const updatedTeamMembers = [...data.researchTeams];
         updatedTeamMembers[index] = {
             ...updatedTeamMembers[index],
             [field]: value
         };
         updateData('researchTeams', updatedTeamMembers);
-    };
+    }, [data.researchTeams, updateData]);
 
-    const handleRemoveCostItem = (index: number): void => {
+    const handleRemoveCostItem = useCallback((index: number): void => {
         const updatedCostItems = [...data.listOfEstimatedCosts];
         updatedCostItems.splice(index, 1);
         updateData('listOfEstimatedCosts', updatedCostItems);
-    };
+    }, [data.listOfEstimatedCosts, updateData]);
 
-    const handleAddCostItem = (event: MouseEvent<HTMLButtonElement>): void => {
+    const handleAddCostItem = useCallback((event: MouseEvent<HTMLButtonElement>): void => {
         event.preventDefault();
         const newCostItem: EstimatedCost = {
             item: '',
@@ -101,23 +104,23 @@ export const ProjectDetailsPage = ({
             justification: ''
         };
         updateData('listOfEstimatedCosts', [...data.listOfEstimatedCosts, newCostItem]);
-    };
+    }, [data.listOfEstimatedCosts, updateData]);
 
-    const handleCostItemChange = (index: number, field: keyof EstimatedCost, value: string | number) => {
+    const handleCostItemChange = useCallback((index: number, field: keyof EstimatedCost, value: string | number) => {
         const updatedCostItems = [...data.listOfEstimatedCosts];
         const updatedItem = {
             ...updatedCostItems[index],
             [field]: value
         };
 
-        // Recalculate total if quantity or pricePerUnit changes
         if (field === 'quantity' || field === 'pricePerUnit') {
             updatedItem.total = Number(updatedItem.quantity) * Number(updatedItem.pricePerUnit);
         }
 
         updatedCostItems[index] = updatedItem;
         updateData('listOfEstimatedCosts', updatedCostItems);
-    };
+    }, [data.listOfEstimatedCosts, updateData]);
+
 
     return (
         <div className="d-flex flex-column" style={{ width: '100%',   }}>
@@ -179,7 +182,7 @@ export const ProjectDetailsPage = ({
             <div className="form-group">
                 <label className="form-label">Состав научного коллектива</label>
                 {data.researchTeams.map((member, index) => (
-                    <div key={index} className="card mb-3 p-3">
+                <div key={`member-${index}-${member.fullName}`} className="card mb-3 p-3">
                         <div className="d-flex justify-content-between mb-2">
                             <h5>Участник #{index + 1}</h5>
                             <button
@@ -303,8 +306,8 @@ export const ProjectDetailsPage = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {data.listOfEstimatedCosts.map((cost, index) => (
-                            <tr key={index}>
+                    {data.listOfEstimatedCosts.map((cost, index) => (
+                            <tr key={`cost-${index}-${cost.item}`}>
                                 <td>
                                     <input
                                         type="text"

@@ -166,7 +166,7 @@ export const Project = () => {
 
         {currentPage === 2 && (
           <AnnotationPage
-            data={formData}
+            data={formData} 
             updateData={updateFormData}
             prevPage={prevPage}
             nextPage={nextPage}
@@ -194,7 +194,7 @@ export const Project = () => {
             aria-valuemin={1}
             aria-valuemax={2}
           >
-            Шаг {currentPage} из 2
+            Шаг {currentPage} из 3
           </div>
         </div>
       </div>
