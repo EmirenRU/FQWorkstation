@@ -74,7 +74,8 @@ export const ProjectDetailsPage = ({
             education: '',
             speciality: '',
             roleInProject: '',
-            experience: ''
+            experience: '',
+            workPlace: ''
         };
         updateData('researchTeams', [...data.researchTeams, newMember]);
     }, [data.researchTeams, updateData]);
@@ -181,8 +182,9 @@ export const ProjectDetailsPage = ({
             {/* Состав научного коллектива */}
             <div className="form-group">
                 <label className="form-label">Состав научного коллектива</label>
-                {data.researchTeams.map((member, index) => (
-                <div key={`member-${index}-${member.fullName}`} className="card mb-3 p-3">
+{data.researchTeams.map((member, index) => (
+  <div key={`member-${index}`} className="card mb-3 p-3">
+                    
                         <div className="d-flex justify-content-between mb-2">
                             <h5>Участник #{index + 1}</h5>
                             <button
