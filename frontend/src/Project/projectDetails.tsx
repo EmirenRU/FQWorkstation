@@ -318,7 +318,7 @@ export const ProjectDetailsPage = ({
                     </thead>
                     <tbody>
                     {data.listOfEstimatedCosts.map((cost, index) => (
-                            <tr key={`cost-${index}-${cost.item}`}>
+                            <tr key={`cost-${index}`}>
                                 <td>
                                     <input
                                         type="text"
