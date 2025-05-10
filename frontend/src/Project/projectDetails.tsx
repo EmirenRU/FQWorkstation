@@ -72,7 +72,7 @@ export const ProjectDetailsPage = ({
             fullName: '',
             position: '',
             education: '',
-            specialty: '',
+            speciality: '',
             roleInProject: '',
             experience: ''
         };
@@ -227,8 +227,8 @@ export const ProjectDetailsPage = ({
                                 <label className="mr-3">Специальность</label>
                                 <input
                                     type="text"
-                                    value={member.specialty}
-                                    onChange={(e) => handleTeamMemberChange(index, 'specialty', e.target.value)}
+                                    value={member.speciality}
+                                    onChange={(e) => handleTeamMemberChange(index, 'speciality', e.target.value)}
                                     className="form-input"
                                 />
                             </div>
@@ -260,6 +260,15 @@ export const ProjectDetailsPage = ({
                                     type="text"
                                     value={member.roleInProject}
                                     onChange={(e) => handleTeamMemberChange(index, 'roleInProject', e.target.value)}
+                                    className="form-input"
+                                />
+                            </div>
+                        <div className="col-md-6 mb-3">
+                            <label className="mr-3">Рабочее место</label>
+                                <input
+                                    type="text"
+                                    value={member.workPlace}
+                                    onChange={(e) => handleTeamMemberChange(index, 'workPlace', e.target.value)}
                                     className="form-input"
                                 />
                             </div>
