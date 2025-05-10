@@ -8,9 +8,10 @@ import { ProjectDetailsPage } from './projectDetails';
 
 export interface ResearchTeamMember {
   fullName: string;
+  workPlace: string;
   position: string;
   education: string;
-  specialty: string;
+  speciality: string;
   academicDegree?: string;
   academicTitle?: string;
   roleInProject: string;
