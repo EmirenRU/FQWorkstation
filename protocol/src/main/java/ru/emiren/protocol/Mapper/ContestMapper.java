@@ -42,7 +42,7 @@ public class ContestMapper {
         contestData.setProjectSupervisor(data.get("projectSupervisor").toString());
         contestData.setDate(data.get("date").toString());
         contestData.setResearchDirections(data.get("researchDirections").toString());
-        contestData.setResearchTeam(handleResearchTeam(numberingAnnotationStyle, data.get("researchTeams")));
+        contestData.setResearchTeams(handleResearchTeam(numberingAnnotationStyle, data.get("researchTeams")));
         contestData.setProjectTasks(data.get("projectTasks").toString());
         contestData.setDescriptionPlannedScientificResults(data.get("descriptionPlannedScientificResults").toString());
         return contestData;
@@ -59,11 +59,13 @@ public class ContestMapper {
                     res = data.get("fullName") + " " +
                             data.get("workPlace") + " " +
                             data.get("position") + " " +
-                            data.get("educationAndSpecialty") + " " +
+                            data.get("education") + " " +
+                            data.get("speciality") + " " +
                             data.get("academicDegree") + " " +
                             data.get("academicTitle") + " " +
-                            data.get("projectRole") + " " +
-                            data.get("professionalLevel");
+                            data.get("roleInProject") + " " +
+                            data.get("experience");
+                    log.info("result is {}", res);
                     num.getItems().add(new NumberingItemRenderData(0, Paragraphs.of(new TextRenderData(res) {{
                         setStyle(style);
                     }}).indentFirstLine(2).create()));

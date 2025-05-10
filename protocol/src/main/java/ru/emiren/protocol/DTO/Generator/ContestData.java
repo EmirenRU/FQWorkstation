@@ -21,7 +21,7 @@ public class ContestData {
     private String descriptionOfMethods;
     private String futureResults;
     private String justificationOfRequestedFinancing;
-    private NumberingRenderData researchTeam;
+    private NumberingRenderData researchTeams;
     private String fullNameOfSupervisor;
     private String listOfEstimatedCosts;
     @Size(max = 10)
