@@ -8,7 +8,7 @@ import { ProjectDetailsPage } from './projectDetails';
 
 export interface ResearchTeamMember {
   fullName: string;
-  workPlace: string;
+  workPlace: string; // TO BE ADDED SOMEDAY
   position: string;
   education: string;
   speciality: string;
@@ -142,7 +142,7 @@ export const Project = () => {
   const nextPage = () => setCurrentPage(prev => prev + 1);
   const prevPage = () => setCurrentPage(prev => prev - 1);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent):Promise<void> => {
     console.log(formData)
     e.preventDefault();
     try {

@@ -12,7 +12,7 @@ export const ProjectDetailsPage = ({
     data: ProjectData;
     updateData: (field: keyof ProjectData, value: unknown) => void;
     prevPage: () => void;
-    onSubmit: () => void;
+    onSubmit:  (e: React.FormEvent) => Promise<void>;
 }) => {
     // Мемоизированные компоненты полей
     const TextAreaFieldGroup = useCallback(({
@@ -318,7 +318,7 @@ export const ProjectDetailsPage = ({
                     </thead>
                     <tbody>
                     {data.listOfEstimatedCosts.map((cost, index) => (
-                            <tr key={`cost-${index}-${cost.item}`}>
+                            <tr key={`cost-${index}`}>
                                 <td>
                                     <input
                                         type="text"
@@ -384,7 +384,7 @@ export const ProjectDetailsPage = ({
                     Назад
                 </button>
                 <button
-                    type="button"
+                    type="submit"
                     onClick={onSubmit}
                     className="btn btn-primary"
                 >
