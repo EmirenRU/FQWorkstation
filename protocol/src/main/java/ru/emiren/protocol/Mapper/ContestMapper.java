@@ -45,6 +45,7 @@ public class ContestMapper {
         contestData.setResearchTeams(handleResearchTeam(numberingAnnotationStyle, data.get("researchTeams")));
         contestData.setProjectTasks(data.get("projectTasks").toString());
         contestData.setDescriptionPlannedScientificResults(data.get("descriptionPlannedScientificResults").toString());
+        contestData.setDescriptionOfScientificFuture(data.get("descriptionOfScientificFuture").toString());
         return contestData;
     }
 
