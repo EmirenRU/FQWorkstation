@@ -11,7 +11,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:13131", "http://hub:8080/sql",
                                 "http://localhost:3000", "ws://localhost:13131/api",
-                                "https://localhost:13131/api")
+                                "https://localhost:13131/api", "https://fqw.rudn.ru",
+                                "https://localhost:13131", "https://fqw.rudn.ru:13131")
                 .allowedMethods("GET", "POST", "PUT", "OPTIONS")
                 .allowCredentials(true);
     }
