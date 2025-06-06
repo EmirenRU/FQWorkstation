@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
     - uses: actions/checkout@v4
@@ -28,11 +25,26 @@ jobs:
     - name: Build with Maven and Package
       run: |
         mvn clean package
-        mkdir -p docker-build/docker docker-build/fqw/target docker-build/support/target docker-build/protocol/target docker-build/frontend 
-        cp fqw/target/*.jar docker-build/fqw/target/app.jar
-        cp support/target/*.jar docker-build/support/target/app.jar
-        cp protocol/target/*.jar docker-build/protocol/target/app.jar
-    
+
+    - name: Creating Directory
+      run: |
+        mkdir -p docker-build/docker \
+        docker-build/fqw/target \
+        docker-build/support/target \ 
+        docker-build/protocol/target \
+        docker-build/frontend
+    - name: Copying file FQW
+      run: cp fqw/target/*.jar docker-build/fqw/target/app.jar
+    - name: Copying file Support
+      run: cp support/target/*.jar docker-build/support/target/app.jar
+    - name: Copying file Protocol
+      run: cp protocol/target/*.jar docker-build/protocol/target/app.jar
+
+
+
+
+
+
     - name: Build React package
       run: |
         sudo apt-get install -y npm nodejs
