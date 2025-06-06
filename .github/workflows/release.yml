@@ -40,14 +40,18 @@ jobs:
     - name: Copying file Protocol
       run: cp protocol/target/*.jar docker-build/protocol/target/app.jar
 
-    - name: Build React package
+    - name: Installing NPM Modules
       run: |
         sudo apt-get install -y npm nodejs
+    - name: Installing Libraries
+      run: |
         cd frontend 
         npm i
+    - name: Building React 
         npm run build
         cd ..
-        cp -r frontend/* docker-build/frontend/
+    - name: Copying data
+      run: cp -r frontend/* docker-build/frontend/
         
     - name: create 7z archive
       run: |
@@ -58,7 +62,7 @@ jobs:
       id: create_release
       uses: softprops/action-gh-release@v1 #
       with:
-        tag_name: ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
         files: docker-build.7z
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
