@@ -28,10 +28,7 @@ jobs:
 
     - name: Creating Directory
       run: |
-        mkdir -p docker-build/docker \
-        docker-build/fqw/target \
-        docker-build/support/target \ 
-        docker-build/protocol/target \
+        mkdir -p docker-build/docker docker-build/fqw docker-build/fqw/target docker-build/support docker-build/support/target docker-build/protocol docker-build/protocol/target \
         docker-build/frontend
     - name: Copying file FQW
       run: cp fqw/target/*.jar docker-build/fqw/target/app.jar
@@ -39,11 +36,6 @@ jobs:
       run: cp support/target/*.jar docker-build/support/target/app.jar
     - name: Copying file Protocol
       run: cp protocol/target/*.jar docker-build/protocol/target/app.jar
-
-
-
-
-
 
     - name: Build React package
       run: |
