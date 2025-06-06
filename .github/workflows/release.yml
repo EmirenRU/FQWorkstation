@@ -1,0 +1,57 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 24
+      uses: actions/setup-java@v4
+      with:
+        java-version: '24'
+        distribution: 'temurin'
+        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+    - name: Build with Maven and Package
+      run: |
+        mvn clean package
+        mkdir -p docker-build/docker docker-build/fqw docker-build/support docker-build/protocol docker-build/frontend
+        cp fqw/target/*.jar docker-build/fqw/target/app.jar
+        cp support/target/*.jar docker-build/support/target/app.jar
+        cp protocol/target/*.jar docker-build/protocol/target/app.jar
+    
+    - name: Build React package
+      run: |
+        sudo apt-get install -y npm nodejs
+        cd frontend 
+        npm i
+        npm run build
+        cd ..
+        cp -r frontend/* docker-build/frontend/
+        
+    - name: create 7z archive
+      run: |
+        sudo apt-get install -y p7zip-full
+        7z a -mx=9 -m0=lzma2 docker-build.7z ./docker-build/
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        files: docker-build.7z
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
