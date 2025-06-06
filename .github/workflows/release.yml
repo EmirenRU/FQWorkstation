@@ -47,7 +47,8 @@ jobs:
       run: |
         cd frontend 
         npm i
-    - name: Building React 
+    - name: Building React
+      run: |
         npm run build
         cd ..
     - name: Copying data
