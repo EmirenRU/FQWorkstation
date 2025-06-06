@@ -26,6 +26,16 @@ docker-remove:
 test-load:
 	mvn gatling:test
 
+release:
+	@if [ -z "$version" ]; then \
+	    echo "Error: No version specified. Use 'make github-action version=<tag_name>'"; \
+	    exit 1; \
+	fi
+	git tag v$(version)
+	git push origin --tags
+	@echo "Created and pushed tag: v$(version)"
+
+
 all: add-hosts compose
 
 .PHONY: compose docker-build docker all add-hosts
