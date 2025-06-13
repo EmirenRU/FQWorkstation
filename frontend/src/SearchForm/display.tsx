@@ -12,7 +12,7 @@ interface ToggleDisplayAndSaveStateProps {
 export const ToggleDisplayAndSaveState: FC<ToggleDisplayAndSaveStateProps> = ({ signal, setReady }) => {
     console.log("recevide signal ", signal);
     ///changed
-    const header = ["ФИО Преподавателя", "Ученная степень", "Должность", "Кафедра", "ФИО Студента", "Студ.Номер", "Гражданство", "Тема"];
+    const header = ["ФИО Преподавателя", "Ученая степень", "Должность", "Кафедра", "ФИО Студента", "Студ.Номер", "Гражданство", "Тема"];
     const tableRef = useRef(null);
     const { formData } = useFormContext();
     const [loading, setLoading] = useState(true);
