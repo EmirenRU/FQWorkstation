@@ -57,3 +57,4 @@ frontend/.env
 frontend/dist
 frontend/node_modules
 frontend/package-lock.json
+/protocol/src/main/resources/~$ntest_template.docx

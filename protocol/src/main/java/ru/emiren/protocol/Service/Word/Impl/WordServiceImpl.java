@@ -133,12 +133,14 @@ public class WordServiceImpl implements WordService {
     private List<List<String>> processSheet(XSSFSheet sheet){
         Row header = sheet.getRow(0);
         header.forEach(cell -> {log.info("Header: {}", cell.toString());});
+        header = translateCellsToEngVariation(header);
 
         // TODO to finish
         List<Map<String, String>> mapList = new ArrayList<>();
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             Map<String, String> rowData = new HashMap<>();
+            rowData.putIfAbsent("ID", String.valueOf(i));
             for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
                 Cell cell = row.getCell(j);
                 if (cell != null){
@@ -148,10 +150,10 @@ public class WordServiceImpl implements WordService {
                     } else if (cell.getCellType() == CellType.NUMERIC) {
                         rowData.putIfAbsent(header.getCell(j).getStringCellValue(), String.valueOf(cell.getNumericCellValue()));
                     } else if (cell.getCellType() == CellType.BLANK) {
-                        rowData.putIfAbsent(header.getCell(j).getStringCellValue(), "?");
+                        rowData.putIfAbsent(header.getCell(j).getStringCellValue(), " ");
                     }
                 } else {
-                    rowData.putIfAbsent(header.getCell(j).getStringCellValue(), "?");
+                    rowData.putIfAbsent(header.getCell(j).getStringCellValue(), " ");
                 }
             }
             log.info("Row with index {} : {}", i , rowData);
@@ -163,35 +165,58 @@ public class WordServiceImpl implements WordService {
         return processData(mapList);
     }
 
+
+
+    private Row translateCellsToEngVariation(Row header) {
+        HashMap<String, String> rowData = new HashMap<>(Map.of("ФИО Преподавателя", "SuName",
+                "Ученная степень", "AcDegree",
+                "Должность", "Position",
+                "Кафедра", "Department",
+                "ФИО Студента", "FullName",
+                "Студ.Номер", "StudNum",
+                "Гражданство", "Citizenship",
+                    "Тема", "Theme"
+        ));
+
+        header.forEach(cell -> {
+            if (rowData.containsKey(cell.getStringCellValue())) {
+                cell.setCellValue(rowData.get(cell.getStringCellValue()));
+            }
+        });
+        return header;
+    }
+
     private List<List<String>> processData(List<Map<String, String>> mapList) {
         List<List<String>> data = new ArrayList<>();
 
         for (Map<String, String> map : mapList) {
             List<String> rowData = new ArrayList<>(Collections.nCopies(42, " "));
-
-            rowData.set(0, map.getOrDefault("ID", "?"));
-            rowData.set(1, map.getOrDefault("FullName", "?"));
-            rowData.set(2, map.getOrDefault("StudNum", "?"));
-            rowData.set(3, map.getOrDefault("Theme", "?"));
-            rowData.set(4, map.getOrDefault("SuData", "?"));
-            rowData.set(5, map.getOrDefault("SuName", "?"));
-            rowData.set(11, map.getOrDefault("Questioner1", "?"));
-            rowData.set(12, map.getOrDefault("Question1", "?"));
-            rowData.set(13, map.getOrDefault("Questioner2", "?"));
-            rowData.set(14, map.getOrDefault("Question2", "?"));
-            rowData.set(15, map.getOrDefault("Questioner3", "?"));
-            rowData.set(16, map.getOrDefault("Question3", "?"));
-            rowData.set(20, map.getOrDefault("IndividualOpinion", "?"));
-            rowData.set(24, map.getOrDefault("Language", "?"));
-            rowData.set(29, map.getOrDefault("Department", "?"));
-            rowData.set(30, map.getOrDefault("Orientation", "?"));
-            rowData.set(21, map.getOrDefault("Score", "?"));
-            rowData.set(31, map.getOrDefault("Citizenship", "?"));
+            log.info("map in process: {}", map);
+            rowData.set(0, map.getOrDefault("ID", " "));
+            rowData.set(1, map.getOrDefault("FullName", " "));
+            rowData.set(2, map.getOrDefault("StudNum", " "));
+            rowData.set(3, map.getOrDefault("Theme", " "));
+            rowData.set(4, (map.get("SuData") != null) ? map.getOrDefault("SuData", " ") : (map.getOrDefault("AcDegree", " ") + " " + map.getOrDefault("Position", " ")));
+            rowData.set(5, map.getOrDefault("SuName", " "));
+            rowData.set(11, map.getOrDefault("Questioner1", " "));
+            rowData.set(12, map.getOrDefault("Question1", " "));
+            rowData.set(13, map.getOrDefault("Questioner2", " "));
+            rowData.set(14, map.getOrDefault("Question2", " "));
+            rowData.set(15, map.getOrDefault("Questioner3", " "));
+            rowData.set(16, map.getOrDefault("Question3", " "));
+            rowData.set(20, map.getOrDefault("IndividualOpinion", " "));
+            rowData.set(24, map.getOrDefault("Language", " "));
+            rowData.set(29, map.getOrDefault("Department", " "));
+            rowData.set(30, map.getOrDefault("Orientation", " "));
+            rowData.set(21, map.getOrDefault("Score", " "));
+            rowData.set(31, map.getOrDefault("Citizenship", " "));
             rowData.set(32, map.getOrDefault("Program", " "));
-            rowData.set(33, map.getOrDefault("NumberOfDecree", "?"));
+            rowData.set(33, map.getOrDefault("NumberOfDecree", " "));
+            log.info("rowdata : {}", rowData);
 
             data.add(rowData);
         }
+        log.info("data after processing: {}", data);
 
         return data;
     }
@@ -388,12 +413,13 @@ public class WordServiceImpl implements WordService {
 
         try {
             List<NiceXWPFDocument> documents = new ArrayList<>();
-
+            log.info("Before generating the document");
             for (int i = 0; i < data.size(); i++) {
                 List<String> arr = data.get(i);
                 Map<String, Object> dataMap = getStringObjectMap(arr);
 
-//                log.info("The dataMap contains: {}", dataMap);
+                log.info("The dataMap contains: {}", dataMap);
+                log.info("Before Saving");
                 try {
                     saveDataAsync(dataMap);
                 } catch (RestClientException e){
@@ -401,6 +427,7 @@ public class WordServiceImpl implements WordService {
                 } catch (Exception e) {
                     log.warn("Async Exception: {}", e.getMessage());
                 }
+                log.info("After Saving");
                 NiceXWPFDocument tempDoc = XWPFTemplate.compile(fileTemplate, Configure.createDefault())
                         .render(dataMap)
                         .getXWPFDocument();

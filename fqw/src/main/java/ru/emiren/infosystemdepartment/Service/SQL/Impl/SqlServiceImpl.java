@@ -168,6 +168,9 @@ public class SqlServiceImpl implements SqlService {
         if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()){
             dateFrom = Integer.valueOf(strDateFrom);
             dateTo   = Integer.valueOf(strDateTo);
+        } else {
+            dateFrom = 0;
+            dateTo = 9999;
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );
@@ -321,7 +324,13 @@ public class SqlServiceImpl implements SqlService {
             if (!strDateFrom.isEmpty() && !strDateTo.isEmpty()) {
                 dateFrom = Integer.valueOf(strDateFrom);
                 dateTo = Integer.valueOf(strDateTo);
+            } else {
+                dateFrom = 0;
+                dateTo = 9999;
             }
+        } else {
+            dateFrom = 0;
+            dateTo = 9999;
         }
 
         log.info("date from and to: {} and {}", dateFrom, dateTo );

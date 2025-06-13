@@ -29,4 +29,5 @@ public class ContestData {
     private String projectSupervisor;
     private String researchDirections;
     private String descriptionPlannedScientificResults;
+    private String descriptionOfScientificFuture;
 }
