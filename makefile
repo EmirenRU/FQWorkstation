@@ -36,8 +36,8 @@ release:
 	@echo "Created and pushed tag: v$(version)"
 
 minikube:
-    kubectl apply -f fqworkstation.yaml
+	kubectl apply -f fqworkstation.yaml
 
 all: add-hosts compose
 
-.PHONY: compose docker-build docker all add-hosts
+.PHONY: compose docker-build docker all add-hosts release

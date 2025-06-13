@@ -168,8 +168,11 @@ public class WordServiceImpl implements WordService {
 
 
     private Row translateCellsToEngVariation(Row header) {
-        HashMap<String, String> rowData = new HashMap<>(Map.of("ФИО Преподавателя", "SuName",
+        Map<String, String> rowData = new HashMap<>(Map.of("ФИО Преподавателя", "SuName",
                 "Ученная степень", "AcDegree",
+                "Учёная степень", "AcDegree",
+                "Ученая степень", "AcDegree",
+
                 "Должность", "Position",
                 "Кафедра", "Department",
                 "ФИО Студента", "FullName",
