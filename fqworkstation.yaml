@@ -115,6 +115,7 @@ items:
                 image: emiren-co/fqworkstation-frontend:latest
                 ports:
                   - containerPort: 80
+                  - containerPort: 443
                 volumeMounts:
                   - mountPath: :/usr/share/nginx/html
                     name: frontend
@@ -293,28 +294,16 @@ items:
                 ports:
                   - containerPort: 13136
   - apiVersion: v1
-    kind: PersistentVolume
-    metadata:
-      name: db-data
-      namespace: fqworkstation
-    spec:
-      capacity:
-        storage: 1Gi
-      accessModes:
-        - ReadWriteOnce
-
-    - apiVersion: v1
-    kind: PersistentVolumeClaim
     metadata:
       namespace: fqworkstation
       name: db-data-claim
     spec:
       accessModes:
-          - ReadWriteOnce
+        - ReadWriteOnce
       resources:
-          requests:
-            storage: 5Gi
-
+        requests:
+          storage: 5Gi
+    kind: PersistentVolumeClaim
 
   - apiVersion: v1
     kind: PersistentVolume

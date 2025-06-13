@@ -24,7 +24,7 @@ public interface StudentLecturerRepository extends JpaRepository<StudentLecturer
             " ( (sl.student.department.code IN :departmentCode ) OR (-1 IN :departmentCode ) ) AND " +
             " ( (sl.student.fqw.id IN :theme) OR ( -1 IN :theme ) ) AND " +
             " ( (:dateFrom IS NULL) OR (p.dateOfProtection >= :dateFrom) ) AND " +
-            " ( (:dateTo IS NULL)  OR (p.dateOfProtection <= :dateTo) ) " +
+            " ( (:dateTo IS NULL) OR (p.dateOfProtection <= :dateTo) ) " +
             " ORDER BY sl.lecturer.name")
     List<StudentLecturers> findAllByAndThemeAndDateAndOrientationAndDepartmentAndSortedByLecturer(
             @Param("orientationCodes") List<String> orientationCodes,

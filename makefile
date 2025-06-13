@@ -35,6 +35,8 @@ release:
 	git push origin --tags
 	@echo "Created and pushed tag: v$(version)"
 
+minikube:
+    kubectl apply -f fqworkstation.yaml
 
 all: add-hosts compose
 
