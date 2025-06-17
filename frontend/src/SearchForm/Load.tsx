@@ -117,7 +117,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
                 setOrientations(OrientationData);
                 setTeachersData(TeachersData);
                 setThemes(ThemesData);
-                setSelectorLoaded(true); // Устанавливаем статус загрузки здесь
+                setSelectorLoaded(true); 
             } else {
                 console.error("Invalid data structure received");
                 setSwitchDefaultSelectors(true);
@@ -185,7 +185,7 @@ export const  LoadSaved: FC<ToggleDisplayAndSaveStateProps> = ({signal,setReady}
         }
     }, [Departments, Orientations, Teachers, Themes]);
 
-    // Обновление bootstrap-select после загрузки данных
+    
     useEffect(() => {
         if (selectorsStatus) {
             $('.selectpicker').selectpicker('refresh');
